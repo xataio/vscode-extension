@@ -1,0 +1,71 @@
+{
+  "name": "xata",
+  "displayName": "xata-vscode-extension",
+  "description": "Managed your xatabase from VSCode",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.66.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:xata.login",
+    "onCommand:xata.logout",
+    "onView:xataExplorer"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "xata.login",
+        "title": "Xata: Login"
+      },
+      {
+        "command": "xata.logout",
+        "title": "Xata: Logout"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "xata",
+          "title": "Xata",
+          "icon": "media/xata-icon.svg"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "xataExplorer",
+        "contents": "Welcome to xata!\n[Get started](command:xata.login)"
+      }
+    ],
+    "views": {
+      "xata": [
+        {
+          "id": "xataExplorer",
+          "name": "Xata",
+          "icon": "media/xata-icon.svg"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "14.x",
+    "@types/vscode": "^1.66.0",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "eslint": "^8.11.0",
+    "typescript": "^4.5.5",
+    "vitest": "^0.9.3"
+  },
+  "dependencies": {}
+}
