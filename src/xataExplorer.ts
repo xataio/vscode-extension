@@ -7,14 +7,17 @@ import {
   DatabaseTreeItem,
   TableTreeItem,
   WorkspaceTreeItem,
+  BranchTreeItem,
 } from "./TreeItem";
 
 import {
   getBranchDetails,
+  getBranchList,
   getDatabaseList,
   getTableSchema,
   getWorkspacesList,
 } from "./xata/xataComponents";
+import { Branch } from "./xata/xataSchemas";
 
 export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
   constructor(private context: Context) {}
@@ -57,24 +60,33 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
     // Database level
     if (element.contextValue === "database") {
-      const { schema } = await getBranchDetails({
+      const { branches } = await getBranchList({
         baseUrl: this.context.getBaseUrl(element.workspace.id),
         context: this.context,
         pathParams: {
-          dbBranchName: `${element.database.name}:main`,
+          dbName: element.database.name,
         },
       });
 
-      return schema.tables.map(
-        (table) =>
-          new TableTreeItem(
-            `[t] ${table.name}`,
-            vscode.TreeItemCollapsibleState.Collapsed,
-            element.workspace,
-            element.database,
-            table
-          )
-      );
+      if (branches.length === 1) {
+        return this.getTableTreeItems(element, branches[0]);
+      } else {
+        return branches.map(
+          (branch) =>
+            new BranchTreeItem(
+              `[b] ${branch.name}`,
+              vscode.TreeItemCollapsibleState.Collapsed,
+              element.workspace,
+              element.database,
+              branch
+            )
+        );
+      }
+    }
+
+    // Branch level
+    if (element.contextValue === "branch") {
+      return this.getTableTreeItems(element, element.branch);
     }
 
     // Table level
@@ -95,6 +107,7 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
             vscode.TreeItemCollapsibleState.None,
             element.workspace,
             element.database,
+            element.branch,
             element.table,
             column
           )
@@ -106,6 +119,31 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
   getTreeItem(element: TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
     return element;
+  }
+
+  private async getTableTreeItems(
+    element: DatabaseTreeItem | BranchTreeItem,
+    branch: Branch
+  ) {
+    const { schema } = await getBranchDetails({
+      baseUrl: this.context.getBaseUrl(element.workspace.id),
+      context: this.context,
+      pathParams: {
+        dbBranchName: `${element.database.name}:${branch.name}`,
+      },
+    });
+
+    return schema.tables.map(
+      (table) =>
+        new TableTreeItem(
+          `[t] ${table.name}`,
+          vscode.TreeItemCollapsibleState.Collapsed,
+          element.workspace,
+          element.database,
+          branch,
+          table
+        )
+    );
   }
 }
 

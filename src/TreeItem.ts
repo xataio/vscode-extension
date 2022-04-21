@@ -1,6 +1,11 @@
 import * as vscode from "vscode";
 import { GetWorkspacesListResponse } from "./xata/xataComponents";
-import { Column, ListDatabasesResponse, Table } from "./xata/xataSchemas";
+import {
+  Branch,
+  Column,
+  ListDatabasesResponse,
+  Table,
+} from "./xata/xataSchemas";
 
 export class WorkspaceTreeItem extends vscode.TreeItem {
   contextValue = "workspace" as const;
@@ -13,8 +18,6 @@ export class WorkspaceTreeItem extends vscode.TreeItem {
     super(label, collapsibleState);
   }
 }
-
-// TODO Add branch layer
 
 export class DatabaseTreeItem extends vscode.TreeItem {
   contextValue = "database" as const;
@@ -29,6 +32,20 @@ export class DatabaseTreeItem extends vscode.TreeItem {
   }
 }
 
+export class BranchTreeItem extends vscode.TreeItem {
+  contextValue = "branch" as const;
+
+  constructor(
+    public readonly label: string,
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+    public readonly workspace: GetWorkspacesListResponse["workspaces"][-1],
+    public readonly database: Required<ListDatabasesResponse>["databases"][-1],
+    public readonly branch: Branch
+  ) {
+    super(label, collapsibleState);
+  }
+}
+
 export class TableTreeItem extends vscode.TreeItem {
   contextValue = "table" as const;
 
@@ -37,6 +54,7 @@ export class TableTreeItem extends vscode.TreeItem {
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly workspace: GetWorkspacesListResponse["workspaces"][-1],
     public readonly database: Required<ListDatabasesResponse>["databases"][-1],
+    public readonly branch: Branch,
     public readonly table: Table
   ) {
     super(label, collapsibleState);
@@ -51,6 +69,7 @@ export class ColumnTreeItem extends vscode.TreeItem {
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly workspace: GetWorkspacesListResponse["workspaces"][-1],
     public readonly database: Required<ListDatabasesResponse>["databases"][-1],
+    public readonly branch: Branch,
     public readonly table: Table,
     public readonly column: Column
   ) {
@@ -61,5 +80,6 @@ export class ColumnTreeItem extends vscode.TreeItem {
 export type TreeItem =
   | WorkspaceTreeItem
   | DatabaseTreeItem
+  | BranchTreeItem
   | TableTreeItem
   | ColumnTreeItem;
