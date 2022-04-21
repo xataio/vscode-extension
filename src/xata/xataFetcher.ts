@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Context } from "../context";
+import * as vscode from "vscode";
 import { request } from "undici";
 import { HttpMethod } from "undici/types/dispatcher";
 
@@ -51,10 +52,17 @@ export async function xataFetch<
       },
     }
   );
-  // if (!response.) {
-  //   // TODO validate & parse the error to fit the generated error types
-  //   throw new Error("Network response was not ok");
-  // }
+
+  if (response.statusCode === 401) {
+    throw new Error("Xata: Invalid token");
+  }
+
+  if (!response.statusCode.toString().startsWith("2")) {
+    throw new Error(
+      `Xata: Network error (${(await response.body.json()).message})`
+    );
+  }
+
   return await response.body.json();
 }
 
