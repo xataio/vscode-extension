@@ -5,7 +5,10 @@ import { Command } from "../types";
  */
 export const logoutCommand: Command = {
   id: "xata.logout",
-  action(context) {
-    return context.clearToken;
+  action(context, explorer) {
+    return async () => {
+      await context.clearToken();
+      return explorer.refresh();
+    };
   },
 };

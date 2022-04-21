@@ -6,7 +6,7 @@ import { Command } from "../types";
  */
 export const loginCommand: Command = {
   id: "xata.login",
-  action(context) {
+  action(context, explorer) {
     return async () => {
       const token = await vscode.window.showInputBox({
         prompt: "Paste your xata personal access token",
@@ -14,7 +14,8 @@ export const loginCommand: Command = {
       });
 
       if (token) {
-        return context.setToken(token);
+        await context.setToken(token);
+        return explorer.refresh();
       }
     };
   },

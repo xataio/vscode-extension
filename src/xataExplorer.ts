@@ -20,7 +20,18 @@ import {
 import { Branch } from "./xata/xataSchemas";
 
 export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
+  #onDidChangeTreeData: vscode.EventEmitter<TreeItem | null> =
+    new vscode.EventEmitter<TreeItem | null>();
+
+  readonly onDidChangeTreeData:
+    | vscode.Event<TreeItem | TreeItem[] | null>
+    | undefined = this.#onDidChangeTreeData.event;
+
   constructor(private context: Context) {}
+
+  public refresh() {
+    this.#onDidChangeTreeData.fire(null);
+  }
 
   async getChildren(element?: TreeItem): Promise<TreeItem[]> {
     // Root level
@@ -151,12 +162,18 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 }
 
 export class XataExplorer {
+  private treeDataProvider: XataDataProvider;
+
+  public refresh() {
+    this.treeDataProvider.refresh();
+  }
+
   constructor(context: vscode.ExtensionContext) {
-    const treeDataProvider = new XataDataProvider(getContext(context));
+    this.treeDataProvider = new XataDataProvider(getContext(context));
 
     context.subscriptions.push(
       vscode.window.createTreeView("xataExplorer", {
-        treeDataProvider,
+        treeDataProvider: this.treeDataProvider,
       })
     );
   }
