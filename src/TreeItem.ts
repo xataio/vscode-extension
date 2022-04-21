@@ -74,6 +74,10 @@ export class ColumnTreeItem extends vscode.TreeItem {
     public readonly column: Column
   ) {
     super(label, collapsibleState);
+
+    if (column.type === "link" && column.link) {
+      this.label = `${column.name} (${column.link.table})`;
+    }
   }
 }
 
