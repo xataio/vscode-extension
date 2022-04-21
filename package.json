@@ -21,7 +21,7 @@
       "properties": {
         "xata.baseUrl": {
           "type": "string",
-          "default": "https://staging.xatabase.co",
+          "default": "https://xata.sh",
           "description": "Xata base url"
         }
       }
