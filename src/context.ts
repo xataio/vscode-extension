@@ -60,16 +60,6 @@ export function getContext(extensionContext: ExtensionContext) {
         dark: extensionContext.asAbsolutePath(`media/columns/dark/${type}.svg`),
       };
     },
-
-    /**
-     * Retrieve a column icon by type
-     */
-    getBranchIcon(): TreeItem["iconPath"] {
-      return {
-        light: extensionContext.asAbsolutePath(`media/branch-light.svg`),
-        dark: extensionContext.asAbsolutePath(`media/branch-dark.svg`),
-      };
-    },
   };
 }
 

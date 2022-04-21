@@ -9,6 +9,7 @@ import {
 
 export class WorkspaceTreeItem extends vscode.TreeItem {
   contextValue = "workspace" as const;
+  iconPath = new vscode.ThemeIcon("globe");
 
   constructor(
     public readonly label: string,
@@ -21,6 +22,7 @@ export class WorkspaceTreeItem extends vscode.TreeItem {
 
 export class DatabaseTreeItem extends vscode.TreeItem {
   contextValue = "database" as const;
+  iconPath = new vscode.ThemeIcon("repo");
 
   constructor(
     public readonly label: string,
@@ -34,6 +36,7 @@ export class DatabaseTreeItem extends vscode.TreeItem {
 
 export class BranchTreeItem extends vscode.TreeItem {
   contextValue = "branch" as const;
+  iconPath = new vscode.ThemeIcon("source-control");
 
   constructor(
     public readonly label: string,
@@ -48,6 +51,7 @@ export class BranchTreeItem extends vscode.TreeItem {
 
 export class TableTreeItem extends vscode.TreeItem {
   contextValue = "table" as const;
+  iconPath = new vscode.ThemeIcon("browser");
 
   constructor(
     public readonly label: string,

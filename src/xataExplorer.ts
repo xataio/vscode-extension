@@ -44,7 +44,7 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
       return workspaces.map(
         (w) =>
           new WorkspaceTreeItem(
-            `[ws] ${w.name}`,
+            w.name,
             vscode.TreeItemCollapsibleState.Collapsed,
             w
           )
@@ -61,7 +61,7 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
       return (databases || []).map(
         (db) =>
           new DatabaseTreeItem(
-            `[db] ${db.displayName}`,
+            db.displayName,
             vscode.TreeItemCollapsibleState.Collapsed,
             element.workspace,
             db
@@ -133,9 +133,6 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
       element.iconPath = this.context.getColumnIcon(element.column.type);
     }
 
-    if (element.contextValue === "branch") {
-      element.iconPath = this.context.getBranchIcon();
-    }
     return element;
   }
 
@@ -154,7 +151,7 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
     return schema.tables.map(
       (table) =>
         new TableTreeItem(
-          `[t] ${table.name}`,
+          table.name,
           vscode.TreeItemCollapsibleState.Collapsed,
           element.workspace,
           element.database,
