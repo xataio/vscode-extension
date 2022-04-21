@@ -9,5 +9,5 @@
     "rootDir": "src",
     "strict": true
   },
-  "exclude": ["vitest.config.ts"]
+  "exclude": ["vitest.config.ts", "openapi-codegen.config.ts"]
 }

@@ -1,4 +1,4 @@
-import { ExtensionContext } from "vscode";
+import { ExtensionContext, workspace, window } from "vscode";
 
 /**
  * Wrapper around vscode extension context
@@ -27,6 +27,25 @@ export function getContext(extensionContext: ExtensionContext) {
      */
     clearToken() {
       return extensionContext.secrets.delete("token");
+    },
+
+    /**
+     * Get baseUrl from the workspace configuration
+     */
+    getBaseUrl(workspaceId?: string) {
+      const configValue = workspace.getConfiguration().get("xata.baseUrl");
+
+      if (!(typeof configValue === "string" && configValue.includes("//"))) {
+        window.showErrorMessage('"xata.baseUrl" is not a valid url');
+        return "";
+      }
+
+      if (workspaceId) {
+        const { protocol, host } = new URL(configValue);
+        return `${protocol}//${workspaceId}.${host}`;
+      } else {
+        return configValue;
+      }
     },
   };
 }

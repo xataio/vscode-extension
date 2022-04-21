@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as commands from "./commands";
 import { getContext } from "./context";
+import { XataExplorer } from "./xataExplorer";
 
 export function activate(extContext: vscode.ExtensionContext) {
   const context = getContext(extContext);
@@ -11,6 +12,8 @@ export function activate(extContext: vscode.ExtensionContext) {
       vscode.commands.registerCommand(command.id, command.action(context))
     );
   });
+
+  new XataExplorer(extContext);
 }
 
 export function deactivate() {}
