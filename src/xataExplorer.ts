@@ -103,7 +103,7 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
       return columns.map(
         (column) =>
           new ColumnTreeItem(
-            `[c] ${column.name} (${column.type})`,
+            column.name,
             vscode.TreeItemCollapsibleState.None,
             element.workspace,
             element.database,
@@ -118,6 +118,9 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
   }
 
   getTreeItem(element: TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
+    if (element.contextValue === "column") {
+      element.iconPath = this.context.getColumnIcon(element.column.type);
+    }
     return element;
   }
 

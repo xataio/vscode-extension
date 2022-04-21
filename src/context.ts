@@ -1,4 +1,5 @@
-import { ExtensionContext, workspace, window } from "vscode";
+import { ExtensionContext, workspace, window, TreeItem } from "vscode";
+import { Column } from "./xata/xataSchemas";
 
 /**
  * Wrapper around vscode extension context
@@ -46,6 +47,18 @@ export function getContext(extensionContext: ExtensionContext) {
       } else {
         return configValue;
       }
+    },
+
+    /**
+     * Retrieve a column icon by type
+     */
+    getColumnIcon(type: Column["type"]): TreeItem["iconPath"] {
+      return {
+        light: extensionContext.asAbsolutePath(
+          `media/columns/light/${type}.svg`
+        ),
+        dark: extensionContext.asAbsolutePath(`media/columns/dark/${type}.svg`),
+      };
     },
   };
 }
