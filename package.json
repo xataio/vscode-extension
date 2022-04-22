@@ -24,6 +24,11 @@
           "type": "string",
           "default": "https://xata.sh",
           "description": "Xata base url"
+        },
+        "xata.hideBranchLevel": {
+          "type": "boolean",
+          "default": "true",
+          "description": "Hide branch level when a database have only one branch"
         }
       }
     },

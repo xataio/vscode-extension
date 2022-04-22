@@ -79,7 +79,7 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
         },
       });
 
-      if (branches.length === 1) {
+      if (branches.length === 1 && this.context.getHideBranchLevel()) {
         return this.getTableTreeItems(element, branches[0]);
       } else {
         return branches.map(

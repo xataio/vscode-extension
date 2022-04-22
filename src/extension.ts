@@ -16,6 +16,13 @@ export function activate(extensionContext: vscode.ExtensionContext) {
       )
     );
   });
+
+  // Handle configuration change
+  vscode.workspace.onDidChangeConfiguration((event) => {
+    if (event.affectsConfiguration("xata.hideBranchLevel")) {
+      xataExplorer.refresh();
+    }
+  });
 }
 
 export function deactivate() {}

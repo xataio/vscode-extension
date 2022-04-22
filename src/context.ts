@@ -31,7 +31,7 @@ export function getContext(extensionContext: ExtensionContext) {
     },
 
     /**
-     * Get baseUrl from the workspace configuration
+     * Get `baseUrl` from the workspace configuration
      */
     getBaseUrl(workspaceId?: string) {
       const configValue = workspace.getConfiguration().get("xata.baseUrl");
@@ -47,6 +47,16 @@ export function getContext(extensionContext: ExtensionContext) {
       } else {
         return configValue;
       }
+    },
+
+    /**
+     * Get `hideBranchLevel` from the workspace configuration
+     */
+    getHideBranchLevel() {
+      return (
+        workspace.getConfiguration().get<boolean>("xata.hideBranchLevel") ??
+        true
+      );
     },
 
     /**
