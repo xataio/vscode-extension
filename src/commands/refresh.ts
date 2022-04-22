@@ -5,5 +5,6 @@ import { Command } from "../types";
  */
 export const refreshCommand: Command = {
   id: "xata.refresh",
+  icon: "refresh",
   action: (_context, explorer) => () => explorer.refresh(),
 };

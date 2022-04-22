@@ -58,9 +58,8 @@ export async function xataFetch<
   }
 
   if (!response.statusCode.toString().startsWith("2")) {
-    throw new Error(
-      `Xata: Network error (${(await response.body.json()).message})`
-    );
+    const details = (await response.body.json()).message;
+    throw new ValidationError(`Xata: Network error (${details}})`, details);
   }
 
   return await response.body.json();
@@ -77,3 +76,9 @@ const resolveUrl = (
   }
   return url.replace(/\{\w*\}/g, (key) => pathParams[key.slice(1, -1)]) + query;
 };
+
+export class ValidationError extends Error {
+  constructor(public message: string, public details: string) {
+    super(message);
+  }
+}

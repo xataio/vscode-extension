@@ -40,6 +40,11 @@
         "command": "xata.refresh",
         "title": "Xata: Refresh",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "xata.addColumn",
+        "title": "Add column",
+        "icon": "$(add)"
       }
     ],
     "viewsContainers": {
@@ -67,11 +72,24 @@
       ]
     },
     "menus": {
+      "commandPalette": [
+        {
+          "command": "xata.addColumn",
+          "when": "false"
+        }
+      ],
       "view/title": [
         {
           "command": "xata.refresh",
           "when": "view == xataExplorer",
           "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "xata.addColumn",
+          "when": "view == xataExplorer && viewItem == table",
+          "group": "inline"
         }
       ]
     }
