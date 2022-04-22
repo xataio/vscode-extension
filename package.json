@@ -12,6 +12,7 @@
   "activationEvents": [
     "onCommand:xata.login",
     "onCommand:xata.logout",
+    "onCommand:xata.refresh",
     "onView:xataExplorer"
   ],
   "main": "./out/extension.js",
@@ -34,6 +35,11 @@
       {
         "command": "xata.logout",
         "title": "Xata: Logout"
+      },
+      {
+        "command": "xata.refresh",
+        "title": "Xata: Refresh",
+        "icon": "$(refresh)"
       }
     ],
     "viewsContainers": {
@@ -57,6 +63,15 @@
           "id": "xataExplorer",
           "name": "Xata",
           "icon": "media/xata-icon.svg"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "xata.refresh",
+          "when": "view == xataExplorer",
+          "group": "navigation"
         }
       ]
     }
