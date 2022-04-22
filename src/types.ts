@@ -7,6 +7,7 @@ import { XataExplorer } from "./xataExplorer";
  */
 export type Command = {
   id: `xata.${string}`;
+  type: "global";
   icon?: string;
   action: (context: Context, explorer: XataExplorer) => () => void;
 };
@@ -19,6 +20,7 @@ export type Command = {
  */
 export type TreeItemCommand<T extends TreeItem> = {
   id: `xata.${string}`;
+  type: "treeItem";
   /**
    * Icon
    * @see https://microsoft.github.io/vscode-codicons/dist/codicon.html

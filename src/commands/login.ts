@@ -6,6 +6,7 @@ import { Command } from "../types";
  */
 export const loginCommand: Command = {
   id: "xata.login",
+  type: "global",
   action(context, explorer) {
     return async () => {
       const token = await vscode.window.showInputBox({
@@ -20,6 +21,3 @@ export const loginCommand: Command = {
     };
   },
 };
-
-// TODO:
-// - list workspaces
