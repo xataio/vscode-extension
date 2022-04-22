@@ -57,6 +57,10 @@ export async function xataFetch<
     throw new Error("Xata: Invalid token");
   }
 
+  if (response.statusCode === 204 /* no content */) {
+    return undefined as any as TData;
+  }
+
   if (!response.statusCode.toString().startsWith("2")) {
     const details = (await response.body.json()).message;
     throw new ValidationError(`Xata: Network error (${details}})`, details);

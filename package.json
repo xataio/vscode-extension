@@ -53,8 +53,13 @@
       },
       {
         "command": "xata.addWorkspace",
-        "title": "Add workspace",
+        "title": "Xata: Add workspace",
         "icon": "$(add)"
+      },
+      {
+        "command": "xata.deleteWorkspace",
+        "title": "Delete workspace",
+        "icon": "$(trash)"
       }
     ],
     "viewsContainers": {
@@ -86,6 +91,10 @@
         {
           "command": "xata.addColumn",
           "when": "false"
+        },
+        {
+          "command": "xata.deleteWorkspace",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -104,6 +113,10 @@
           "command": "xata.addColumn",
           "when": "view == xataExplorer && viewItem == table",
           "group": "inline"
+        },
+        {
+          "command": "xata.deleteWorkspace",
+          "when": "view == xataExplorer && viewItem == workspace"
         }
       ]
     }
