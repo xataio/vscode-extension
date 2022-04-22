@@ -9,7 +9,7 @@ import {
 
 export class WorkspaceTreeItem extends vscode.TreeItem {
   contextValue = "workspace" as const;
-  iconPath = new vscode.ThemeIcon("globe");
+  iconPath = new vscode.ThemeIcon("rocket");
 
   constructor(
     public readonly label: string,
@@ -22,7 +22,7 @@ export class WorkspaceTreeItem extends vscode.TreeItem {
 
 export class DatabaseTreeItem extends vscode.TreeItem {
   contextValue = "database" as const;
-  iconPath = new vscode.ThemeIcon("repo");
+  iconPath = new vscode.ThemeIcon("database");
 
   constructor(
     public readonly label: string,
@@ -51,7 +51,7 @@ export class BranchTreeItem extends vscode.TreeItem {
 
 export class TableTreeItem extends vscode.TreeItem {
   contextValue = "table" as const;
-  iconPath = new vscode.ThemeIcon("browser");
+  iconPath = new vscode.ThemeIcon("table");
 
   constructor(
     public readonly label: string,
@@ -80,7 +80,7 @@ export class ColumnTreeItem extends vscode.TreeItem {
     super(label, collapsibleState);
 
     if (column.type === "link" && column.link) {
-      this.label = `${column.name} (${column.link.table})`;
+      this.description = `🔗 ${column.link.table}`;
     }
   }
 }
