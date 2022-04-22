@@ -5,6 +5,6 @@ import { XataExplorer } from "./xataExplorer";
  * VSCode command.
  */
 export type Command = {
-  id: string;
+  id: `xata.${string}`;
   action: (context: Context, explorer: XataExplorer) => () => void;
 };
