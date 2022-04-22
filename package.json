@@ -50,6 +50,11 @@
         "command": "xata.addColumn",
         "title": "Add column",
         "icon": "$(add)"
+      },
+      {
+        "command": "xata.addWorkspace",
+        "title": "Add workspace",
+        "icon": "$(add)"
       }
     ],
     "viewsContainers": {
@@ -88,6 +93,10 @@
           "command": "xata.refresh",
           "when": "view == xataExplorer",
           "group": "navigation"
+        },
+        {
+          "command": "xata.addWorkspace",
+          "when": "view == xataExplorer"
         }
       ],
       "view/item/context": [
