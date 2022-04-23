@@ -15,8 +15,6 @@ describe("commands", () => {
     (c: { command: string }) => c.command
   );
 
-  const activationEvents: string[] = packageJSON.activationEvents;
-
   // Check if every commands are declared in package.json
   Object.values(commands).forEach((command) => {
     it(`should have "${command.id}" declared in package.json:contributes:commands`, () => {
@@ -37,13 +35,23 @@ describe("commands", () => {
     }
 
     if (command.type === "global") {
-      it(`should start with "Xata:" prefix (${command.id})`, () => {
-        expect(
-          packageJSON.contributes.commands
-            .find((c: { command: string }) => c.command === command.id)
-            .title.startsWith("Xata: ")
-        ).toBe(true);
-      });
+      if (command.hideFromCommandPalette) {
+        it(`should not start with "Xata:" prefix (${command.id})`, () => {
+          expect(
+            packageJSON.contributes.commands
+              .find((c: { command: string }) => c.command === command.id)
+              .title.startsWith("Xata: ")
+          ).toBe(false);
+        });
+      } else {
+        it(`should start with "Xata:" prefix (${command.id})`, () => {
+          expect(
+            packageJSON.contributes.commands
+              .find((c: { command: string }) => c.command === command.id)
+              .title.startsWith("Xata: ")
+          ).toBe(true);
+        });
+      }
     }
   });
 });

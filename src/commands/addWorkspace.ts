@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { Command } from "../types";
+import { slugify } from "../utils";
 import { createWorkspace } from "../xata/xataComponents";
 
 /**
@@ -8,6 +9,7 @@ import { createWorkspace } from "../xata/xataComponents";
 export const addWorkspaceCommand: Command = {
   id: "xata.addWorkspace",
   type: "global",
+  hideFromCommandPalette: true,
   icon: "add",
   action(context, explorer) {
     return async () => {
@@ -33,7 +35,3 @@ export const addWorkspaceCommand: Command = {
     };
   },
 };
-
-function slugify(name: string) {
-  return name.toLowerCase().split(/\W/g).filter(Boolean).join("-");
-}

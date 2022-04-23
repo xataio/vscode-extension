@@ -9,6 +9,7 @@ export type Command = {
   id: `xata.${string}`;
   type: "global";
   icon?: string;
+  hideFromCommandPalette?: boolean;
   action: (context: Context, explorer: XataExplorer) => () => void;
 };
 
