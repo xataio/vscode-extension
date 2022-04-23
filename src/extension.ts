@@ -19,7 +19,10 @@ export function activate(extensionContext: vscode.ExtensionContext) {
 
   // Handle configuration change
   vscode.workspace.onDidChangeConfiguration((event) => {
-    if (event.affectsConfiguration("xata.hideBranchLevel")) {
+    if (
+      event.affectsConfiguration("xata.hideBranchLevel") ||
+      event.affectsConfiguration("xata.enableDatabaseColor")
+    ) {
       xataExplorer.refresh();
     }
   });

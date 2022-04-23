@@ -60,6 +60,16 @@ export function getContext(extensionContext: ExtensionContext) {
     },
 
     /**
+     * Get `enableDatabaseColor` from the workspace configuration
+     */
+    getEnableDatabaseColor() {
+      return (
+        workspace.getConfiguration().get<boolean>("xata.enableDatabaseColor") ??
+        true
+      );
+    },
+
+    /**
      * Retrieve a column icon by type
      */
     getColumnIcon(type: Column["type"]): TreeItem["iconPath"] {

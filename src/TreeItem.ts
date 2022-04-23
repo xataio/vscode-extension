@@ -28,9 +28,14 @@ export class DatabaseTreeItem extends vscode.TreeItem {
     public readonly label: string,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly workspace: GetWorkspacesListResponse["workspaces"][-1],
-    public readonly database: Required<ListDatabasesResponse>["databases"][-1]
+    public readonly database: Required<ListDatabasesResponse>["databases"][-1],
+    withColor: boolean
   ) {
     super(label, collapsibleState);
+    if (withColor && database.ui?.color) {
+      const color = new vscode.ThemeColor(database.ui.color.replace("-", "."));
+      this.iconPath = new vscode.ThemeIcon("database", color);
+    }
   }
 }
 

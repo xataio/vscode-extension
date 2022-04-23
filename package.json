@@ -29,9 +29,86 @@
           "type": "boolean",
           "default": "true",
           "description": "Hide branch level when a database have only one branch"
+        },
+        "xata.enableDatabaseColor": {
+          "type": "boolean",
+          "default": "true",
+          "description": "Use database color for the icon"
         }
       }
     },
+    "colors": [
+      {
+        "id": "xata.gray",
+        "description": "Xata gray",
+        "defaults": {
+          "dark": "#CBD5E0",
+          "highContrast": "#E2E8F0",
+          "highContrastLight": "#4A5568",
+          "light": "#A0AEC0"
+        }
+      },
+      {
+        "id": "xata.orange",
+        "description": "Xata orange",
+        "defaults": {
+          "dark": "#F6AD55",
+          "highContrast": "#FBD38D",
+          "highContrastLight": "#C05621",
+          "light": "#ED8936"
+        }
+      },
+      {
+        "id": "xata.green",
+        "description": "Xata green",
+        "defaults": {
+          "dark": "#68D391",
+          "highContrast": "#9AE6B4",
+          "highContrastLight": "#2F855A",
+          "light": "#48BB78"
+        }
+      },
+      {
+        "id": "xata.blue",
+        "description": "Xata blue",
+        "defaults": {
+          "dark": "#63b3ed",
+          "highContrast": "#90cdf4",
+          "highContrastLight": "#2b6cb0",
+          "light": "#4299e1"
+        }
+      },
+      {
+        "id": "xata.cyan",
+        "description": "Xata cyan",
+        "defaults": {
+          "dark": "#76E4F7",
+          "highContrast": "#9DECF9",
+          "highContrastLight": "#00A3C4",
+          "light": "#0BC5EA"
+        }
+      },
+      {
+        "id": "xata.purple",
+        "description": "Xata purple",
+        "defaults": {
+          "dark": "#B794F4",
+          "highContrast": "#D6BCFA",
+          "highContrastLight": "#6B46C1",
+          "light": "#9F7AEA"
+        }
+      },
+      {
+        "id": "xata.pink",
+        "description": "Xata pink",
+        "defaults": {
+          "dark": "#F687B3",
+          "highContrast": "#FBB6CE",
+          "highContrastLight": "#B83280",
+          "light": "#ED64A6"
+        }
+      }
+    ],
     "commands": [
       {
         "command": "xata.login",

@@ -2,6 +2,9 @@ import * as vscode from "vscode";
 import { Command } from "../types";
 import { createWorkspace } from "../xata/xataComponents";
 
+/**
+ * Command to add a workspace
+ */
 export const addWorkspaceCommand: Command = {
   id: "xata.addWorkspace",
   type: "global",

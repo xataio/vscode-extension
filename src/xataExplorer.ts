@@ -64,7 +64,8 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
             db.displayName,
             vscode.TreeItemCollapsibleState.Collapsed,
             element.workspace,
-            db
+            db,
+            this.context.getEnableDatabaseColor()
           )
       );
     }
