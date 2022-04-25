@@ -133,7 +133,7 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
         baseUrl: this.context.getBaseUrl(element.workspace.id),
         context: this.context,
         pathParams: {
-          dbBranchName: `${element.database.name}:main`,
+          dbBranchName: `${element.database.name}:${element.branch.name}`,
           tableName: element.table.name,
         },
       });
