@@ -11,15 +11,22 @@ describe("commands", () => {
     readFileSync(join(__dirname, "../../package.json"), "utf-8")
   );
 
-  const contributesCommands: string[] = packageJSON.contributes.commands.map(
-    (c: { command: string }) => c.command
-  );
-
   // Check if every commands are declared in package.json
   Object.values(commands).forEach((command) => {
+    const contributeCommand = packageJSON.contributes.commands.find(
+      (c: { command: string; icon?: string; title: string }) =>
+        c.command === command.id
+    );
+
     it(`should have "${command.id}" declared in package.json:contributes:commands`, () => {
-      expect(contributesCommands.includes(command.id)).toBe(true);
+      expect(contributeCommand).toBeDefined();
     });
+
+    if (command.icon) {
+      it(`should have the "${command.icon}" icon for "${command.id}"`, () => {
+        expect(contributeCommand.icon).toEqual(`$(${command.icon})`);
+      });
+    }
 
     if (command.type === "treeItem") {
       it(`should have "${command.id}" not part of the commandPalette`, () => {
@@ -31,6 +38,14 @@ describe("commands", () => {
           command: command.id,
           when: "false",
         });
+      });
+
+      it(`should have "${command.id}" declared as a view/item/context`, () => {
+        expect(
+          packageJSON.contributes.menus["view/item/context"].find(
+            (c: { command: string }) => c.command === command.id
+          )?.when
+        ).toMatch(/view == xataExplorer && viewItem == /);
       });
     }
 

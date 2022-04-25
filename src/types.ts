@@ -1,3 +1,4 @@
+import { Codicon } from "./codicon";
 import { Context } from "./context";
 import { TreeItem } from "./TreeItem";
 import { XataExplorer } from "./xataExplorer";
@@ -8,7 +9,7 @@ import { XataExplorer } from "./xataExplorer";
 export type Command = {
   id: `xata.${string}`;
   type: "global";
-  icon?: string;
+  icon?: Codicon;
   hideFromCommandPalette?: boolean;
   action: (context: Context, explorer: XataExplorer) => () => void;
 };
@@ -26,6 +27,6 @@ export type TreeItemCommand<T extends TreeItem> = {
    * Icon
    * @see https://microsoft.github.io/vscode-codicons/dist/codicon.html
    */
-  icon: string;
+  icon: Codicon;
   action: (context: Context, explorer: XataExplorer) => (treeItem: T) => void;
 };

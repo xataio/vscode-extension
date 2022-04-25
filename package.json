@@ -139,6 +139,11 @@
         "icon": "$(add)"
       },
       {
+        "command": "xata.renameWorkspace",
+        "title": "Rename workspace",
+        "icon": "$(edit)"
+      },
+      {
         "command": "xata.addDatabase",
         "title": "Add database",
         "icon": "$(add)"
@@ -216,6 +221,10 @@
           "when": "false"
         },
         {
+          "command": "xata.renameWorkspace",
+          "when": "false"
+        },
+        {
           "command": "xata.addWorkspace",
           "when": "false"
         },
@@ -255,6 +264,10 @@
         },
         {
           "command": "xata.deleteWorkspace",
+          "when": "view == xataExplorer && viewItem == workspace"
+        },
+        {
+          "command": "xata.renameWorkspace",
           "when": "view == xataExplorer && viewItem == workspace"
         },
         {
