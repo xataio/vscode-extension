@@ -8,3 +8,4 @@ export { addWorkspaceCommand } from "./addWorkspace";
 export { addColumnCommand } from "./addColumn";
 export { deleteWorkspaceCommand } from "./deleteWorkspace";
 export { addDatabaseCommand } from "./addDatabase";
+export { deleteDatabaseCommand } from "./deleteDatabase";

@@ -142,6 +142,11 @@
         "command": "xata.deleteWorkspace",
         "title": "Delete workspace",
         "icon": "$(trash)"
+      },
+      {
+        "command": "xata.deleteDatabase",
+        "title": "Delete database",
+        "icon": "$(trash)"
       }
     ],
     "viewsContainers": {
@@ -179,6 +184,10 @@
           "when": "false"
         },
         {
+          "command": "xata.deleteDatabase",
+          "when": "false"
+        },
+        {
           "command": "xata.deleteWorkspace",
           "when": "false"
         },
@@ -212,6 +221,10 @@
           "command": "xata.addDatabase",
           "when": "view == xataExplorer && viewItem == workspace",
           "group": "inline"
+        },
+        {
+          "command": "xata.deleteDatabase",
+          "when": "view == xataExplorer && viewItem == database"
         }
       ]
     }
