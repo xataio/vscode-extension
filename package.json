@@ -172,6 +172,11 @@
         "command": "xata.addTable",
         "title": "Add table",
         "icon": "$(empty-window)"
+      },
+      {
+        "command": "xata.previewData",
+        "title": "Preview data",
+        "icon": "$(eye)"
       }
     ],
     "viewsContainers": {
@@ -238,6 +243,10 @@
         },
         {
           "command": "xata.deleteTable",
+          "when": "false"
+        },
+        {
+          "command": "xata.previewData",
           "when": "false"
         }
       ],
@@ -306,6 +315,11 @@
         {
           "command": "xata.deleteTable",
           "when": "view == xataExplorer && viewItem == table"
+        },
+        {
+          "command": "xata.previewData",
+          "when": "view == xataExplorer && viewItem == table",
+          "group": "inline"
         }
       ]
     }
