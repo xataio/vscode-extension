@@ -149,6 +149,11 @@
         "icon": "$(trash)"
       },
       {
+        "command": "xata.deleteTable",
+        "title": "Delete table",
+        "icon": "$(trash)"
+      },
+      {
         "command": "xata.addBranch",
         "title": "Add branch",
         "icon": "$(git-pull-request-create)"
@@ -212,6 +217,10 @@
         {
           "command": "xata.addTable",
           "when": "false"
+        },
+        {
+          "command": "xata.deleteTable",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -267,6 +276,10 @@
           "command": "xata.addTable",
           "when": "view == xataExplorer && viewItem == branch",
           "group": "inline"
+        },
+        {
+          "command": "xata.deleteTable",
+          "when": "view == xataExplorer && viewItem == table"
         }
       ]
     }

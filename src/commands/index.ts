@@ -11,3 +11,4 @@ export { addDatabaseCommand } from "./addDatabase";
 export { deleteDatabaseCommand } from "./deleteDatabase";
 export { addBranchCommand } from "./addBranch";
 export { addTableCommand } from "./addTable";
+export { deleteTableCommand } from "./deleteTable";
