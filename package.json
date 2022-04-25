@@ -129,6 +129,11 @@
         "icon": "$(add)"
       },
       {
+        "command": "xata.deleteColumn",
+        "title": "Delete column",
+        "icon": "$(trash)"
+      },
+      {
         "command": "xata.addWorkspace",
         "title": "Add workspace",
         "icon": "$(add)"
@@ -195,6 +200,10 @@
           "when": "false"
         },
         {
+          "command": "xata.deleteColumn",
+          "when": "false"
+        },
+        {
           "command": "xata.addDatabase",
           "when": "false"
         },
@@ -239,6 +248,10 @@
           "command": "xata.addColumn",
           "when": "view == xataExplorer && viewItem == table",
           "group": "inline"
+        },
+        {
+          "command": "xata.deleteColumn",
+          "when": "view == xataExplorer && viewItem == column"
         },
         {
           "command": "xata.deleteWorkspace",

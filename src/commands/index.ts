@@ -6,6 +6,7 @@ export { addWorkspaceCommand } from "./addWorkspace";
 
 // TreeItem
 export { addColumnCommand } from "./addColumn";
+export { deleteColumnCommand } from "./deleteColumn";
 export { deleteWorkspaceCommand } from "./deleteWorkspace";
 export { addDatabaseCommand } from "./addDatabase";
 export { deleteDatabaseCommand } from "./deleteDatabase";
