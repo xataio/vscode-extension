@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { DatabaseTreeItem, WorkspaceTreeItem } from "../TreeItem";
+import { DatabaseTreeItem } from "../TreeItem";
 import { TreeItemCommand } from "../types";
 import { deleteDatabase } from "../xata/xataComponents";
 

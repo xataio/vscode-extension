@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { formatDistanceStrict } from "date-fns";
 import { GetWorkspacesListResponse } from "./xata/xataComponents";
 import {
   Branch,
@@ -39,6 +40,25 @@ export class DatabaseTreeItem extends vscode.TreeItem {
   }
 }
 
+export class OneBranchDatabaseItem extends vscode.TreeItem {
+  contextValue = "oneBranchDatabase" as const;
+  iconPath = new vscode.ThemeIcon("database");
+
+  constructor(
+    public readonly label: string,
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+    public readonly workspace: GetWorkspacesListResponse["workspaces"][-1],
+    public readonly database: Required<ListDatabasesResponse>["databases"][-1],
+    withColor: boolean
+  ) {
+    super(label, collapsibleState);
+    if (withColor && database.ui?.color) {
+      const color = new vscode.ThemeColor(database.ui.color.replace("-", "."));
+      this.iconPath = new vscode.ThemeIcon("database", color);
+    }
+  }
+}
+
 export class BranchTreeItem extends vscode.TreeItem {
   contextValue = "branch" as const;
   iconPath = new vscode.ThemeIcon("source-control");
@@ -51,6 +71,14 @@ export class BranchTreeItem extends vscode.TreeItem {
     public readonly branch: Branch
   ) {
     super(label, collapsibleState);
+
+    this.description = formatDistanceStrict(
+      new Date(branch.createdAt),
+      new Date(),
+      {
+        addSuffix: true,
+      }
+    );
   }
 }
 
@@ -93,6 +121,7 @@ export class ColumnTreeItem extends vscode.TreeItem {
 export type TreeItem =
   | WorkspaceTreeItem
   | DatabaseTreeItem
+  | OneBranchDatabaseItem
   | BranchTreeItem
   | TableTreeItem
   | ColumnTreeItem;

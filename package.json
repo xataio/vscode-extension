@@ -147,6 +147,11 @@
         "command": "xata.deleteDatabase",
         "title": "Delete database",
         "icon": "$(trash)"
+      },
+      {
+        "command": "xata.addBranch",
+        "title": "Add branch",
+        "icon": "$(git-pull-request-create)"
       }
     ],
     "viewsContainers": {
@@ -194,6 +199,10 @@
         {
           "command": "xata.addWorkspace",
           "when": "false"
+        },
+        {
+          "command": "xata.addBranch",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -225,6 +234,20 @@
         {
           "command": "xata.deleteDatabase",
           "when": "view == xataExplorer && viewItem == database"
+        },
+        {
+          "command": "xata.deleteDatabase",
+          "when": "view == xataExplorer && viewItem == oneBranchDatabase"
+        },
+        {
+          "command": "xata.addBranch",
+          "when": "view == xataExplorer && viewItem == database",
+          "group": "inline"
+        },
+        {
+          "command": "xata.addBranch",
+          "when": "view == xataExplorer && viewItem == oneBranchDatabase",
+          "group": "inline"
         }
       ]
     }
@@ -249,6 +272,7 @@
     "vitest": "^0.9.3"
   },
   "dependencies": {
+    "date-fns": "^2.28.0",
     "undici": "^5.0.0"
   }
 }
