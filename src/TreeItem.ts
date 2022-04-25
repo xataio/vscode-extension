@@ -49,6 +49,7 @@ export class OneBranchDatabaseItem extends vscode.TreeItem {
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly workspace: GetWorkspacesListResponse["workspaces"][-1],
     public readonly database: Required<ListDatabasesResponse>["databases"][-1],
+    public readonly branch: Branch,
     withColor: boolean
   ) {
     super(label, collapsibleState);

@@ -10,3 +10,4 @@ export { deleteWorkspaceCommand } from "./deleteWorkspace";
 export { addDatabaseCommand } from "./addDatabase";
 export { deleteDatabaseCommand } from "./deleteDatabase";
 export { addBranchCommand } from "./addBranch";
+export { addTableCommand } from "./addTable";

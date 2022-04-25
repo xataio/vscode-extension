@@ -59,17 +59,37 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
         context: this.context,
       });
 
-      return (databases || []).map(
-        (db) =>
-          new (db.numberOfBranches <= 1
-            ? OneBranchDatabaseItem
-            : DatabaseTreeItem)(
+      return Promise.all(
+        (databases || []).map(async (db) => {
+          if (
+            db.numberOfBranches > 1 ||
+            this.context.getHideBranchLevel() === false
+          ) {
+            return new DatabaseTreeItem(
+              db.displayName,
+              vscode.TreeItemCollapsibleState.Collapsed,
+              element.workspace,
+              db,
+              this.context.getEnableDatabaseColor()
+            );
+          }
+          const { branches } = await getBranchList({
+            baseUrl: this.context.getBaseUrl(element.workspace.id),
+            context: this.context,
+            pathParams: {
+              dbName: db.name,
+            },
+          });
+
+          return new OneBranchDatabaseItem(
             db.displayName,
             vscode.TreeItemCollapsibleState.Collapsed,
             element.workspace,
             db,
+            branches[0],
             this.context.getEnableDatabaseColor()
-          )
+          );
+        })
       );
     }
 

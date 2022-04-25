@@ -152,6 +152,11 @@
         "command": "xata.addBranch",
         "title": "Add branch",
         "icon": "$(git-pull-request-create)"
+      },
+      {
+        "command": "xata.addTable",
+        "title": "Add table",
+        "icon": "$(empty-window)"
       }
     ],
     "viewsContainers": {
@@ -203,6 +208,10 @@
         {
           "command": "xata.addBranch",
           "when": "false"
+        },
+        {
+          "command": "xata.addTable",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -247,6 +256,16 @@
         {
           "command": "xata.addBranch",
           "when": "view == xataExplorer && viewItem == oneBranchDatabase",
+          "group": "inline"
+        },
+        {
+          "command": "xata.addTable",
+          "when": "view == xataExplorer && viewItem == oneBranchDatabase",
+          "group": "inline"
+        },
+        {
+          "command": "xata.addTable",
+          "when": "view == xataExplorer && viewItem == branch",
           "group": "inline"
         }
       ]
