@@ -139,6 +139,11 @@
         "icon": "$(trash)"
       },
       {
+        "command": "xata.renameColumn",
+        "title": "Rename column",
+        "icon": "$(edit)"
+      },
+      {
         "command": "xata.addWorkspace",
         "title": "Add workspace",
         "icon": "$(add)"
@@ -224,6 +229,10 @@
           "when": "false"
         },
         {
+          "command": "xata.renameColumn",
+          "when": "false"
+        },
+        {
           "command": "xata.addDatabase",
           "when": "false"
         },
@@ -283,6 +292,10 @@
         },
         {
           "command": "xata.deleteColumn",
+          "when": "view == xataExplorer && viewItem == column"
+        },
+        {
+          "command": "xata.renameColumn",
           "when": "view == xataExplorer && viewItem == column"
         },
         {
