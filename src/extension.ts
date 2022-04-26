@@ -2,15 +2,15 @@ import * as vscode from "vscode";
 import * as commands from "./commands";
 import { getContext } from "./context";
 import { XataExplorer } from "./xataExplorer";
-import { XataRecordsProvider } from "./xataRecordsProvider";
+import { XataJsonSchemaProvider } from "./xataJsonSchemaProvider";
 
 export function activate(extensionContext: vscode.ExtensionContext) {
   const xataExplorer = new XataExplorer(extensionContext);
   const context = getContext(extensionContext);
 
-  const xataRecords = new XataRecordsProvider(context);
+  const xataJsonSchema = new XataJsonSchemaProvider(context);
   extensionContext.subscriptions.push(
-    vscode.workspace.registerTextDocumentContentProvider("xata", xataRecords)
+    vscode.workspace.registerTextDocumentContentProvider("xata", xataJsonSchema)
   );
 
   // Register all commands
