@@ -80,6 +80,11 @@ export function getContext(extensionContext: ExtensionContext) {
         dark: extensionContext.asAbsolutePath(`media/columns/dark/${type}.svg`),
       };
     },
+
+    /**
+     * The uri of the directory containing the extension.
+     */
+    extensionUri: extensionContext.extensionUri,
   };
 }
 
