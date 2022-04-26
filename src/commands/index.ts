@@ -13,6 +13,7 @@ export { renameWorkspaceCommand } from "./renameWorkspace";
 export { addDatabaseCommand } from "./addDatabase";
 export { deleteDatabaseCommand } from "./deleteDatabase";
 export { addBranchCommand } from "./addBranch";
+export { deleteBranchCommand } from "./deleteBranch";
 export { addTableCommand } from "./addTable";
 export { deleteTableCommand } from "./deleteTable";
 export { renameTableCommand } from "./renameTable";
