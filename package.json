@@ -182,6 +182,11 @@
         "command": "xata.previewData",
         "title": "Preview data",
         "icon": "$(eye)"
+      },
+      {
+        "command": "xata.renameTable",
+        "title": "Rename table",
+        "icon": "$(edit)"
       }
     ],
     "viewsContainers": {
@@ -251,6 +256,10 @@
           "when": "false"
         },
         {
+          "command": "xata.renameTable",
+          "when": "false"
+        },
+        {
           "command": "xata.previewData",
           "when": "false"
         }
@@ -311,6 +320,10 @@
           "command": "xata.addTable",
           "when": "view == xataExplorer && viewItem == oneBranchDatabase",
           "group": "inline"
+        },
+        {
+          "command": "xata.renameTable",
+          "when": "view == xataExplorer && viewItem == table"
         },
         {
           "command": "xata.addTable",

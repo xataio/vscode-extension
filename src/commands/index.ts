@@ -14,6 +14,5 @@ export { deleteDatabaseCommand } from "./deleteDatabase";
 export { addBranchCommand } from "./addBranch";
 export { addTableCommand } from "./addTable";
 export { deleteTableCommand } from "./deleteTable";
-
-// Experimental
+export { renameTableCommand } from "./renameTable";
 export { previewDataCommand } from "./previewData";
