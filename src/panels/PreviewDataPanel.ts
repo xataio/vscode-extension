@@ -1,13 +1,7 @@
 import * as vscode from "vscode";
 import { Context } from "../context";
+import { XataTablePath } from "../types";
 import { getUri } from "../utils";
-
-interface XataTablePath {
-  workspaceId: string;
-  databaseName: string;
-  branchName: string;
-  tableName: string;
-}
 
 /**
  * Panel to display table data as preview
@@ -20,6 +14,7 @@ export class PreviewDataPanel {
     private context: Context,
     private panel: vscode.WebviewPanel,
     public uid: string,
+    private path: XataTablePath,
     data: string
   ) {
     this.panel.onDidDispose(this.dispose.bind(this), null, this.disposables);
@@ -49,7 +44,7 @@ export class PreviewDataPanel {
       );
       PreviewDataPanel.previewPanels.set(
         tableUid,
-        new PreviewDataPanel(context, panel, tableUid, data)
+        new PreviewDataPanel(context, panel, tableUid, table, data)
       );
     }
   }
@@ -68,6 +63,11 @@ export class PreviewDataPanel {
       this.context.extensionUri,
       "node_modules/@vscode/webview-ui-toolkit/dist/toolkit.min.js"
     );
+    const codiconsUri = getUri(
+      webview,
+      this.context.extensionUri,
+      "node_modules/@vscode/codicons/dist/codicon.css"
+    );
 
     return /*html*/ `
       <!DOCTYPE html>
@@ -76,9 +76,28 @@ export class PreviewDataPanel {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <script type="module" src="${toolkitUri}"></script>
+          <link href="${codiconsUri}" rel="stylesheet" />
+          <style>
+            a {
+              text-decoration: none;
+            }
+            .top-bar {
+              display: flex;
+              justify-content: flex-end;
+              padding: 4px 0;
+            }
+          </style>
           <title>Xata preview data</title>
         </head>
         <body>
+        <div class="top-bar">
+          <a href="${this.context.getAppLink(this.path)}">
+            <vscode-button appearance="primary">
+              Open in xata
+              <span slot="start" class="codicon codicon-link-external"></span>
+            </vscode-button>
+          </a>
+        </div>
         ${data === "[]" ? /*html*/ `<p>No records found</p>` : ""}
         <vscode-data-grid id="xata-preview" generate-header="sticky" aria-label="Preview of xata records"></vscode-data-grid>
         <script>

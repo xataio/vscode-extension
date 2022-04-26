@@ -1,4 +1,5 @@
 import { ExtensionContext, workspace, window, TreeItem } from "vscode";
+import { XataTablePath } from "./types";
 import { Column } from "./xata/xataSchemas";
 
 /**
@@ -47,6 +48,28 @@ export function getContext(extensionContext: ExtensionContext) {
       } else {
         return configValue;
       }
+    },
+
+    /**
+     * Get link to Xata UI
+     */
+    getAppLink({
+      branchName,
+      databaseName,
+      tableName,
+      workspaceId,
+    }: XataTablePath) {
+      const configValue = workspace.getConfiguration().get("xata.appBaseUrl");
+
+      if (!(typeof configValue === "string" && configValue.includes("//"))) {
+        window.showErrorMessage('"xata.appBaseUrl" is not a valid url');
+        return "";
+      }
+
+      return `${configValue.replace(
+        /\/$/,
+        ""
+      )}/workspaces/${workspaceId}/dbs/${databaseName}/${branchName}/tables/${tableName}`;
     },
 
     /**

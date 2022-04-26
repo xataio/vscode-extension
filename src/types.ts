@@ -30,3 +30,10 @@ export type TreeItemCommand<T extends TreeItem> = {
   icon: Codicon;
   action: (context: Context, explorer: XataExplorer) => (treeItem: T) => void;
 };
+
+export interface XataTablePath {
+  workspaceId: string;
+  databaseName: string;
+  branchName: string;
+  tableName: string;
+}

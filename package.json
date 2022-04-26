@@ -23,7 +23,12 @@
         "xata.baseUrl": {
           "type": "string",
           "default": "https://xata.sh",
-          "description": "Xata base url"
+          "description": "Xata API base url"
+        },
+        "xata.appBaseUrl": {
+          "type": "string",
+          "default": "https://app.xata.io",
+          "description": "Xata UI base url"
         },
         "xata.hideBranchLevel": {
           "type": "boolean",
@@ -345,6 +350,7 @@
     "vitest": "^0.9.3"
   },
   "dependencies": {
+    "@vscode/codicons": "^0.0.29",
     "@vscode/webview-ui-toolkit": "^1.0.0",
     "date-fns": "^2.28.0",
     "flat": "^5.0.2",
