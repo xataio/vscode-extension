@@ -19,3 +19,4 @@ export { addTableCommand } from "./addTable";
 export { deleteTableCommand } from "./deleteTable";
 export { renameTableCommand } from "./renameTable";
 export { previewDataCommand } from "./previewData";
+export { openInsertRecordTemplateCommand } from "./openInsertRecordTemplate";

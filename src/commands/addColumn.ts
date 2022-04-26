@@ -17,7 +17,7 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
   id: "xata.addColumn",
   type: "treeItem",
   icon: "add",
-  action(context, explorer) {
+  action(context, explorer, jsonSchemaProvider) {
     return async (tableTreeItem) => {
       let link: AddTableColumnVariables["body"]["link"];
 
@@ -86,6 +86,13 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
             tableName: tableTreeItem.table.name,
           },
         });
+
+        // Notify the change to our custom jsonSchemaProvider
+        jsonSchemaProvider.onDidChangeEmitter.fire(
+          vscode.Uri.parse(
+            `xata:${tableTreeItem.workspace.id}/${tableTreeItem.database.name}/${tableTreeItem.branch.name}/${tableTreeItem.table.name}`
+          )
+        );
 
         return explorer.refresh();
       } catch (e) {

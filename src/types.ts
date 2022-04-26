@@ -2,6 +2,7 @@ import { Codicon } from "./codicon";
 import { Context } from "./context";
 import { TreeItem } from "./TreeItem";
 import { XataExplorer } from "./xataExplorer";
+import { XataJsonSchemaProvider } from "./xataJsonSchemaProvider";
 
 /**
  * Global VSCode command.
@@ -11,7 +12,11 @@ export type Command = {
   type: "global";
   icon?: Codicon;
   hideFromCommandPalette?: boolean;
-  action: (context: Context, explorer: XataExplorer) => () => void;
+  action: (
+    context: Context,
+    explorer: XataExplorer,
+    jsonSchemaProvider: XataJsonSchemaProvider
+  ) => () => void;
 };
 
 /**
@@ -28,7 +33,11 @@ export type TreeItemCommand<T extends TreeItem> = {
    * @see https://microsoft.github.io/vscode-codicons/dist/codicon.html
    */
   icon: Codicon;
-  action: (context: Context, explorer: XataExplorer) => (treeItem: T) => void;
+  action: (
+    context: Context,
+    explorer: XataExplorer,
+    jsonSchemaProvider: XataJsonSchemaProvider
+  ) => (treeItem: T) => void;
 };
 
 export interface XataTablePath {

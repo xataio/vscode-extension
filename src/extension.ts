@@ -18,7 +18,7 @@ export function activate(extensionContext: vscode.ExtensionContext) {
     extensionContext.subscriptions.push(
       vscode.commands.registerCommand(
         command.id,
-        command.action(context, xataExplorer)
+        command.action(context, xataExplorer, xataJsonSchema)
       )
     );
   });

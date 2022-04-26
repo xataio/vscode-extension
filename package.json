@@ -201,6 +201,11 @@
         "command": "xata.renameTable",
         "title": "Rename table",
         "icon": "$(edit)"
+      },
+      {
+        "command": "xata.openInsertRecordTemplate",
+        "title": "Open insert record template",
+        "icon": "$(json)"
       }
     ],
     "viewsContainers": {
@@ -284,6 +289,10 @@
         {
           "command": "xata.previewData",
           "when": "false"
+        },
+        {
+          "command": "xata.openInsertRecordTemplate",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -353,7 +362,8 @@
         },
         {
           "command": "xata.renameTable",
-          "when": "view == xataExplorer && viewItem == table"
+          "when": "view == xataExplorer && viewItem == table",
+          "group": "1_actions"
         },
         {
           "command": "xata.addTable",
@@ -362,12 +372,18 @@
         },
         {
           "command": "xata.deleteTable",
-          "when": "view == xataExplorer && viewItem == table"
+          "when": "view == xataExplorer && viewItem == table",
+          "group": "1_actions"
         },
         {
           "command": "xata.previewData",
           "when": "view == xataExplorer && viewItem == table",
           "group": "inline"
+        },
+        {
+          "command": "xata.openInsertRecordTemplate",
+          "when": "view == xataExplorer && viewItem == table",
+          "group": "5_templates"
         }
       ]
     }
@@ -398,6 +414,7 @@
     "@vscode/webview-ui-toolkit": "^1.0.0",
     "date-fns": "^2.28.0",
     "flat": "^5.0.2",
+    "jsonc": "^2.0.0",
     "undici": "^5.0.0"
   }
 }

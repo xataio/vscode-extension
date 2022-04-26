@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { jsonc } from "jsonc";
 import { Command } from "../types";
 import { insertRecord } from "../xata/xataComponents";
 
@@ -16,7 +17,7 @@ export const insertRecordCommand: Command = {
 
       const rawText = vscode.window.activeTextEditor.document.getText();
       try {
-        const record = JSON.parse(rawText);
+        const record = jsonc.parse(rawText);
         if (
           typeof record !== "object" ||
           typeof record.$schema !== "string" ||
