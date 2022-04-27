@@ -38,13 +38,13 @@ export const addDatabaseCommand: TreeItemCommand<WorkspaceTreeItem> = {
       // TODO: Make this picker colorful 🌈
       const color = await vscode.window.showQuickPick(
         [
-          "xata-gray",
-          "xata-orange",
-          "xata-green",
-          "xata-blue",
-          "xata-cyan",
-          "xata-purple",
-          "xata-pink",
+          { label: "Gray", value: "xata-gray" },
+          { label: "Orange", value: "xata-orange" },
+          { label: "Green", value: "xata-green" },
+          { label: "Blue", value: "xata-blue" },
+          { label: "Cyan", value: "xata-cyan" },
+          { label: "Purple", value: "xata-purple" },
+          { label: "Pink", value: "xata-pink" },
         ],
         {
           title: "Pick a color",
@@ -65,7 +65,7 @@ export const addDatabaseCommand: TreeItemCommand<WorkspaceTreeItem> = {
           body: {
             displayName: name,
             ui: {
-              color: color,
+              color: color.value,
             },
           },
         });
