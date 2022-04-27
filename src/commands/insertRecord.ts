@@ -57,7 +57,7 @@ export const insertRecordCommand: Command = {
         );
       } catch {
         vscode.window.showErrorMessage(
-          "The current document is not valid record"
+          "The current document is not a valid record"
         );
       }
     };

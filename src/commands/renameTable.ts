@@ -8,7 +8,7 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
   id: "xata.renameTable",
   icon: "edit",
   type: "treeItem",
-  action: (context, explorer) => {
+  action: (context, explorer, jsonSchemaProvider) => {
     return async (tableTreeItem) => {
       const { schema } = await getBranchDetails({
         baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
@@ -51,6 +51,13 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
             name,
           },
         });
+
+        // Notify the change to our custom jsonSchemaProvider
+        jsonSchemaProvider.onDidChangeEmitter.fire(
+          vscode.Uri.parse(
+            `xata:${tableTreeItem.workspace.id}/${tableTreeItem.database.name}/${tableTreeItem.branch.name}/${tableTreeItem.table.name}`
+          )
+        );
 
         return explorer.refresh();
       } catch (e) {

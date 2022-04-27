@@ -204,7 +204,7 @@
       },
       {
         "command": "xata.openInsertRecordTemplate",
-        "title": "Open insert record template",
+        "title": "Insert record",
         "icon": "$(json)"
       }
     ],

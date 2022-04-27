@@ -22,9 +22,19 @@ export class XataJsonSchemaProvider
   onDidChangeEmitter = new vscode.EventEmitter<vscode.Uri>();
   onDidChange = this.onDidChangeEmitter.event;
 
+  private static openDocuments: Set<vscode.Uri> = new Set();
+
   constructor(private context: Context) {}
 
+  public refresh() {
+    XataJsonSchemaProvider.openDocuments.forEach((uri) =>
+      this.onDidChangeEmitter.fire(uri)
+    );
+  }
+
   async provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
+    XataJsonSchemaProvider.openDocuments.add(uri);
+
     const [workspaceId, databaseName, branchName, tableName] =
       uri.path.split("/");
 

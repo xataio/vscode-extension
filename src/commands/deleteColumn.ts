@@ -7,7 +7,7 @@ export const deleteColumnCommand: TreeItemCommand<ColumnTreeItem> = {
   id: "xata.deleteColumn",
   icon: "trash",
   type: "treeItem",
-  action: (context, explorer) => {
+  action: (context, explorer, jsonSchemaProvider) => {
     return async (tableTreeItem) => {
       const confirm = await vscode.window.showInputBox({
         title: `Delete column`,
@@ -32,6 +32,13 @@ export const deleteColumnCommand: TreeItemCommand<ColumnTreeItem> = {
           columnName: tableTreeItem.column.name,
         },
       });
+
+      // Notify the change to our custom jsonSchemaProvider
+      jsonSchemaProvider.onDidChangeEmitter.fire(
+        vscode.Uri.parse(
+          `xata:${tableTreeItem.workspace.id}/${tableTreeItem.database.name}/${tableTreeItem.branch.name}/${tableTreeItem.table.name}`
+        )
+      );
 
       return explorer.refresh();
     };
