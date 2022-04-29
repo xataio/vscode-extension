@@ -8,13 +8,13 @@ Manage your xatabase schema without leaving VSCode!
 
 Create workspaces, databases, branches and columns directly from the sidebar.
 
-![create-schema](./doc/create-schema.gif)
+![create-schema](https://github.com/xataio/vscode-extension/raw/main/doc/create-schema.gif)
 
 ### Insert & preview your records
 
 Insert your records with auto-completion / validation and preview them.
 
-![insert-record](./doc/insert-preview-records.gif)
+![insert-record](https://github.com/xataio/vscode-extension/raw/main/doc/insert-preview-records.gif)
 
 ## Requirements
 
