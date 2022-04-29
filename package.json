@@ -241,6 +241,14 @@
     "menus": {
       "commandPalette": [
         {
+          "command": "xata.login",
+          "when": "!xata.isLogged"
+        },
+        {
+          "command": "xata.logout",
+          "when": "xata.isLogged"
+        },
+        {
           "command": "xata.addColumn",
           "when": "false"
         },
@@ -304,12 +312,20 @@
       "view/title": [
         {
           "command": "xata.refresh",
-          "when": "view == xataExplorer",
+          "when": "view == xataExplorer && xata.isLogged",
           "group": "navigation"
         },
         {
           "command": "xata.addWorkspace",
-          "when": "view == xataExplorer"
+          "when": "view == xataExplorer && xata.isLogged"
+        },
+        {
+          "command": "xata.logout",
+          "when": "view == xataExplorer && xata.isLogged"
+        },
+        {
+          "command": "xata.login",
+          "when": "view == xataExplorer && !xata.isLogged"
         }
       ],
       "view/item/context": [
