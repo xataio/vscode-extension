@@ -38,34 +38,42 @@ export async function xataFetch<
   TQueryParams,
   TPathParams
 >): Promise<TData> {
-  const token = await context.getToken();
-  const response = await request(
-    `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,
-    {
-      method: method.toUpperCase() as HttpMethod,
-      body: body ? JSON.stringify(body) : undefined,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        ...headers,
-      },
+  try {
+    const token = await context.getToken();
+    const response = await request(
+      `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,
+      {
+        method: method.toUpperCase() as HttpMethod,
+        body: body ? JSON.stringify(body) : undefined,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          ...headers,
+        },
+      }
+    );
+
+    if (response.statusCode === 401) {
+      throw new Error("Xata: Invalid token");
     }
-  );
 
-  if (response.statusCode === 401) {
-    throw new Error("Xata: Invalid token");
+    if (response.statusCode === 204 /* no content */) {
+      return undefined as any as TData;
+    }
+
+    if (!response.statusCode.toString().startsWith("2")) {
+      const details = (await response.body.json()).message;
+      throw new ValidationError(`Xata: Network error (${details}})`, details);
+    }
+
+    return await response.body.json();
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code === "ENOTFOUND") {
+      context.setOffline(true);
+      throw new Error("Xata: You are offline");
+    }
+    throw e;
   }
-
-  if (response.statusCode === 204 /* no content */) {
-    return undefined as any as TData;
-  }
-
-  if (!response.statusCode.toString().startsWith("2")) {
-    const details = (await response.body.json()).message;
-    throw new ValidationError(`Xata: Network error (${details}})`, details);
-  }
-
-  return await response.body.json();
 }
 
 const resolveUrl = (

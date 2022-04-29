@@ -7,7 +7,8 @@ export const refreshCommand: Command = {
   id: "xata.refresh",
   type: "global",
   icon: "refresh",
-  action: (_context, explorer, jsonSchemaProvider) => () => {
+  action: (context, explorer, jsonSchemaProvider) => () => {
+    context.setOffline(false);
     jsonSchemaProvider.refresh();
     explorer.refresh();
   },

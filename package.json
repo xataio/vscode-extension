@@ -227,6 +227,11 @@
         "view": "xataExplorer",
         "contents": "It appears you don’t have any workspaces.\nCreate a workspace to get started.\n[Create workspace](command:xata.addWorkspace)",
         "when": "xata.isLogged && xata.workspaceCount == 0"
+      },
+      {
+        "view": "xataExplorer",
+        "contents": "You are offline\n[Refresh](command:xata.refresh)",
+        "when": "xata.isOffline"
       }
     ],
     "views": {

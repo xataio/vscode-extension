@@ -21,7 +21,7 @@ export function getContext(extensionContext: ExtensionContext) {
      */
     async getToken() {
       const token = await extensionContext.secrets.get("token");
-      setIsLoggedCommandContext(Boolean(token));
+      setContributeContext("xata.isLogged", Boolean(token));
       return token;
     },
 
@@ -29,7 +29,7 @@ export function getContext(extensionContext: ExtensionContext) {
      * Set a xata token
      */
     setToken(token: string) {
-      setIsLoggedCommandContext(Boolean(token));
+      setContributeContext("xata.isLogged", Boolean(token));
       return extensionContext.secrets.store("token", token);
     },
 
@@ -37,7 +37,7 @@ export function getContext(extensionContext: ExtensionContext) {
      * Clear xata token
      */
     clearToken() {
-      setIsLoggedCommandContext(false);
+      setContributeContext("xata.isLogged", false);
       return extensionContext.secrets.delete("token");
     },
 
@@ -118,12 +118,28 @@ export function getContext(extensionContext: ExtensionContext) {
      * The uri of the directory containing the extension.
      */
     extensionUri: extensionContext.extensionUri,
+
+    /**
+     * Set `xata:isOffline` contribute context value
+     */
+    setOffline(value: boolean) {
+      setContributeContext("xata.isOffline", value);
+    },
   };
 }
 
 export type Context = ReturnType<typeof getContext>;
 
-// Expose `xata.isLogged` for the welcome screen logic
-const setIsLoggedCommandContext = (value: boolean) => {
-  commands.executeCommand("setContext", "xata.isLogged", value);
-};
+/**
+ * Set a value to vscode context.
+ *
+ * This value can be used in `when` conditions in package.json
+ *
+ * @documentation https://code.visualstudio.com/api/references/when-clause-contexts#add-a-custom-when-clause-context
+ */
+function setContributeContext(
+  key: "xata.isLogged" | "xata.isOffline",
+  value: boolean
+) {
+  commands.executeCommand("setContext", key, value);
+}
