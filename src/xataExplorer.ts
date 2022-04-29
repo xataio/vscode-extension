@@ -35,12 +35,23 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
   }
 
   async getChildren(element?: TreeItem): Promise<TreeItem[]> {
+    if (!(await this.context.getToken())) {
+      return [];
+    }
+
     // Root level
     if (!element) {
       const { workspaces } = await getWorkspacesList({
         baseUrl: this.context.getBaseUrl(),
         context: this.context,
       });
+
+      // Expose `xata.workspaceCount` for the welcome screen logic
+      vscode.commands.executeCommand(
+        "setContext",
+        "xata.workspaceCount",
+        workspaces.length
+      );
 
       return workspaces.map(
         (w) =>

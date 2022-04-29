@@ -220,7 +220,13 @@
     "viewsWelcome": [
       {
         "view": "xataExplorer",
-        "contents": "Welcome to xata!\n[Get started](command:xata.login)"
+        "contents": "Welcome to xata!\n[Get started](command:xata.login)",
+        "when": "!xata.isLogged"
+      },
+      {
+        "view": "xataExplorer",
+        "contents": "It appears you don’t have any workspaces.\nCreate a workspace to get started.\n[Create workspace](command:xata.addWorkspace)",
+        "when": "xata.isLogged && xata.workspaceCount == 0"
       }
     ],
     "views": {

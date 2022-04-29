@@ -1,4 +1,10 @@
-import { ExtensionContext, workspace, window, TreeItem } from "vscode";
+import {
+  ExtensionContext,
+  workspace,
+  window,
+  TreeItem,
+  commands,
+} from "vscode";
 import { XataTablePath } from "./types";
 import { Column } from "./xata/xataSchemas";
 
@@ -13,14 +19,17 @@ export function getContext(extensionContext: ExtensionContext) {
     /**
      * Retrieve stored xata token
      */
-    getToken() {
-      return extensionContext.secrets.get("token");
+    async getToken() {
+      const token = await extensionContext.secrets.get("token");
+      setIsLoggedCommandContext(Boolean(token));
+      return token;
     },
 
     /**
      * Set a xata token
      */
     setToken(token: string) {
+      setIsLoggedCommandContext(Boolean(token));
       return extensionContext.secrets.store("token", token);
     },
 
@@ -28,6 +37,7 @@ export function getContext(extensionContext: ExtensionContext) {
      * Clear xata token
      */
     clearToken() {
+      setIsLoggedCommandContext(false);
       return extensionContext.secrets.delete("token");
     },
 
@@ -112,3 +122,8 @@ export function getContext(extensionContext: ExtensionContext) {
 }
 
 export type Context = ReturnType<typeof getContext>;
+
+// Expose `xata.isLogged` for the welcome screen logic
+const setIsLoggedCommandContext = (value: boolean) => {
+  commands.executeCommand("setContext", "xata.isLogged", value);
+};

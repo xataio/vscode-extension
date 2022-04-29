@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Context } from "../context";
-import * as vscode from "vscode";
 import { request } from "undici";
 import { HttpMethod } from "undici/types/dispatcher";
 
