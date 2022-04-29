@@ -8,10 +8,10 @@ import { XataJsonSchemaProvider } from "./xataJsonSchemaProvider";
  * Global VSCode command.
  */
 export type Command = {
-  id: `xata.${string}`;
+  id: string;
   type: "global";
   icon?: Codicon;
-  hideFromCommandPalette?: boolean;
+  inPalette?: boolean;
   action: (
     context: Context,
     explorer: XataExplorer,
@@ -26,7 +26,7 @@ export type Command = {
  * - Not visible from the command palette
  */
 export type TreeItemCommand<T extends TreeItem> = {
-  id: `xata.${string}`;
+  id: string;
   type: "treeItem";
   /**
    * Icon

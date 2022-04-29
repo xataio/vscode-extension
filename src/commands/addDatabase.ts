@@ -9,7 +9,7 @@ import { ValidationError } from "../xata/xataFetcher";
  * Command to add a database to a selected workspace
  */
 export const addDatabaseCommand: TreeItemCommand<WorkspaceTreeItem> = {
-  id: "xata.addDatabase",
+  id: "addDatabase",
   type: "treeItem",
   icon: "add",
   action(context, explorer) {

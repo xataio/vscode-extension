@@ -5,8 +5,9 @@ import { Command } from "../types";
  * Command to ask for xata token
  */
 export const loginCommand: Command = {
-  id: "xata.login",
+  id: "login",
   type: "global",
+  inPalette: true,
   action(context, explorer) {
     return async () => {
       const token = await vscode.window.showInputBox({

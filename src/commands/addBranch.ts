@@ -7,7 +7,7 @@ import { ValidationError } from "../xata/xataFetcher";
 export const addBranchCommand: TreeItemCommand<
   DatabaseTreeItem | OneBranchDatabaseItem
 > = {
-  id: "xata.addBranch",
+  id: "addBranch",
   type: "treeItem",
   icon: "git-pull-request-create",
   action: (context, explorer) => {

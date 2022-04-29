@@ -7,9 +7,8 @@ import { createWorkspace } from "../xata/xataComponents";
  * Command to add a workspace
  */
 export const addWorkspaceCommand: Command = {
-  id: "xata.addWorkspace",
+  id: "addWorkspace",
   type: "global",
-  hideFromCommandPalette: true,
   icon: "add",
   action(context, explorer) {
     return async () => {

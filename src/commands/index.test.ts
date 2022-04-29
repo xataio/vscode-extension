@@ -15,10 +15,10 @@ describe("commands", () => {
   Object.values(commands).forEach((command) => {
     const contributeCommand = packageJSON.contributes.commands.find(
       (c: { command: string; icon?: string; title: string }) =>
-        c.command === command.id
+        c.command === `xata.${command.id}`
     );
 
-    it(`should have "${command.id}" declared in package.json:contributes:commands`, () => {
+    it(`should have "xata.${command.id}" declared in package.json:contributes:commands`, () => {
       expect(contributeCommand).toBeDefined();
     });
 
@@ -32,10 +32,10 @@ describe("commands", () => {
       it(`should have "${command.id}" not part of the commandPalette`, () => {
         expect(
           packageJSON.contributes.menus.commandPalette.find(
-            (c: { command: string }) => c.command === command.id
+            (c: { command: string }) => c.command === `xata.${command.id}`
           )
         ).toEqual({
-          command: command.id,
+          command: `xata.${command.id}`,
           when: "false",
         });
       });
@@ -43,28 +43,33 @@ describe("commands", () => {
       it(`should have "${command.id}" declared as a view/item/context`, () => {
         expect(
           packageJSON.contributes.menus["view/item/context"].find(
-            (c: { command: string }) => c.command === command.id
+            (c: { command: string }) => c.command === `xata.${command.id}`
           )?.when
         ).toMatch(/view == xataExplorer && viewItem == /);
       });
     }
 
     if (command.type === "global") {
-      if (command.hideFromCommandPalette) {
-        it(`should not start with "Xata:" prefix (${command.id})`, () => {
-          expect(
-            packageJSON.contributes.commands
-              .find((c: { command: string }) => c.command === command.id)
-              .title.startsWith("Xata: ")
-          ).toBe(false);
-        });
-      } else {
+      if (command.inPalette) {
         it(`should start with "Xata:" prefix (${command.id})`, () => {
           expect(
             packageJSON.contributes.commands
-              .find((c: { command: string }) => c.command === command.id)
+              .find(
+                (c: { command: string }) =>
+                  c.command === `xata.palette.${command.id}`
+              )
               .title.startsWith("Xata: ")
           ).toBe(true);
+        });
+      } else {
+        it(`should not start with "Xata:" prefix (${command.id})`, () => {
+          expect(
+            packageJSON.contributes.commands
+              .find(
+                (c: { command: string }) => c.command === `xata.${command.id}`
+              )
+              .title.startsWith("Xata: ")
+          ).toBe(false);
         });
       }
     }

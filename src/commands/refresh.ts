@@ -4,9 +4,10 @@ import { Command } from "../types";
  * Command to refresh the schema tree
  */
 export const refreshCommand: Command = {
-  id: "xata.refresh",
+  id: "refresh",
   type: "global",
   icon: "refresh",
+  inPalette: true,
   action: (context, explorer, jsonSchemaProvider) => () => {
     context.setOffline(false);
     jsonSchemaProvider.refresh();

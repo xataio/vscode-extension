@@ -14,7 +14,7 @@ import { Column } from "../xata/xataSchemas";
  * Command to add a column to selected table
  */
 export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
-  id: "xata.addColumn",
+  id: "addColumn",
   type: "treeItem",
   icon: "add",
   action(context, explorer, jsonSchemaProvider) {

@@ -4,7 +4,7 @@ import { TreeItemCommand } from "../types";
 import { deleteTable } from "../xata/xataComponents";
 
 export const deleteTableCommand: TreeItemCommand<TableTreeItem> = {
-  id: "xata.deleteTable",
+  id: "deleteTable",
   icon: "trash",
   type: "treeItem",
   action: (context, explorer) => {

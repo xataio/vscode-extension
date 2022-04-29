@@ -5,7 +5,7 @@ import { PreviewDataPanel } from "../panels/PreviewDataPanel";
 import { queryTable } from "../xata/xataComponents";
 
 export const previewDataCommand: TreeItemCommand<TableTreeItem> = {
-  id: "xata.previewData",
+  id: "previewData",
   icon: "eye",
   type: "treeItem",
   action: (context) => {

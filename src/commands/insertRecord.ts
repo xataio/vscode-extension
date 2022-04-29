@@ -7,8 +7,9 @@ import { insertRecord } from "../xata/xataComponents";
  * Command to insert a record from a json
  */
 export const insertRecordCommand: Command = {
-  id: "xata.insertRecord",
+  id: "insertRecord",
   type: "global",
+  inPalette: true,
   action: (context) => {
     return async () => {
       if (!vscode.window.activeTextEditor) {

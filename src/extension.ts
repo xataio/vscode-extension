@@ -15,9 +15,17 @@ export function activate(extensionContext: vscode.ExtensionContext) {
 
   // Register all commands
   Object.values(commands).forEach((command) => {
+    if (command.type === "global" && command.inPalette) {
+      extensionContext.subscriptions.push(
+        vscode.commands.registerCommand(
+          `xata.palette.${command.id}`,
+          command.action(context, xataExplorer, xataJsonSchema)
+        )
+      );
+    }
     extensionContext.subscriptions.push(
       vscode.commands.registerCommand(
-        command.id,
+        `xata.${command.id}`,
         command.action(context, xataExplorer, xataJsonSchema)
       )
     );

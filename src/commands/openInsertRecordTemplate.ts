@@ -3,7 +3,7 @@ import { TableTreeItem } from "../TreeItem";
 import { TreeItemCommand } from "../types";
 
 export const openInsertRecordTemplateCommand: TreeItemCommand<TableTreeItem> = {
-  id: "xata.openInsertRecordTemplate",
+  id: "openInsertRecordTemplate",
   type: "treeItem",
   icon: "json",
   action: () => async (tableTreeItem) => {

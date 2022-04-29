@@ -5,7 +5,7 @@ import { getBranchDetails, updateTable } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 
 export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
-  id: "xata.renameTable",
+  id: "renameTable",
   icon: "edit",
   type: "treeItem",
   action: (context, explorer, jsonSchemaProvider) => {

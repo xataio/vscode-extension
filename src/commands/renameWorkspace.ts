@@ -5,7 +5,7 @@ import { slugify } from "../utils";
 import { updateWorkspace } from "../xata/xataComponents";
 
 export const renameWorkspaceCommand: TreeItemCommand<WorkspaceTreeItem> = {
-  id: "xata.renameWorkspace",
+  id: "renameWorkspace",
   icon: "edit",
   type: "treeItem",
   action: (context, explorer) => {

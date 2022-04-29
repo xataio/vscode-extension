@@ -116,19 +116,36 @@
     ],
     "commands": [
       {
-        "command": "xata.login",
+        "command": "xata.palette.login",
         "title": "Xata: Login"
       },
       {
-        "command": "xata.logout",
+        "command": "xata.login",
+        "title": "Login"
+      },
+      {
+        "command": "xata.palette.logout",
         "title": "Xata: Logout"
       },
       {
-        "command": "xata.insertRecord",
+        "command": "xata.logout",
+        "title": "Logout"
+      },
+      {
+        "command": "xata.palette.insertRecord",
         "title": "Xata: Insert record"
       },
       {
+        "command": "xata.insertRecord",
+        "title": "Insert record"
+      },
+      {
         "command": "xata.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "xata.palette.refresh",
         "title": "Xata: Refresh",
         "icon": "$(refresh)"
       },
@@ -246,12 +263,20 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "xata.login",
+          "command": "xata.palette.login",
           "when": "!xata.isLogged"
         },
         {
-          "command": "xata.logout",
+          "command": "xata.palette.logout",
           "when": "xata.isLogged"
+        },
+        {
+          "command": "xata.login",
+          "when": "false"
+        },
+        {
+          "command": "xata.logout",
+          "when": "false"
         },
         {
           "command": "xata.addColumn",

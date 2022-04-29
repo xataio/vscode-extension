@@ -5,7 +5,7 @@ import { updateColumn } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 
 export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
-  id: "xata.renameColumn",
+  id: "renameColumn",
   icon: "edit",
   type: "treeItem",
   action: (context, explorer) => {
