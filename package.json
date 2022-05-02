@@ -2,6 +2,7 @@
   "name": "xata",
   "displayName": "xata-vscode-extension",
   "repository": "https://github.com/xataio/vscode-extension",
+  "icon": "doc/xata-icon-128.png",
   "description": "Managed your xatabase from VSCode",
   "version": "0.0.1",
   "engines": {
