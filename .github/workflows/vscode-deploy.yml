@@ -1,0 +1,23 @@
+name: VSCode Deploy
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build & deploy to VS Code
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.13.1
+          registry-url: https://registry.npmjs.org/
+      - run: yarn
+      - run: yarn deploy:vscode
+        env:
+          VSCE_PAT: ${{ secrets.VSCODE_ACCESS_TOKEN }}
