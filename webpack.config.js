@@ -68,14 +68,13 @@ const createConfig = (/** @type {{ browser?: boolean; }} */ env) => ({
     ? [
         new webpack.ProvidePlugin({
           process: "process/browser",
-        }),
-        // Work around for Buffer is undefined:
-        // https://github.com/webpack/changelog-v5/issues/10
-        new webpack.ProvidePlugin({
+          // Work around for Buffer is undefined:
+          // https://github.com/webpack/changelog-v5/issues/10
           Buffer: ["buffer", "Buffer"],
         }),
+        new webpack.EnvironmentPlugin({ VSCODE_ENV: "browser" }),
       ]
-    : [],
+    : [new webpack.EnvironmentPlugin({ VSCODE_ENV: "electron" })],
 
   module: {
     rules: [

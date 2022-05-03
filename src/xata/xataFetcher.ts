@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Context } from "../context";
-import fetch from "cross-fetch";
 
 export type XataFetcherExtraProps = {
   baseUrl: string;
@@ -38,8 +37,15 @@ export async function xataFetch<
   TPathParams
 >): Promise<TData> {
   try {
+    // Deal with `fetch` between browser/electron context
+    // Note: `cross-fetch` and other similar packages are not working in this context.
+    const crossFetch =
+      process.env.VSCODE_ENV === "browser"
+        ? fetch
+        : (await import("node-fetch")).default;
+
     const token = await context.getToken();
-    const response = await fetch(
+    const response = await crossFetch(
       `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,
       {
         method: method.toUpperCase(),
@@ -61,11 +67,11 @@ export async function xataFetch<
     }
 
     if (!response.status.toString().startsWith("2")) {
-      const details = (await response.json()).message;
+      const details = ((await response.json()) as any).message;
       throw new ValidationError(`Xata: Network error (${details}})`, details);
     }
 
-    return await response.json();
+    return (await response.json()) as TData;
   } catch (e) {
     if ((e as NodeJS.ErrnoException).code === "ENOTFOUND") {
       context.setOffline(true);
