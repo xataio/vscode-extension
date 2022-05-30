@@ -10,7 +10,7 @@ export const previewDataCommand: TreeItemCommand<TableTreeItem> = {
   type: "treeItem",
   action: (context) => {
     return async (tableTreeItem) => {
-      const { records } = await queryTable({
+      const table = await queryTable({
         baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
         context: context,
         pathParams: {
@@ -18,6 +18,12 @@ export const previewDataCommand: TreeItemCommand<TableTreeItem> = {
           tableName: tableTreeItem.table.name,
         },
       });
+
+      if (!table.success) {
+        throw new Error(table.error.payload.message);
+      }
+
+      const { records } = table.data;
 
       const flattenRecords = records.map((r) => {
         // Omit `xata` key from the preview (internals)

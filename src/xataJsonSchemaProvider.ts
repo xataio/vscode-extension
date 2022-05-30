@@ -38,7 +38,7 @@ export class XataJsonSchemaProvider
     const [workspaceId, databaseName, branchName, tableName] =
       uri.path.split("/");
 
-    const { columns } = await getTableSchema({
+    const tableSchema = await getTableSchema({
       baseUrl: this.context.getBaseUrl(workspaceId),
       context: this.context,
       pathParams: {
@@ -46,6 +46,12 @@ export class XataJsonSchemaProvider
         tableName,
       },
     });
+
+    if (!tableSchema.success) {
+      throw new Error(tableSchema.error.payload.message);
+    }
+
+    const { columns } = tableSchema.data;
 
     return JSON.stringify(xataTableSchemaToJsonSchema(columns));
   }
@@ -56,42 +62,52 @@ export function xataTableSchemaToJsonSchema(
 ): JSONSchema7Definition {
   return {
     type: "object",
-    properties: columns.reduce((mem, column) => {
-      const property: JSONSchema7Definition = {};
-      switch (column.type) {
-        case "bool":
-          property.type = "boolean";
-          break;
-        case "email":
-          property.type = "string";
-          property.format = "email";
-          break;
-        case "float":
-          property.type = "number";
-          break;
-        case "int":
-          property.type = "integer";
-          break;
-        case "link":
-          property.type = "string";
-          property.description = "id of the linked resource";
-          break;
-        case "multiple":
-          property.type = "array";
-          property.items = {
-            type: "string",
-          };
-          break;
-        case "object":
-          property.type = "object";
-          break;
-        case "string":
-        case "text":
-          property.type = "string";
-          break;
-      }
+    required: ["records"],
+    properties: {
+      records: {
+        description: "List of records to insert",
+        type: "array",
+        items: {
+          type: "object",
+          properties: columns.reduce((mem, column) => {
+            const property: JSONSchema7Definition = {};
+            switch (column.type) {
+              case "bool":
+                property.type = "boolean";
+                break;
+              case "email":
+                property.type = "string";
+                property.format = "email";
+                break;
+              case "float":
+                property.type = "number";
+                break;
+              case "int":
+                property.type = "integer";
+                break;
+              case "link":
+                property.description = `id of the linked record (${column.link?.table})`;
+                property.type = "string";
+                break;
+              case "multiple":
+                property.type = "array";
+                property.items = {
+                  type: "string",
+                };
+                break;
+              case "object":
+                property.type = "object";
+                break;
+              case "string":
+              case "text":
+                property.type = "string";
+                break;
+            }
 
-      return { ...mem, [column.name]: property };
-    }, {} as { [key: string]: JSONSchema7Definition }),
+            return { ...mem, [column.name]: property };
+          }, {} as { [key: string]: JSONSchema7Definition }),
+        },
+      },
+    },
   };
 }

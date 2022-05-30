@@ -41,10 +41,16 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
     // Root level
     if (!element) {
-      const { workspaces } = await getWorkspacesList({
+      const workspacesList = await getWorkspacesList({
         baseUrl: this.context.getBaseUrl(),
         context: this.context,
       });
+
+      if (!workspacesList.success) {
+        throw new Error(workspacesList.error.payload.message);
+      }
+
+      const { workspaces } = workspacesList.data;
 
       // Expose `xata.workspaceCount` for the welcome screen logic
       vscode.commands.executeCommand(
@@ -65,10 +71,16 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
     // Workspace level
     if (element.contextValue === "workspace") {
-      const { databases } = await getDatabaseList({
+      const databaseList = await getDatabaseList({
         baseUrl: this.context.getBaseUrl(element.workspace.id),
         context: this.context,
       });
+
+      if (!databaseList.success) {
+        throw new Error(databaseList.error.payload.message);
+      }
+
+      const { databases } = databaseList.data;
 
       return Promise.all(
         (databases || []).map(async (db) => {
@@ -84,13 +96,19 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
               this.context.getEnableDatabaseColor()
             );
           }
-          const { branches } = await getBranchList({
+          const branchList = await getBranchList({
             baseUrl: this.context.getBaseUrl(element.workspace.id),
             context: this.context,
             pathParams: {
               dbName: db.name,
             },
           });
+
+          if (!branchList.success) {
+            throw new Error(branchList.error.payload.message);
+          }
+
+          const { branches } = branchList.data;
 
           return new OneBranchDatabaseItem(
             db.displayName,
@@ -109,13 +127,19 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
       element.contextValue === "database" ||
       element.contextValue === "oneBranchDatabase"
     ) {
-      const { branches } = await getBranchList({
+      const branchList = await getBranchList({
         baseUrl: this.context.getBaseUrl(element.workspace.id),
         context: this.context,
         pathParams: {
           dbName: element.database.name,
         },
       });
+
+      if (!branchList.success) {
+        throw new Error(branchList.error.payload.message);
+      }
+
+      const { branches } = branchList.data;
 
       if (branches.length === 1 && this.context.getHideBranchLevel()) {
         return this.getTableTreeItems(element, branches[0]);
@@ -140,7 +164,7 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
     // Table level
     if (element.contextValue === "table") {
-      const { columns } = await getTableSchema({
+      const tableSchema = await getTableSchema({
         baseUrl: this.context.getBaseUrl(element.workspace.id),
         context: this.context,
         pathParams: {
@@ -148,6 +172,12 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
           tableName: element.table.name,
         },
       });
+
+      if (!tableSchema.success) {
+        throw new Error(tableSchema.error.payload.message);
+      }
+
+      const { columns } = tableSchema.data;
 
       return columns.map(
         (column) =>
@@ -178,13 +208,19 @@ export class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
     element: DatabaseTreeItem | BranchTreeItem | OneBranchDatabaseItem,
     branch: Branch
   ) {
-    const { schema } = await getBranchDetails({
+    const branchDetails = await getBranchDetails({
       baseUrl: this.context.getBaseUrl(element.workspace.id),
       context: this.context,
       pathParams: {
         dbBranchName: `${element.database.name}:${branch.name}`,
       },
     });
+
+    if (!branchDetails.success) {
+      throw new Error(branchDetails.error.payload.message);
+    }
+
+    const { schema } = branchDetails.data;
 
     return schema.tables.map(
       (table) =>

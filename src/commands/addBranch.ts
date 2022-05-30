@@ -12,13 +12,19 @@ export const addBranchCommand: TreeItemCommand<
   icon: "git-pull-request-create",
   action: (context, explorer) => {
     return async (databaseTreeItem) => {
-      const { branches } = await getBranchList({
+      const branchList = await getBranchList({
         baseUrl: context.getBaseUrl(databaseTreeItem.workspace.id),
         context: context,
         pathParams: {
           dbName: databaseTreeItem.database.name,
         },
       });
+
+      if (!branchList.success) {
+        throw new Error(branchList.error.payload.message);
+      }
+
+      const { branches } = branchList.data;
 
       const existingBranches = branches.map((b) => b.name);
 

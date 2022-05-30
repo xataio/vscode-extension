@@ -14,10 +14,16 @@ export const addDatabaseCommand: TreeItemCommand<WorkspaceTreeItem> = {
   icon: "add",
   action(context, explorer) {
     return async (workspaceTreeItem) => {
-      const { databases } = await getDatabaseList({
+      const databaseList = await getDatabaseList({
         baseUrl: context.getBaseUrl(workspaceTreeItem.workspace.id),
         context: context,
       });
+
+      if (!databaseList.success) {
+        throw new Error(databaseList.error.payload.message);
+      }
+
+      const { databases } = databaseList.data;
 
       const existingDatabases = databases?.map((d) => d.name) || [];
 

@@ -30,13 +30,20 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
       }
 
       if (type === "link") {
-        const { schema } = await getBranchDetails({
+        const branchDetails = await getBranchDetails({
           baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
           context,
           pathParams: {
             dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
           },
         });
+
+        if (!branchDetails.success) {
+          throw new Error(branchDetails.error.payload.message);
+        }
+
+        const { schema } = branchDetails.data;
+
         const table = await vscode.window.showQuickPick(
           schema.tables.map((t) => t.name),
           {

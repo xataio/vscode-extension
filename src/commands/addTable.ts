@@ -12,7 +12,7 @@ export const addTableCommand: TreeItemCommand<
   icon: "empty-window",
   action: (context, explorer) => {
     return async (branchTreeItem) => {
-      const { schema } = await getBranchDetails({
+      const branchDetails = await getBranchDetails({
         baseUrl: context.getBaseUrl(branchTreeItem.workspace.id),
         context: context,
         pathParams: {
@@ -20,6 +20,11 @@ export const addTableCommand: TreeItemCommand<
         },
       });
 
+      if (!branchDetails.success) {
+        throw new Error(branchDetails.error.payload.message);
+      }
+
+      const { schema } = branchDetails.data;
       const existingTables = schema.tables.map((t) => t.name);
 
       const name = await vscode.window.showInputBox({

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Context } from "../context";
 
+export type ErrorWrapper<TError> = TError;
+
 export type XataFetcherExtraProps = {
   baseUrl: string;
   context: Context;
@@ -17,6 +19,7 @@ export type XataFetcherOptions<TBody, THeaders, TQueryParams, TPathParams> = {
 
 export async function xataFetch<
   TData,
+  TError extends { status: number; payload: any },
   TBody extends {} | undefined | null,
   THeaders extends {},
   TQueryParams extends {},
@@ -30,12 +33,10 @@ export async function xataFetch<
   queryParams,
   context,
   baseUrl,
-}: XataFetcherOptions<
-  TBody,
-  THeaders,
-  TQueryParams,
-  TPathParams
->): Promise<TData> {
+}: XataFetcherOptions<TBody, THeaders, TQueryParams, TPathParams>): Promise<
+  | { success: true; data: TData }
+  | { success: false; error: ErrorWrapper<TError> }
+> {
   try {
     // Deal with `fetch` between browser/electron context
     // Note: `cross-fetch` and other similar packages are not working in this context.
@@ -63,15 +64,20 @@ export async function xataFetch<
     }
 
     if (response.status === 204 /* no content */) {
-      return undefined as any as TData;
+      return { success: true, data: undefined as any };
     }
 
     if (!response.status.toString().startsWith("2")) {
-      const details = ((await response.json()) as any).message;
-      throw new ValidationError(`Xata: Network error (${details}})`, details);
+      return {
+        success: false,
+        error: {
+          status: response.status,
+          payload: await response.json(),
+        } as any,
+      };
     }
 
-    return (await response.json()) as TData;
+    return { success: true, data: await response.json() };
   } catch (e) {
     if ((e as NodeJS.ErrnoException).code === "ENOTFOUND") {
       context.setOffline(true);
@@ -93,8 +99,8 @@ const resolveUrl = (
   return url.replace(/\{\w*\}/g, (key) => pathParams[key.slice(1, -1)]) + query;
 };
 
-export class ValidationError extends Error {
-  constructor(public message: string, public details: string) {
+export class ValidationError<TDetails> extends Error {
+  constructor(public message: string, public details: TDetails) {
     super(message);
   }
 }
