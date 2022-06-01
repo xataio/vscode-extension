@@ -3,7 +3,7 @@ export { loginCommand } from "./login";
 export { logoutCommand } from "./logout";
 export { refreshCommand } from "./refresh";
 export { addWorkspaceCommand } from "./addWorkspace";
-export { insertRecordCommand } from "./insertRecord";
+export { insertRecordsCommand } from "./insertRecords";
 
 // TreeItem
 export { addColumnCommand } from "./addColumn";
@@ -19,4 +19,4 @@ export { addTableCommand } from "./addTable";
 export { deleteTableCommand } from "./deleteTable";
 export { renameTableCommand } from "./renameTable";
 export { previewDataCommand } from "./previewData";
-export { openInsertRecordTemplateCommand } from "./openInsertRecordTemplate";
+export { openInsertRecordsTemplateCommand } from "./openInsertRecordsTemplate";

@@ -3,9 +3,25 @@
  *
  * @version 1.0
  */
+import type * as Fetcher from "./xataFetcher";
 import { xataFetch, XataFetcherExtraProps } from "./xataFetcher";
 import type * as Schemas from "./xataSchemas";
 import type * as Responses from "./xataResponses";
+
+export type GetUserError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type GetUserVariables = XataFetcherExtraProps;
 
@@ -13,11 +29,26 @@ export type GetUserVariables = XataFetcherExtraProps;
  * Return details of the user making the request
  */
 export const getUser = (variables: GetUserVariables) =>
-  xataFetch<Schemas.UserWithID, undefined, {}, {}, {}>({
+  xataFetch<Schemas.UserWithID, GetUserError, undefined, {}, {}, {}>({
     url: "/user",
     method: "get",
     ...variables,
   });
+
+export type UpdateUserError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type UpdateUserVariables = {
   body: Schemas.User;
@@ -27,11 +58,26 @@ export type UpdateUserVariables = {
  * Update user info
  */
 export const updateUser = (variables: UpdateUserVariables) =>
-  xataFetch<Schemas.UserWithID, Schemas.User, {}, {}, {}>({
+  xataFetch<Schemas.UserWithID, UpdateUserError, Schemas.User, {}, {}, {}>({
     url: "/user",
     method: "put",
     ...variables,
   });
+
+export type DeleteUserError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type DeleteUserVariables = XataFetcherExtraProps;
 
@@ -39,11 +85,26 @@ export type DeleteUserVariables = XataFetcherExtraProps;
  * Delete the user making the request
  */
 export const deleteUser = (variables: DeleteUserVariables) =>
-  xataFetch<undefined, undefined, {}, {}, {}>({
+  xataFetch<undefined, DeleteUserError, undefined, {}, {}, {}>({
     url: "/user",
     method: "delete",
     ...variables,
   });
+
+export type GetUserAPIKeysError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type GetUserAPIKeysResponse = {
   keys: {
@@ -58,11 +119,9 @@ export type GetUserAPIKeysVariables = XataFetcherExtraProps;
  * Retrieve a list of existing user API keys
  */
 export const getUserAPIKeys = (variables: GetUserAPIKeysVariables) =>
-  xataFetch<GetUserAPIKeysResponse, undefined, {}, {}, {}>({
-    url: "/user/keys",
-    method: "get",
-    ...variables,
-  });
+  xataFetch<GetUserAPIKeysResponse, GetUserAPIKeysError, undefined, {}, {}, {}>(
+    { url: "/user/keys", method: "get", ...variables }
+  );
 
 export type CreateUserAPIKeyPathParams = {
   /*
@@ -70,6 +129,21 @@ export type CreateUserAPIKeyPathParams = {
    */
   keyName: Schemas.APIKeyName;
 };
+
+export type CreateUserAPIKeyError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type CreateUserAPIKeyResponse = {
   name: string;
@@ -87,6 +161,7 @@ export type CreateUserAPIKeyVariables = {
 export const createUserAPIKey = (variables: CreateUserAPIKeyVariables) =>
   xataFetch<
     CreateUserAPIKeyResponse,
+    CreateUserAPIKeyError,
     undefined,
     {},
     {},
@@ -100,6 +175,21 @@ export type DeleteUserAPIKeyPathParams = {
   keyName: Schemas.APIKeyName;
 };
 
+export type DeleteUserAPIKeyError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type DeleteUserAPIKeyVariables = {
   pathParams: DeleteUserAPIKeyPathParams;
 } & XataFetcherExtraProps;
@@ -108,11 +198,29 @@ export type DeleteUserAPIKeyVariables = {
  * Delete an existing API key
  */
 export const deleteUserAPIKey = (variables: DeleteUserAPIKeyVariables) =>
-  xataFetch<undefined, undefined, {}, {}, DeleteUserAPIKeyPathParams>({
-    url: "/user/keys/{keyName}",
-    method: "delete",
-    ...variables,
-  });
+  xataFetch<
+    undefined,
+    DeleteUserAPIKeyError,
+    undefined,
+    {},
+    {},
+    DeleteUserAPIKeyPathParams
+  >({ url: "/user/keys/{keyName}", method: "delete", ...variables });
+
+export type CreateWorkspaceError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type CreateWorkspaceVariables = {
   body: Schemas.WorkspaceMeta;
@@ -122,11 +230,29 @@ export type CreateWorkspaceVariables = {
  * Creates a new workspace with the user requesting it as its single owner.
  */
 export const createWorkspace = (variables: CreateWorkspaceVariables) =>
-  xataFetch<Schemas.Workspace, Schemas.WorkspaceMeta, {}, {}, {}>({
-    url: "/workspaces",
-    method: "post",
-    ...variables,
-  });
+  xataFetch<
+    Schemas.Workspace,
+    CreateWorkspaceError,
+    Schemas.WorkspaceMeta,
+    {},
+    {},
+    {}
+  >({ url: "/workspaces", method: "post", ...variables });
+
+export type GetWorkspacesListError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type GetWorkspacesListResponse = {
   workspaces: {
@@ -143,11 +269,14 @@ export type GetWorkspacesListVariables = XataFetcherExtraProps;
  * Retrieve the list of workspaces the user belongs to
  */
 export const getWorkspacesList = (variables: GetWorkspacesListVariables) =>
-  xataFetch<GetWorkspacesListResponse, undefined, {}, {}, {}>({
-    url: "/workspaces",
-    method: "get",
-    ...variables,
-  });
+  xataFetch<
+    GetWorkspacesListResponse,
+    GetWorkspacesListError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: "/workspaces", method: "get", ...variables });
 
 export type GetWorkspacePathParams = {
   /*
@@ -155,6 +284,21 @@ export type GetWorkspacePathParams = {
    */
   workspaceId: Schemas.WorkspaceID;
 };
+
+export type GetWorkspaceError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type GetWorkspaceVariables = {
   pathParams: GetWorkspacePathParams;
@@ -164,11 +308,14 @@ export type GetWorkspaceVariables = {
  * Retrieve workspace info from a workspace ID
  */
 export const getWorkspace = (variables: GetWorkspaceVariables) =>
-  xataFetch<Schemas.Workspace, undefined, {}, {}, GetWorkspacePathParams>({
-    url: "/workspaces/{workspaceId}",
-    method: "get",
-    ...variables,
-  });
+  xataFetch<
+    Schemas.Workspace,
+    GetWorkspaceError,
+    undefined,
+    {},
+    {},
+    GetWorkspacePathParams
+  >({ url: "/workspaces/{workspaceId}", method: "get", ...variables });
 
 export type UpdateWorkspacePathParams = {
   /*
@@ -176,6 +323,21 @@ export type UpdateWorkspacePathParams = {
    */
   workspaceId: Schemas.WorkspaceID;
 };
+
+export type UpdateWorkspaceError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type UpdateWorkspaceVariables = {
   body: Schemas.WorkspaceMeta;
@@ -188,6 +350,7 @@ export type UpdateWorkspaceVariables = {
 export const updateWorkspace = (variables: UpdateWorkspaceVariables) =>
   xataFetch<
     Schemas.Workspace,
+    UpdateWorkspaceError,
     Schemas.WorkspaceMeta,
     {},
     {},
@@ -201,6 +364,21 @@ export type DeleteWorkspacePathParams = {
   workspaceId: Schemas.WorkspaceID;
 };
 
+export type DeleteWorkspaceError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type DeleteWorkspaceVariables = {
   pathParams: DeleteWorkspacePathParams;
 } & XataFetcherExtraProps;
@@ -209,11 +387,14 @@ export type DeleteWorkspaceVariables = {
  * Delete the workspace with the provided ID
  */
 export const deleteWorkspace = (variables: DeleteWorkspaceVariables) =>
-  xataFetch<undefined, undefined, {}, {}, DeleteWorkspacePathParams>({
-    url: "/workspaces/{workspaceId}",
-    method: "delete",
-    ...variables,
-  });
+  xataFetch<
+    undefined,
+    DeleteWorkspaceError,
+    undefined,
+    {},
+    {},
+    DeleteWorkspacePathParams
+  >({ url: "/workspaces/{workspaceId}", method: "delete", ...variables });
 
 export type GetWorkspaceMembersListPathParams = {
   /*
@@ -221,6 +402,21 @@ export type GetWorkspaceMembersListPathParams = {
    */
   workspaceId: Schemas.WorkspaceID;
 };
+
+export type GetWorkspaceMembersListError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type GetWorkspaceMembersListVariables = {
   pathParams: GetWorkspaceMembersListPathParams;
@@ -234,6 +430,7 @@ export const getWorkspaceMembersList = (
 ) =>
   xataFetch<
     Schemas.WorkspaceMembers,
+    GetWorkspaceMembersListError,
     undefined,
     {},
     {},
@@ -250,6 +447,21 @@ export type UpdateWorkspaceMemberRolePathParams = {
    */
   userId: Schemas.UserID;
 };
+
+export type UpdateWorkspaceMemberRoleError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type UpdateWorkspaceMemberRoleRequestBody = {
   role: Schemas.Role;
@@ -268,6 +480,7 @@ export const updateWorkspaceMemberRole = (
 ) =>
   xataFetch<
     undefined,
+    UpdateWorkspaceMemberRoleError,
     UpdateWorkspaceMemberRoleRequestBody,
     {},
     {},
@@ -289,6 +502,21 @@ export type RemoveWorkspaceMemberPathParams = {
   userId: Schemas.UserID;
 };
 
+export type RemoveWorkspaceMemberError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type RemoveWorkspaceMemberVariables = {
   pathParams: RemoveWorkspaceMemberPathParams;
 } & XataFetcherExtraProps;
@@ -299,7 +527,14 @@ export type RemoveWorkspaceMemberVariables = {
 export const removeWorkspaceMember = (
   variables: RemoveWorkspaceMemberVariables
 ) =>
-  xataFetch<undefined, undefined, {}, {}, RemoveWorkspaceMemberPathParams>({
+  xataFetch<
+    undefined,
+    RemoveWorkspaceMemberError,
+    undefined,
+    {},
+    {},
+    RemoveWorkspaceMemberPathParams
+  >({
     url: "/workspaces/{workspaceId}/members/{userId}",
     method: "delete",
     ...variables,
@@ -311,6 +546,21 @@ export type InviteWorkspaceMemberPathParams = {
    */
   workspaceId: Schemas.WorkspaceID;
 };
+
+export type InviteWorkspaceMemberError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type InviteWorkspaceMemberRequestBody = {
   /*
@@ -333,6 +583,7 @@ export const inviteWorkspaceMember = (
 ) =>
   xataFetch<
     Schemas.WorkspaceInvite,
+    InviteWorkspaceMemberError,
     InviteWorkspaceMemberRequestBody,
     {},
     {},
@@ -350,6 +601,21 @@ export type CancelWorkspaceMemberInvitePathParams = {
   inviteId: Schemas.InviteID;
 };
 
+export type CancelWorkspaceMemberInviteError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type CancelWorkspaceMemberInviteVariables = {
   pathParams: CancelWorkspaceMemberInvitePathParams;
 } & XataFetcherExtraProps;
@@ -362,6 +628,7 @@ export const cancelWorkspaceMemberInvite = (
 ) =>
   xataFetch<
     undefined,
+    CancelWorkspaceMemberInviteError,
     undefined,
     {},
     {},
@@ -383,6 +650,21 @@ export type ResendWorkspaceMemberInvitePathParams = {
   inviteId: Schemas.InviteID;
 };
 
+export type ResendWorkspaceMemberInviteError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type ResendWorkspaceMemberInviteVariables = {
   pathParams: ResendWorkspaceMemberInvitePathParams;
 } & XataFetcherExtraProps;
@@ -395,6 +677,7 @@ export const resendWorkspaceMemberInvite = (
 ) =>
   xataFetch<
     undefined,
+    ResendWorkspaceMemberInviteError,
     undefined,
     {},
     {},
@@ -416,6 +699,21 @@ export type AcceptWorkspaceMemberInvitePathParams = {
   inviteKey: Schemas.InviteKey;
 };
 
+export type AcceptWorkspaceMemberInviteError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type AcceptWorkspaceMemberInviteVariables = {
   pathParams: AcceptWorkspaceMemberInvitePathParams;
 } & XataFetcherExtraProps;
@@ -428,6 +726,7 @@ export const acceptWorkspaceMemberInvite = (
 ) =>
   xataFetch<
     undefined,
+    AcceptWorkspaceMemberInviteError,
     undefined,
     {},
     {},
@@ -438,17 +737,31 @@ export const acceptWorkspaceMemberInvite = (
     ...variables,
   });
 
+export type GetDatabaseListError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+>;
+
 export type GetDatabaseListVariables = XataFetcherExtraProps;
 
 /**
  * List all databases available in your Workspace.
  */
 export const getDatabaseList = (variables: GetDatabaseListVariables) =>
-  xataFetch<Schemas.ListDatabasesResponse, undefined, {}, {}, {}>({
-    url: "/dbs",
-    method: "get",
-    ...variables,
-  });
+  xataFetch<
+    Schemas.ListDatabasesResponse,
+    GetDatabaseListError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: "/dbs", method: "get", ...variables });
 
 export type GetBranchListPathParams = {
   /*
@@ -456,6 +769,21 @@ export type GetBranchListPathParams = {
    */
   dbName: Schemas.DBName;
 };
+
+export type GetBranchListError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type GetBranchListVariables = {
   pathParams: GetBranchListPathParams;
@@ -467,6 +795,7 @@ export type GetBranchListVariables = {
 export const getBranchList = (variables: GetBranchListVariables) =>
   xataFetch<
     Schemas.ListBranchesResponse,
+    GetBranchListError,
     undefined,
     {},
     {},
@@ -479,6 +808,17 @@ export type CreateDatabasePathParams = {
    */
   dbName: Schemas.DBName;
 };
+
+export type CreateDatabaseError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+>;
 
 export type CreateDatabaseResponse = {
   /*
@@ -514,6 +854,7 @@ export type CreateDatabaseVariables = {
 export const createDatabase = (variables: CreateDatabaseVariables) =>
   xataFetch<
     CreateDatabaseResponse,
+    CreateDatabaseError,
     CreateDatabaseRequestBody,
     {},
     {},
@@ -527,6 +868,21 @@ export type DeleteDatabasePathParams = {
   dbName: Schemas.DBName;
 };
 
+export type DeleteDatabaseError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type DeleteDatabaseVariables = {
   pathParams: DeleteDatabasePathParams;
 } & XataFetcherExtraProps;
@@ -535,11 +891,14 @@ export type DeleteDatabaseVariables = {
  * Delete a database and all of its branches and tables permanently.
  */
 export const deleteDatabase = (variables: DeleteDatabaseVariables) =>
-  xataFetch<undefined, undefined, {}, {}, DeleteDatabasePathParams>({
-    url: "/dbs/{dbName}",
-    method: "delete",
-    ...variables,
-  });
+  xataFetch<
+    undefined,
+    DeleteDatabaseError,
+    undefined,
+    {},
+    {},
+    DeleteDatabasePathParams
+  >({ url: "/dbs/{dbName}", method: "delete", ...variables });
 
 export type GetBranchDetailsPathParams = {
   /*
@@ -548,16 +907,34 @@ export type GetBranchDetailsPathParams = {
   dbBranchName: Schemas.DBBranchName;
 };
 
+export type GetBranchDetailsError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type GetBranchDetailsVariables = {
   pathParams: GetBranchDetailsPathParams;
 } & XataFetcherExtraProps;
 
 export const getBranchDetails = (variables: GetBranchDetailsVariables) =>
-  xataFetch<Schemas.DBBranch, undefined, {}, {}, GetBranchDetailsPathParams>({
-    url: "/db/{dbBranchName}",
-    method: "get",
-    ...variables,
-  });
+  xataFetch<
+    Schemas.DBBranch,
+    GetBranchDetailsError,
+    undefined,
+    {},
+    {},
+    GetBranchDetailsPathParams
+  >({ url: "/db/{dbBranchName}", method: "get", ...variables });
 
 export type CreateBranchPathParams = {
   /*
@@ -572,6 +949,21 @@ export type CreateBranchQueryParams = {
    */
   from?: string;
 };
+
+export type CreateBranchError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type CreateBranchRequestBody = {
   /*
@@ -590,6 +982,7 @@ export type CreateBranchVariables = {
 export const createBranch = (variables: CreateBranchVariables) =>
   xataFetch<
     undefined,
+    CreateBranchError,
     CreateBranchRequestBody,
     {},
     CreateBranchQueryParams,
@@ -603,6 +996,21 @@ export type DeleteBranchPathParams = {
   dbBranchName: Schemas.DBBranchName;
 };
 
+export type DeleteBranchError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type DeleteBranchVariables = {
   pathParams: DeleteBranchPathParams;
 } & XataFetcherExtraProps;
@@ -611,11 +1019,14 @@ export type DeleteBranchVariables = {
  * Delete the branch in the database and all its resources
  */
 export const deleteBranch = (variables: DeleteBranchVariables) =>
-  xataFetch<undefined, undefined, {}, {}, DeleteBranchPathParams>({
-    url: "/db/{dbBranchName}",
-    method: "delete",
-    ...variables,
-  });
+  xataFetch<
+    undefined,
+    DeleteBranchError,
+    undefined,
+    {},
+    {},
+    DeleteBranchPathParams
+  >({ url: "/db/{dbBranchName}", method: "delete", ...variables });
 
 export type UpdateBranchMetadataPathParams = {
   /*
@@ -623,6 +1034,21 @@ export type UpdateBranchMetadataPathParams = {
    */
   dbBranchName: Schemas.DBBranchName;
 };
+
+export type UpdateBranchMetadataError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type UpdateBranchMetadataVariables = {
   body?: Schemas.BranchMetadata;
@@ -637,6 +1063,7 @@ export const updateBranchMetadata = (
 ) =>
   xataFetch<
     undefined,
+    UpdateBranchMetadataError,
     Schemas.BranchMetadata,
     {},
     {},
@@ -650,6 +1077,21 @@ export type GetBranchMetadataPathParams = {
   dbBranchName: Schemas.DBBranchName;
 };
 
+export type GetBranchMetadataError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type GetBranchMetadataVariables = {
   pathParams: GetBranchMetadataPathParams;
 } & XataFetcherExtraProps;
@@ -657,6 +1099,7 @@ export type GetBranchMetadataVariables = {
 export const getBranchMetadata = (variables: GetBranchMetadataVariables) =>
   xataFetch<
     Schemas.BranchMetadata,
+    GetBranchMetadataError,
     undefined,
     {},
     {},
@@ -669,6 +1112,21 @@ export type GetBranchMigrationHistoryPathParams = {
    */
   dbBranchName: Schemas.DBBranchName;
 };
+
+export type GetBranchMigrationHistoryError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type GetBranchMigrationHistoryResponse = {
   startedFrom?: Schemas.StartedFromMetadata;
@@ -690,6 +1148,7 @@ export const getBranchMigrationHistory = (
 ) =>
   xataFetch<
     GetBranchMigrationHistoryResponse,
+    GetBranchMigrationHistoryError,
     GetBranchMigrationHistoryRequestBody,
     {},
     {},
@@ -702,6 +1161,21 @@ export type ExecuteBranchMigrationPlanPathParams = {
    */
   dbBranchName: Schemas.DBBranchName;
 };
+
+export type ExecuteBranchMigrationPlanError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type ExecuteBranchMigrationPlanRequestBody = {
   version: number;
@@ -721,6 +1195,7 @@ export const executeBranchMigrationPlan = (
 ) =>
   xataFetch<
     undefined,
+    ExecuteBranchMigrationPlanError,
     ExecuteBranchMigrationPlanRequestBody,
     {},
     {},
@@ -738,6 +1213,21 @@ export type GetBranchMigrationPlanPathParams = {
   dbBranchName: Schemas.DBBranchName;
 };
 
+export type GetBranchMigrationPlanError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type GetBranchMigrationPlanVariables = {
   body: Schemas.Schema;
   pathParams: GetBranchMigrationPlanPathParams;
@@ -751,6 +1241,7 @@ export const getBranchMigrationPlan = (
 ) =>
   xataFetch<
     Responses.BranchMigrationPlan,
+    GetBranchMigrationPlanError,
     Schemas.Schema,
     {},
     {},
@@ -767,6 +1258,21 @@ export type GetBranchStatsPathParams = {
    */
   dbBranchName: Schemas.DBBranchName;
 };
+
+export type GetBranchStatsError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.SimpleError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type GetBranchStatsResponse = {
   timestamp: string;
@@ -790,6 +1296,7 @@ export type GetBranchStatsVariables = {
 export const getBranchStats = (variables: GetBranchStatsVariables) =>
   xataFetch<
     GetBranchStatsResponse,
+    GetBranchStatsError,
     undefined,
     {},
     {},
@@ -807,6 +1314,25 @@ export type CreateTablePathParams = {
   tableName: Schemas.TableName;
 };
 
+export type CreateTableError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+  | {
+      status: 422;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type CreateTableVariables = {
   pathParams: CreateTablePathParams;
 } & XataFetcherExtraProps;
@@ -815,7 +1341,14 @@ export type CreateTableVariables = {
  * Creates a new table with the given name. Returns 422 if a table with the same name already exists.
  */
 export const createTable = (variables: CreateTableVariables) =>
-  xataFetch<undefined, undefined, {}, {}, CreateTablePathParams>({
+  xataFetch<
+    undefined,
+    CreateTableError,
+    undefined,
+    {},
+    {},
+    CreateTablePathParams
+  >({
     url: "/db/{dbBranchName}/tables/{tableName}",
     method: "put",
     ...variables,
@@ -832,6 +1365,17 @@ export type DeleteTablePathParams = {
   tableName: Schemas.TableName;
 };
 
+export type DeleteTableError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+>;
+
 export type DeleteTableVariables = {
   pathParams: DeleteTablePathParams;
 } & XataFetcherExtraProps;
@@ -840,7 +1384,14 @@ export type DeleteTableVariables = {
  * Deletes the table with the given name.
  */
 export const deleteTable = (variables: DeleteTableVariables) =>
-  xataFetch<undefined, undefined, {}, {}, DeleteTablePathParams>({
+  xataFetch<
+    undefined,
+    DeleteTableError,
+    undefined,
+    {},
+    {},
+    DeleteTablePathParams
+  >({
     url: "/db/{dbBranchName}/tables/{tableName}",
     method: "delete",
     ...variables,
@@ -856,6 +1407,21 @@ export type UpdateTablePathParams = {
    */
   tableName: Schemas.TableName;
 };
+
+export type UpdateTableError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type UpdateTableRequestBody = {
   /*
@@ -874,15 +1440,23 @@ export type UpdateTableVariables = {
  *
  * In the example below, we rename a table from “users” to “people”:
  *
- * ```jsx
- * PATCH /db/test:main/tables/users
+ * ```json
+ * // PATCH /db/test:main/tables/users
+ *
  * {
  *   "name": "people"
  * }
  * ```
  */
 export const updateTable = (variables: UpdateTableVariables) =>
-  xataFetch<undefined, UpdateTableRequestBody, {}, {}, UpdateTablePathParams>({
+  xataFetch<
+    undefined,
+    UpdateTableError,
+    UpdateTableRequestBody,
+    {},
+    {},
+    UpdateTablePathParams
+  >({
     url: "/db/{dbBranchName}/tables/{tableName}",
     method: "patch",
     ...variables,
@@ -899,6 +1473,21 @@ export type GetTableSchemaPathParams = {
   tableName: Schemas.TableName;
 };
 
+export type GetTableSchemaError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type GetTableSchemaResponse = {
   columns: Schemas.Column[];
 };
@@ -910,6 +1499,7 @@ export type GetTableSchemaVariables = {
 export const getTableSchema = (variables: GetTableSchemaVariables) =>
   xataFetch<
     GetTableSchemaResponse,
+    GetTableSchemaError,
     undefined,
     {},
     {},
@@ -931,6 +1521,25 @@ export type SetTableSchemaPathParams = {
   tableName: Schemas.TableName;
 };
 
+export type SetTableSchemaError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+  | {
+      status: 409;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type SetTableSchemaRequestBody = {
   columns: Schemas.Column[];
 };
@@ -943,6 +1552,7 @@ export type SetTableSchemaVariables = {
 export const setTableSchema = (variables: SetTableSchemaVariables) =>
   xataFetch<
     undefined,
+    SetTableSchemaError,
     SetTableSchemaRequestBody,
     {},
     {},
@@ -964,6 +1574,21 @@ export type GetTableColumnsPathParams = {
   tableName: Schemas.TableName;
 };
 
+export type GetTableColumnsError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type GetTableColumnsResponse = {
   columns: Schemas.Column[];
 };
@@ -979,6 +1604,7 @@ export type GetTableColumnsVariables = {
 export const getTableColumns = (variables: GetTableColumnsVariables) =>
   xataFetch<
     GetTableColumnsResponse,
+    GetTableColumnsError,
     undefined,
     {},
     {},
@@ -1000,6 +1626,21 @@ export type AddTableColumnPathParams = {
   tableName: Schemas.TableName;
 };
 
+export type AddTableColumnError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type AddTableColumnVariables = {
   body: Schemas.Column;
   pathParams: AddTableColumnPathParams;
@@ -1013,6 +1654,7 @@ export type AddTableColumnVariables = {
 export const addTableColumn = (variables: AddTableColumnVariables) =>
   xataFetch<
     Responses.MigrationIdResponse,
+    AddTableColumnError,
     Schemas.Column,
     {},
     {},
@@ -1038,6 +1680,21 @@ export type GetColumnPathParams = {
   columnName: Schemas.ColumnName;
 };
 
+export type GetColumnError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type GetColumnVariables = {
   pathParams: GetColumnPathParams;
 } & XataFetcherExtraProps;
@@ -1046,7 +1703,14 @@ export type GetColumnVariables = {
  * Get the definition of a single column. To refer to sub-objects, the column name can contain dots. For example `address.country`.
  */
 export const getColumn = (variables: GetColumnVariables) =>
-  xataFetch<Schemas.Column, undefined, {}, {}, GetColumnPathParams>({
+  xataFetch<
+    Schemas.Column,
+    GetColumnError,
+    undefined,
+    {},
+    {},
+    GetColumnPathParams
+  >({
     url: "/db/{dbBranchName}/tables/{tableName}/columns/{columnName}",
     method: "get",
     ...variables,
@@ -1067,6 +1731,21 @@ export type DeleteColumnPathParams = {
   columnName: Schemas.ColumnName;
 };
 
+export type DeleteColumnError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type DeleteColumnVariables = {
   pathParams: DeleteColumnPathParams;
 } & XataFetcherExtraProps;
@@ -1077,6 +1756,7 @@ export type DeleteColumnVariables = {
 export const deleteColumn = (variables: DeleteColumnVariables) =>
   xataFetch<
     Responses.MigrationIdResponse,
+    DeleteColumnError,
     undefined,
     {},
     {},
@@ -1102,6 +1782,21 @@ export type UpdateColumnPathParams = {
   columnName: Schemas.ColumnName;
 };
 
+export type UpdateColumnError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type UpdateColumnRequestBody = {
   /*
    * @minLength 1
@@ -1120,6 +1815,7 @@ export type UpdateColumnVariables = {
 export const updateColumn = (variables: UpdateColumnVariables) =>
   xataFetch<
     Responses.MigrationIdResponse,
+    UpdateColumnError,
     UpdateColumnRequestBody,
     {},
     {},
@@ -1141,6 +1837,21 @@ export type InsertRecordPathParams = {
   tableName: Schemas.TableName;
 };
 
+export type InsertRecordError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type InsertRecordResponse = {
   id: string;
   xata: {
@@ -1159,6 +1870,7 @@ export type InsertRecordVariables = {
 export const insertRecord = (variables: InsertRecordVariables) =>
   xataFetch<
     InsertRecordResponse,
+    InsertRecordError,
     Record<string, any>,
     {},
     {},
@@ -1189,6 +1901,25 @@ export type InsertRecordWithIDQueryParams = {
   ifVersion?: number;
 };
 
+export type InsertRecordWithIDError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+  | {
+      status: 422;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type InsertRecordWithIDVariables = {
   body?: Record<string, any>;
   pathParams: InsertRecordWithIDPathParams;
@@ -1201,6 +1932,7 @@ export type InsertRecordWithIDVariables = {
 export const insertRecordWithID = (variables: InsertRecordWithIDVariables) =>
   xataFetch<
     Responses.RecordUpdateResponse,
+    InsertRecordWithIDError,
     Record<string, any>,
     {},
     InsertRecordWithIDQueryParams,
@@ -1230,6 +1962,25 @@ export type UpdateRecordWithIDQueryParams = {
   ifVersion?: number;
 };
 
+export type UpdateRecordWithIDError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+  | {
+      status: 422;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type UpdateRecordWithIDVariables = {
   body?: Record<string, any>;
   pathParams: UpdateRecordWithIDPathParams;
@@ -1239,6 +1990,7 @@ export type UpdateRecordWithIDVariables = {
 export const updateRecordWithID = (variables: UpdateRecordWithIDVariables) =>
   xataFetch<
     Responses.RecordUpdateResponse,
+    UpdateRecordWithIDError,
     Record<string, any>,
     {},
     UpdateRecordWithIDQueryParams,
@@ -1268,6 +2020,25 @@ export type UpsertRecordWithIDQueryParams = {
   ifVersion?: number;
 };
 
+export type UpsertRecordWithIDError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+  | {
+      status: 422;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type UpsertRecordWithIDVariables = {
   body?: Record<string, any>;
   pathParams: UpsertRecordWithIDPathParams;
@@ -1277,6 +2048,7 @@ export type UpsertRecordWithIDVariables = {
 export const upsertRecordWithID = (variables: UpsertRecordWithIDVariables) =>
   xataFetch<
     Responses.RecordUpdateResponse,
+    UpsertRecordWithIDError,
     Record<string, any>,
     {},
     UpsertRecordWithIDQueryParams,
@@ -1302,12 +2074,34 @@ export type DeleteRecordPathParams = {
   recordId: Schemas.RecordID;
 };
 
+export type DeleteRecordError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type DeleteRecordVariables = {
   pathParams: DeleteRecordPathParams;
 } & XataFetcherExtraProps;
 
 export const deleteRecord = (variables: DeleteRecordVariables) =>
-  xataFetch<undefined, undefined, {}, {}, DeleteRecordPathParams>({
+  xataFetch<
+    undefined,
+    DeleteRecordError,
+    undefined,
+    {},
+    {},
+    DeleteRecordPathParams
+  >({
     url: "/db/{dbBranchName}/tables/{tableName}/data/{recordId}",
     method: "delete",
     ...variables,
@@ -1328,6 +2122,21 @@ export type GetRecordPathParams = {
   recordId: Schemas.RecordID;
 };
 
+export type GetRecordError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
 export type GetRecordRequestBody = {
   columns?: Schemas.ColumnsFilter;
 };
@@ -1341,7 +2150,14 @@ export type GetRecordVariables = {
  * Retrieve record by ID
  */
 export const getRecord = (variables: GetRecordVariables) =>
-  xataFetch<Schemas.Record, GetRecordRequestBody, {}, {}, GetRecordPathParams>({
+  xataFetch<
+    Schemas.Record,
+    GetRecordError,
+    GetRecordRequestBody,
+    {},
+    {},
+    GetRecordPathParams
+  >({
     url: "/db/{dbBranchName}/tables/{tableName}/data/{recordId}",
     method: "get",
     ...variables,
@@ -1357,6 +2173,21 @@ export type BulkInsertTableRecordsPathParams = {
    */
   tableName: Schemas.TableName;
 };
+
+export type BulkInsertTableRecordsError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BulkError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type BulkInsertTableRecordsResponse = {
   recordIDs: string[];
@@ -1379,6 +2210,7 @@ export const bulkInsertTableRecords = (
 ) =>
   xataFetch<
     BulkInsertTableRecordsResponse,
+    BulkInsertTableRecordsError,
     BulkInsertTableRecordsRequestBody,
     {},
     {},
@@ -1399,6 +2231,21 @@ export type QueryTablePathParams = {
    */
   tableName: Schemas.TableName;
 };
+
+export type QueryTableError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type QueryTableRequestBody = {
   filter?: Schemas.FilterExpression;
@@ -1423,7 +2270,7 @@ export type QueryTableVariables = {
  * {
  *   "columns": [...],
  *   "filter": {
- *     "$all": [...]
+ *     "$all": [...],
  *     "$any": [...]
  *     ...
  *   },
@@ -1557,7 +2404,7 @@ export type QueryTableVariables = {
  * {
  *   "name": "Kilian",
  *   "address": {
- *     "street": "New street",
+ *     "street": "New street"
  *   }
  * }
  * ```
@@ -1566,10 +2413,7 @@ export type QueryTableVariables = {
  *
  * ```json
  * {
- *   "columns": [
- *     "*",
- *     "team.name"
- *   ]
+ *   "columns": ["*", "team.name"]
  * }
  * ```
  *
@@ -1587,7 +2431,7 @@ export type QueryTableVariables = {
  *   "team": {
  *     "id": "XX",
  *     "xata": {
- *       "version": 0,
+ *       "version": 0
  *     },
  *     "name": "first team"
  *   }
@@ -1598,10 +2442,7 @@ export type QueryTableVariables = {
  *
  * ```json
  * {
- *   "columns": [
- *     "*",
- *     "team.*"
- *   ]
+ *   "columns": ["*", "team.*"]
  * }
  * ```
  *
@@ -1619,7 +2460,7 @@ export type QueryTableVariables = {
  *   "team": {
  *     "id": "XX",
  *     "xata": {
- *       "version": 0,
+ *       "version": 0
  *     },
  *     "name": "first team",
  *     "code": "A1"
@@ -1668,7 +2509,7 @@ export type QueryTableVariables = {
  * ```json
  * {
  *   "filter": {
- *       "name": "r2",
+ *     "name": "r2"
  *   }
  * }
  * ```
@@ -1690,7 +2531,7 @@ export type QueryTableVariables = {
  * ```json
  * {
  *   "filter": {
- *       "settings.plan": "free",
+ *     "settings.plan": "free"
  *   }
  * }
  * ```
@@ -1700,8 +2541,8 @@ export type QueryTableVariables = {
  *   "filter": {
  *     "settings": {
  *       "plan": "free"
- *     },
- *   },
+ *     }
+ *   }
  * }
  * ```
  *
@@ -1710,8 +2551,8 @@ export type QueryTableVariables = {
  * ```json
  * {
  *   "filter": {
- *     "settings.plan": {"$any": ["free", "paid"]}
- *   },
+ *     "settings.plan": { "$any": ["free", "paid"] }
+ *   }
  * }
  * ```
  *
@@ -1720,9 +2561,9 @@ export type QueryTableVariables = {
  * ```json
  * {
  *   "filter": {
- *       "settings.dark": true,
- *       "settings.plan": "free",
- *   },
+ *     "settings.dark": true,
+ *     "settings.plan": "free"
+ *   }
  * }
  * ```
  *
@@ -1733,11 +2574,11 @@ export type QueryTableVariables = {
  * ```json
  * {
  *   "filter": {
- *       "$any": {
- *         "settings.dark": true,
- *         "settings.plan": "free"
- *       }
- *   },
+ *     "$any": {
+ *       "settings.dark": true,
+ *       "settings.plan": "free"
+ *     }
+ *   }
  * }
  * ```
  *
@@ -1748,12 +2589,13 @@ export type QueryTableVariables = {
  *   "filter": {
  *     "$any": [
  *       {
- *         "name": "r1",
+ *         "name": "r1"
  *       },
  *       {
- *         "name": "r2",
- *       },
- *     ],
+ *         "name": "r2"
+ *       }
+ *     ]
+ *   }
  * }
  * ```
  *
@@ -1762,8 +2604,8 @@ export type QueryTableVariables = {
  * ```json
  * {
  *   "filter": {
- *     "$exists": "settings",
- *   },
+ *     "$exists": "settings"
+ *   }
  * }
  * ```
  *
@@ -1774,12 +2616,12 @@ export type QueryTableVariables = {
  *   "filter": {
  *     "$all": [
  *       {
- *         "$exists": "settings",
+ *         "$exists": "settings"
  *       },
  *       {
- *         "$exists": "name",
- *       },
- *     ],
+ *         "$exists": "name"
+ *       }
+ *     ]
  *   }
  * }
  * ```
@@ -1789,8 +2631,8 @@ export type QueryTableVariables = {
  * ```json
  * {
  *   "filter": {
- *     "$notExists": "settings",
- *   },
+ *     "$notExists": "settings"
+ *   }
  * }
  * ```
  *
@@ -1816,7 +2658,7 @@ export type QueryTableVariables = {
  * {
  *   "filter": {
  *     "<column_name>": {
- *         "$pattern": "v*alue*"
+ *       "$pattern": "v*alue*"
  *     }
  *   }
  * }
@@ -1828,10 +2670,10 @@ export type QueryTableVariables = {
  * {
  *   "filter": {
  *     "<column_name>": {
- *         "$endsWith": ".gz"
+ *       "$endsWith": ".gz"
  *     },
  *     "<column_name>": {
- *         "$startsWith": "tmp-"
+ *       "$startsWith": "tmp-"
  *     }
  *   }
  * }
@@ -1842,16 +2684,15 @@ export type QueryTableVariables = {
  * ```json
  * {
  *   "filter": {
- *       "<column_name>": {
- *         "$ge": 0,
- *         "$lt": 100
- *       }
+ *     "<column_name>": {
+ *       "$ge": 0,
+ *       "$lt": 100
+ *     }
  *   }
  * }
  * ```
  *
  * The supported operators are `$gt`, `$lt`, `$ge`, `$le`.
- *
  *
  * #### Negations
  *
@@ -1877,15 +2718,21 @@ export type QueryTableVariables = {
  * {
  *   "filter": {
  *     "$not": {
- *       "$any": [{
- *         "<column_name1>": "value1"
- *       }, {
- *         "$all": [{
- *           "<column_name2>": "value2"
- *         }, {
- *           "<column_name3>": "value3"
- *         }]
- *       }]
+ *       "$any": [
+ *         {
+ *           "<column_name1>": "value1"
+ *         },
+ *         {
+ *           "$all": [
+ *             {
+ *               "<column_name2>": "value2"
+ *             },
+ *             {
+ *               "<column_name3>": "value3"
+ *             }
+ *           ]
+ *         }
+ *       ]
  *     }
  *   }
  * }
@@ -1940,8 +2787,8 @@ export type QueryTableVariables = {
  *     "<array name>": {
  *       "$includes": {
  *         "$all": [
- *           {"$contains": "label"},
- *           {"$not": {"$endsWith": "-debug"}}
+ *           { "$contains": "label" },
+ *           { "$not": { "$endsWith": "-debug" } }
  *         ]
  *       }
  *     }
@@ -1961,9 +2808,7 @@ export type QueryTableVariables = {
  * {
  *   "filter": {
  *     "settings.labels": {
- *       "$includesAll": [
- *         {"$contains": "label"},
- *       ]
+ *       "$includesAll": [{ "$contains": "label" }]
  *     }
  *   }
  * }
@@ -2010,7 +2855,6 @@ export type QueryTableVariables = {
  *   ]
  * }
  * ```
- *
  *
  * ### Pagination
  *
@@ -2077,8 +2921,8 @@ export type QueryTableVariables = {
  * can be queried by update `page.after` to the returned cursor while keeping the
  * `page.before` cursor from the first range query.
  *
- * The `filter` , `columns`,  `sort` , and `page.size` configuration will be
- * encoded with the cursor.  The pagination request will be invalid if
+ * The `filter` , `columns`, `sort` , and `page.size` configuration will be
+ * encoded with the cursor. The pagination request will be invalid if
  * `filter` or `sort` is set. The columns returned and page size can be changed
  * anytime by passing the `columns` or `page.size` settings to the next query.
  *
@@ -2117,6 +2961,7 @@ export type QueryTableVariables = {
 export const queryTable = (variables: QueryTableVariables) =>
   xataFetch<
     Responses.QueryResponse,
+    QueryTableError,
     QueryTableRequestBody,
     {},
     {},
@@ -2133,6 +2978,21 @@ export type SearchBranchPathParams = {
    */
   dbBranchName: Schemas.DBBranchName;
 };
+
+export type SearchBranchError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
 
 export type SearchBranchRequestBody = {
   /*
@@ -2169,6 +3029,7 @@ export type SearchBranchVariables = {
 export const searchBranch = (variables: SearchBranchVariables) =>
   xataFetch<
     Responses.SearchResponse,
+    SearchBranchError,
     SearchBranchRequestBody,
     {},
     {},

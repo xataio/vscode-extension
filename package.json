@@ -153,12 +153,12 @@
         "title": "Logout"
       },
       {
-        "command": "xata.palette.insertRecord",
-        "title": "Xata: Insert record"
+        "command": "xata.palette.insertRecords",
+        "title": "Xata: Insert records"
       },
       {
-        "command": "xata.insertRecord",
-        "title": "Insert record"
+        "command": "xata.insertRecords",
+        "title": "Insert records"
       },
       {
         "command": "xata.refresh",
@@ -241,8 +241,8 @@
         "icon": "$(edit)"
       },
       {
-        "command": "xata.openInsertRecordTemplate",
-        "title": "Insert record",
+        "command": "xata.openInsertRecordsTemplate",
+        "title": "Insert records",
         "icon": "$(json)"
       }
     ],
@@ -356,7 +356,7 @@
           "when": "false"
         },
         {
-          "command": "xata.openInsertRecordTemplate",
+          "command": "xata.openInsertRecordsTemplate",
           "when": "false"
         }
       ],
@@ -454,7 +454,7 @@
           "group": "inline"
         },
         {
-          "command": "xata.openInsertRecordTemplate",
+          "command": "xata.openInsertRecordsTemplate",
           "when": "view == xataExplorer && viewItem == table",
           "group": "5_templates"
         }
@@ -462,8 +462,8 @@
     }
   },
   "devDependencies": {
-    "@openapi-codegen/cli": "^1.5.0",
-    "@openapi-codegen/typescript": "^3.0.1",
+    "@openapi-codegen/cli": "^1.5.2",
+    "@openapi-codegen/typescript": "^4.0.1",
     "@types/flat": "^5.0.2",
     "@types/json-schema": "^7.0.11",
     "@types/node": "14.x",

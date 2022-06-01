@@ -10,13 +10,19 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
   type: "treeItem",
   action: (context, explorer, jsonSchemaProvider) => {
     return async (tableTreeItem) => {
-      const { schema } = await getBranchDetails({
+      const branchDetails = await getBranchDetails({
         baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
         context: context,
         pathParams: {
           dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
         },
       });
+
+      if (!branchDetails.success) {
+        throw new Error(branchDetails.error.payload.message);
+      }
+
+      const { schema } = branchDetails.data;
 
       const existingTables = schema.tables.map((t) => t.name);
 
