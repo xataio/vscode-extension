@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import fetch from "isomorphic-fetch";
 import { Context } from "../context";
 
 export type ErrorWrapper<TError> = TError;
@@ -38,15 +39,8 @@ export async function xataFetch<
   | { success: false; error: ErrorWrapper<TError> }
 > {
   try {
-    // Deal with `fetch` between browser/electron context
-    // Note: `cross-fetch` and other similar packages are not working in this context.
-    const crossFetch =
-      process.env.VSCODE_ENV === "browser"
-        ? fetch
-        : (await import("node-fetch")).default;
-
     const token = await context.getToken();
-    const response = await crossFetch(
+    const response = await fetch(
       `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,
       {
         method: method.toUpperCase(),
