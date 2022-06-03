@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { TableTreeItem } from "../TreeItem";
+import { TableTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { xataColumnTypes } from "../xata/xataColumnTypes";
 import {
@@ -31,10 +31,10 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
 
       if (type === "link") {
         const branchDetails = await getBranchDetails({
-          baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
+          baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
           context,
           pathParams: {
-            dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
+            dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
           },
         });
 
@@ -81,7 +81,7 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
 
       try {
         await addTableColumn({
-          baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
+          baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
           context,
           body: {
             type,
@@ -89,7 +89,7 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
             link,
           },
           pathParams: {
-            dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
+            dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
             tableName: tableTreeItem.table.name,
           },
         });
@@ -97,7 +97,7 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
         // Notify the change to our custom jsonSchemaProvider
         jsonSchemaProvider.onDidChangeEmitter.fire(
           vscode.Uri.parse(
-            `xata:${tableTreeItem.workspace.id}/${tableTreeItem.database.name}/${tableTreeItem.branch.name}/${tableTreeItem.table.name}`
+            `xata:${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.table.name}`
           )
         );
 

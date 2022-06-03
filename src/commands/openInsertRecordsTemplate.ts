@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { TableTreeItem } from "../TreeItem";
+import { TableTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 
 export const openInsertRecordsTemplateCommand: TreeItemCommand<TableTreeItem> =
@@ -11,11 +11,11 @@ export const openInsertRecordsTemplateCommand: TreeItemCommand<TableTreeItem> =
       const doc = await vscode.workspace.openTextDocument({
         language: "jsonc",
         content:
-          `// Insert a record to ${tableTreeItem.workspace.id}/${tableTreeItem.database.name}/${tableTreeItem.branch.name}/${tableTreeItem.table.name}\n\n` +
+          `// Insert a record to ${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.table.name}\n\n` +
           "// 1. Add your records\n" +
           JSON.stringify(
             {
-              $schema: `xata:${tableTreeItem.workspace.id}/${tableTreeItem.database.name}/${tableTreeItem.branch.name}/${tableTreeItem.table.name}`,
+              $schema: `xata:${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.table.name}`,
               records: [],
             },
             null,

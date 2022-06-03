@@ -1,7 +1,7 @@
 import { Codicon } from "./codicon";
 import { Context } from "./context";
-import { TreeItem } from "./TreeItem";
-import { XataExplorer } from "./xataExplorer";
+import { TreeItem } from "./views/treeItems/TreeItem";
+import { XataExplorer } from "./views/xataExplorer";
 import { XataJsonSchemaProvider } from "./xataJsonSchemaProvider";
 
 /**
@@ -10,6 +10,10 @@ import { XataJsonSchemaProvider } from "./xataJsonSchemaProvider";
 export type Command = {
   id: string;
   type: "global";
+  /**
+   * Icon
+   * @see https://microsoft.github.io/vscode-codicons/dist/codicon.html
+   */
   icon?: Codicon;
   inPalette?: boolean;
   action: (

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { TableTreeItem } from "../TreeItem";
+import { TableTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { getBranchDetails, updateTable } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
@@ -11,10 +11,10 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
   action: (context, explorer, jsonSchemaProvider) => {
     return async (tableTreeItem) => {
       const branchDetails = await getBranchDetails({
-        baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
+        baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
         context: context,
         pathParams: {
-          dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
+          dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
         },
       });
 
@@ -47,10 +47,10 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
 
       try {
         await updateTable({
-          baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
+          baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
           context,
           pathParams: {
-            dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
+            dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
             tableName: tableTreeItem.table.name,
           },
           body: {
@@ -61,7 +61,7 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
         // Notify the change to our custom jsonSchemaProvider
         jsonSchemaProvider.onDidChangeEmitter.fire(
           vscode.Uri.parse(
-            `xata:${tableTreeItem.workspace.id}/${tableTreeItem.database.name}/${tableTreeItem.branch.name}/${tableTreeItem.table.name}`
+            `xata:${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.table.name}`
           )
         );
 

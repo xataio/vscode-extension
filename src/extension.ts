@@ -1,10 +1,12 @@
 import * as vscode from "vscode";
 import * as commands from "./commands";
 import { getContext } from "./context";
-import { XataExplorer } from "./xataExplorer";
+import { CurrentDatabase } from "./views/currentDatabase";
+import { XataExplorer } from "./views/xataExplorer";
 import { XataJsonSchemaProvider } from "./xataJsonSchemaProvider";
 
 export function activate(extensionContext: vscode.ExtensionContext) {
+  new CurrentDatabase(extensionContext);
   const xataExplorer = new XataExplorer(extensionContext);
   const context = getContext(extensionContext);
 

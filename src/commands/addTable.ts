@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
-import { BranchTreeItem, OneBranchDatabaseItem } from "../TreeItem";
+import {
+  BranchTreeItem,
+  OneBranchDatabaseItem,
+} from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { createTable, getBranchDetails } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
@@ -13,10 +16,10 @@ export const addTableCommand: TreeItemCommand<
   action: (context, explorer) => {
     return async (branchTreeItem) => {
       const branchDetails = await getBranchDetails({
-        baseUrl: context.getBaseUrl(branchTreeItem.workspace.id),
+        baseUrl: context.getBaseUrl(branchTreeItem.workspaceId),
         context: context,
         pathParams: {
-          dbBranchName: `${branchTreeItem.database.name}:${branchTreeItem.branch.name}`,
+          dbBranchName: `${branchTreeItem.databaseName}:${branchTreeItem.branchName}`,
         },
       });
 
@@ -48,10 +51,10 @@ export const addTableCommand: TreeItemCommand<
 
       try {
         await createTable({
-          baseUrl: context.getBaseUrl(branchTreeItem.workspace.id),
+          baseUrl: context.getBaseUrl(branchTreeItem.workspaceId),
           context,
           pathParams: {
-            dbBranchName: `${branchTreeItem.database.name}:${branchTreeItem.branch.name}`,
+            dbBranchName: `${branchTreeItem.databaseName}:${branchTreeItem.branchName}`,
             tableName: name,
           },
         });

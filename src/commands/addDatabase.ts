@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { WorkspaceTreeItem } from "../TreeItem";
+import { WorkspaceTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { slugify } from "../utils";
 import { createDatabase, getDatabaseList } from "../xata/xataComponents";

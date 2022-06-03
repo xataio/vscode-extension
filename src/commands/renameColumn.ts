@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ColumnTreeItem } from "../TreeItem";
+import { ColumnTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { updateColumn } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
@@ -10,7 +10,7 @@ export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
   type: "treeItem",
   action: (context, explorer) => {
     return async (columnTreeItem) => {
-      const existingTables = columnTreeItem.table.columns.map((c) => c.name);
+      const existingTables = columnTreeItem.columns.map((c) => c.name);
 
       const name = await vscode.window.showInputBox({
         title: `New column name`,
@@ -33,11 +33,11 @@ export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
 
       try {
         await updateColumn({
-          baseUrl: context.getBaseUrl(columnTreeItem.workspace.id),
+          baseUrl: context.getBaseUrl(columnTreeItem.workspaceId),
           context,
           pathParams: {
-            dbBranchName: `${columnTreeItem.database.name}:${columnTreeItem.branch.name}`,
-            tableName: columnTreeItem.table.name,
+            dbBranchName: `${columnTreeItem.databaseName}:${columnTreeItem.branchName}`,
+            tableName: columnTreeItem.tableName,
             columnName: columnTreeItem.column.name,
           },
           body: {

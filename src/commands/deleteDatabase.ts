@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { DatabaseTreeItem } from "../TreeItem";
+import { DatabaseTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { deleteDatabase } from "../xata/xataComponents";
 
@@ -24,7 +24,7 @@ export const deleteDatabaseCommand: TreeItemCommand<DatabaseTreeItem> = {
       }
 
       await deleteDatabase({
-        baseUrl: context.getBaseUrl(databaseTreeItem.workspace.id),
+        baseUrl: context.getBaseUrl(databaseTreeItem.workspaceId),
         context,
         pathParams: {
           dbName: databaseTreeItem.database.name,

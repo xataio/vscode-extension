@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ColumnTreeItem } from "../TreeItem";
+import { ColumnTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { deleteColumn } from "../xata/xataComponents";
 
@@ -24,11 +24,11 @@ export const deleteColumnCommand: TreeItemCommand<ColumnTreeItem> = {
       }
 
       await deleteColumn({
-        baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
+        baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
         context,
         pathParams: {
-          dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
-          tableName: tableTreeItem.table.name,
+          dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
+          tableName: tableTreeItem.tableName,
           columnName: tableTreeItem.column.name,
         },
       });
@@ -36,7 +36,7 @@ export const deleteColumnCommand: TreeItemCommand<ColumnTreeItem> = {
       // Notify the change to our custom jsonSchemaProvider
       jsonSchemaProvider.onDidChangeEmitter.fire(
         vscode.Uri.parse(
-          `xata:${tableTreeItem.workspace.id}/${tableTreeItem.database.name}/${tableTreeItem.branch.name}/${tableTreeItem.table.name}`
+          `xata:${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.tableName}`
         )
       );
 

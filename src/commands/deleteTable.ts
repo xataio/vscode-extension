@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { TableTreeItem } from "../TreeItem";
+import { TableTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { deleteTable } from "../xata/xataComponents";
 
@@ -24,10 +24,10 @@ export const deleteTableCommand: TreeItemCommand<TableTreeItem> = {
       }
 
       await deleteTable({
-        baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
+        baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
         context,
         pathParams: {
-          dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
+          dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
           tableName: tableTreeItem.table.name,
         },
       });

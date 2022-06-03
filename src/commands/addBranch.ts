@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
-import { DatabaseTreeItem, OneBranchDatabaseItem } from "../TreeItem";
+import {
+  DatabaseTreeItem,
+  OneBranchDatabaseItem,
+} from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { createBranch, getBranchList } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
@@ -13,7 +16,7 @@ export const addBranchCommand: TreeItemCommand<
   action: (context, explorer) => {
     return async (databaseTreeItem) => {
       const branchList = await getBranchList({
-        baseUrl: context.getBaseUrl(databaseTreeItem.workspace.id),
+        baseUrl: context.getBaseUrl(databaseTreeItem.workspaceId),
         context: context,
         pathParams: {
           dbName: databaseTreeItem.database.name,
@@ -58,7 +61,7 @@ export const addBranchCommand: TreeItemCommand<
 
       try {
         await createBranch({
-          baseUrl: context.getBaseUrl(databaseTreeItem.workspace.id),
+          baseUrl: context.getBaseUrl(databaseTreeItem.workspaceId),
           context,
           pathParams: {
             dbBranchName: `${databaseTreeItem.database.name}:${name}`,
