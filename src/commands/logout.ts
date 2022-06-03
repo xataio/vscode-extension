@@ -10,7 +10,7 @@ export const logoutCommand: Command = {
   action(context, refresh) {
     return async () => {
       await context.clearToken();
-      return refresh();
+      return refresh("explorer");
     };
   },
 };

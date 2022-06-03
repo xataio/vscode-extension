@@ -17,7 +17,7 @@ export const loginCommand: Command = {
 
       if (token) {
         await context.setToken(token);
-        return refresh();
+        return refresh("explorer");
       }
     };
   },

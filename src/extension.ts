@@ -9,9 +9,15 @@ export function activate(extensionContext: vscode.ExtensionContext) {
   const xataWorkspace = new XataWorkspace(extensionContext);
   const xataExplorer = new XataExplorer(extensionContext);
 
-  const refresh = () => {
-    xataExplorer.refresh();
-    xataWorkspace.refresh();
+  const refresh = (scope?: "explorer" | "workspace") => {
+    if (scope === "explorer") {
+      xataExplorer.refresh();
+    } else if (scope === "workspace") {
+      xataWorkspace.refresh();
+    } else {
+      xataExplorer.refresh();
+      xataWorkspace.refresh();
+    }
   };
 
   // Expose `xata.treeViews` from `package.json:view/item/context` when clauses

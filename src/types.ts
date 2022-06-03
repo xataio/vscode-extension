@@ -1,8 +1,9 @@
 import { Codicon } from "./codicon";
 import { Context } from "./context";
 import { TreeItem } from "./views/treeItems/TreeItem";
-import { XataExplorer } from "./views/xataExplorer";
 import { XataJsonSchemaProvider } from "./xataJsonSchemaProvider";
+
+type RefreshAction = (scope?: "explorer" | "workspace") => void;
 
 /**
  * Global VSCode command.
@@ -18,7 +19,7 @@ export type Command = {
   inPalette?: boolean;
   action: (
     context: Context,
-    refresh: () => void,
+    refresh: RefreshAction,
     jsonSchemaProvider: XataJsonSchemaProvider
   ) => () => void;
 };
@@ -39,7 +40,7 @@ export type TreeItemCommand<T extends TreeItem> = {
   icon: Codicon;
   action: (
     context: Context,
-    refresh: () => void,
+    refresh: RefreshAction,
     jsonSchemaProvider: XataJsonSchemaProvider
   ) => (treeItem: T) => void;
 };
