@@ -8,7 +8,7 @@ export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
   id: "renameColumn",
   icon: "edit",
   type: "treeItem",
-  action: (context, explorer) => {
+  action: (context, refresh) => {
     return async (columnTreeItem) => {
       const existingTables = columnTreeItem.columns.map((c) => c.name);
 
@@ -33,7 +33,10 @@ export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
 
       try {
         await updateColumn({
-          baseUrl: context.getBaseUrl(columnTreeItem.workspaceId),
+          baseUrl:
+            columnTreeItem.scope?.baseUrl ??
+            context.getBaseUrl(columnTreeItem.workspaceId),
+          token: columnTreeItem.scope?.token,
           context,
           pathParams: {
             dbBranchName: `${columnTreeItem.databaseName}:${columnTreeItem.branchName}`,
@@ -45,7 +48,7 @@ export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
           },
         });
 
-        return explorer.refresh();
+        return refresh();
       } catch (e) {
         if (e instanceof ValidationError) {
           return vscode.window.showErrorMessage(e.details);

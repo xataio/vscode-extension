@@ -8,6 +8,10 @@ export const openInsertRecordsTemplateCommand: TreeItemCommand<TableTreeItem> =
     type: "treeItem",
     icon: "json",
     action: () => async (tableTreeItem) => {
+      const query = tableTreeItem.scope
+        ? `?workspace=${tableTreeItem.scope.vscodeWorkspace.index}`
+        : "";
+
       const doc = await vscode.workspace.openTextDocument({
         language: "jsonc",
         content:
@@ -15,7 +19,7 @@ export const openInsertRecordsTemplateCommand: TreeItemCommand<TableTreeItem> =
           "// 1. Add your records\n" +
           JSON.stringify(
             {
-              $schema: `xata:${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.table.name}`,
+              $schema: `xata:${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.table.name}${query}`,
               records: [],
             },
             null,

@@ -13,7 +13,7 @@ export const addBranchCommand: TreeItemCommand<
   id: "addBranch",
   type: "treeItem",
   icon: "git-pull-request-create",
-  action: (context, explorer) => {
+  action: (context, refresh) => {
     return async (databaseTreeItem) => {
       const branchList = await getBranchList({
         baseUrl: context.getBaseUrl(databaseTreeItem.workspaceId),
@@ -71,7 +71,7 @@ export const addBranchCommand: TreeItemCommand<
           },
         });
 
-        return explorer.refresh();
+        return refresh();
       } catch (e) {
         if (e instanceof ValidationError) {
           return vscode.window.showErrorMessage(e.details);

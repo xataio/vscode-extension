@@ -1,17 +1,16 @@
 import * as vscode from "vscode";
 import { Context } from "../../context";
-import {
-  BranchTreeItem,
-  DatabaseTreeItem,
-  OneBranchDatabaseItem,
-  TableTreeItem,
-} from "./TreeItem";
+import { TableTreeItem } from "./TreeItem";
 import { getBranchDetails } from "../../xata/xataComponents";
 
 export async function getTableTreeItems(
   element: { workspaceId: string; databaseName: string; branchName: string },
   context: Context,
-  scope?: { token: string; baseUrl: string }
+  scope?: {
+    token: string;
+    baseUrl: string;
+    vscodeWorkspace: vscode.WorkspaceFolder;
+  }
 ) {
   const branchDetails = await getBranchDetails({
     baseUrl: scope?.baseUrl ?? context.getBaseUrl(element.workspaceId),

@@ -17,7 +17,7 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
   id: "addColumn",
   type: "treeItem",
   icon: "add",
-  action(context, explorer, jsonSchemaProvider) {
+  action(context, refresh, jsonSchemaProvider) {
     return async (tableTreeItem) => {
       let link: AddTableColumnVariables["body"]["link"];
 
@@ -31,7 +31,10 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
 
       if (type === "link") {
         const branchDetails = await getBranchDetails({
-          baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
+          baseUrl:
+            tableTreeItem.scope?.baseUrl ??
+            context.getBaseUrl(tableTreeItem.workspaceId),
+          token: tableTreeItem.scope?.token,
           context,
           pathParams: {
             dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
@@ -81,7 +84,10 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
 
       try {
         await addTableColumn({
-          baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
+          baseUrl:
+            tableTreeItem.scope?.baseUrl ??
+            context.getBaseUrl(tableTreeItem.workspaceId),
+          token: tableTreeItem.scope?.token,
           context,
           body: {
             type,
@@ -101,7 +107,7 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
           )
         );
 
-        return explorer.refresh();
+        return refresh();
       } catch (e) {
         if (e instanceof ValidationError) {
           return vscode.window.showErrorMessage(e.details);

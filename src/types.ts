@@ -18,7 +18,7 @@ export type Command = {
   inPalette?: boolean;
   action: (
     context: Context,
-    explorer: XataExplorer,
+    refresh: () => void,
     jsonSchemaProvider: XataJsonSchemaProvider
   ) => () => void;
 };
@@ -39,7 +39,7 @@ export type TreeItemCommand<T extends TreeItem> = {
   icon: Codicon;
   action: (
     context: Context,
-    explorer: XataExplorer,
+    refresh: () => void,
     jsonSchemaProvider: XataJsonSchemaProvider
   ) => (treeItem: T) => void;
 };

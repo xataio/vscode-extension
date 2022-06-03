@@ -13,7 +13,7 @@ export const addTableCommand: TreeItemCommand<
   id: "addTable",
   type: "treeItem",
   icon: "empty-window",
-  action: (context, explorer) => {
+  action: (context, refresh) => {
     return async (branchTreeItem) => {
       const branchDetails = await getBranchDetails({
         baseUrl: context.getBaseUrl(branchTreeItem.workspaceId),
@@ -59,7 +59,7 @@ export const addTableCommand: TreeItemCommand<
           },
         });
 
-        return explorer.refresh();
+        return refresh();
       } catch (e) {
         if (e instanceof ValidationError) {
           return vscode.window.showErrorMessage(e.details);

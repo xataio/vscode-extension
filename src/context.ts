@@ -4,7 +4,9 @@ import {
   window,
   TreeItem,
   commands,
+  Uri,
 } from "vscode";
+import dotenv from "dotenv";
 import { XataTablePath } from "./types";
 import { Column } from "./xata/xataSchemas";
 
@@ -124,6 +126,41 @@ export function getContext(extensionContext: ExtensionContext) {
      */
     setOffline(value: boolean) {
       setContributeContext("xata.isOffline", value);
+    },
+
+    /**
+     * Retrieve and validate the config from the workspace .env
+     *
+     * @param uri vscode's workspace uri
+     * @returns
+     */
+    async getVSCodeWorkspaceEnvConfig(uri: Uri) {
+      const envFile = await workspace.fs.readFile(Uri.joinPath(uri, ".env"));
+      const config = dotenv.parse(Buffer.from(envFile));
+
+      if (
+        typeof config.XATA_DATABASE_URL === "string" &&
+        typeof config.XATA_DATABASE_BRANCH === "string" &&
+        typeof config.XATA_API_KEY === "string"
+      ) {
+        const urlChunks = config.XATA_DATABASE_URL.match(/\/\/([a-z0-9-]*)\./);
+        if (!urlChunks) {
+          throw new Error("XATA_DATABASE_URL is not valid");
+        }
+
+        return {
+          baseUrl: new URL(config.XATA_DATABASE_URL).origin,
+          databaseName: new URL(config.XATA_DATABASE_URL).pathname.split(
+            "/"
+          )[2],
+          databaseUrl: config.XATA_DATABASE_URL,
+          branch: config.XATA_DATABASE_BRANCH,
+          apiKey: config.XATA_API_KEY,
+          workspaceId: urlChunks[1],
+        };
+      } else {
+        throw new Error(".env is missing"); // TODO improve the error / call to action
+      }
     },
   };
 }

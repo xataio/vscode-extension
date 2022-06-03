@@ -51,7 +51,6 @@ export async function xataFetch<
       token = await context.getToken();
     }
 
-    console.log({ token, baseUrl, url, queryParams, pathParams });
     const response = await crossFetch(
       `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,
       {

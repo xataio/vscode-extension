@@ -38,8 +38,19 @@ export const insertRecordsCommand: Command = {
         }
 
         const [workspaceId, databaseName, branchName, tableName] = $schema
-          .replace(/^xata:/, "")
+          .replace(/^xata:/, "") // scheme
+          .replace(/\?.*$/, "") // query
           .split("/");
+
+        // Retrieve config from `?workspace={index}`
+        let config: { baseUrl: string; apiKey: string } | undefined = undefined;
+        const queryExecArray = /\?workspace=(\d)$/.exec($schema);
+        if (queryExecArray && vscode.workspace.workspaceFolders) {
+          const workspaceIndex = parseInt(queryExecArray[1]);
+          config = await context.getVSCodeWorkspaceEnvConfig(
+            vscode.workspace.workspaceFolders[workspaceIndex].uri
+          );
+        }
 
         if (!workspaceId || !databaseName || !branchName || !tableName) {
           vscode.window.showErrorMessage(
@@ -50,7 +61,8 @@ export const insertRecordsCommand: Command = {
 
         try {
           const res = await bulkInsertTableRecords({
-            baseUrl: context.getBaseUrl(workspaceId),
+            baseUrl: config?.baseUrl ?? context.getBaseUrl(workspaceId),
+            token: config?.apiKey,
             context,
             pathParams: {
               dbBranchName: `${databaseName}:${branchName}`,
@@ -60,7 +72,6 @@ export const insertRecordsCommand: Command = {
               records,
             },
           });
-          console.log(res);
 
           if (res.success) {
             vscode.window.showInformationMessage(

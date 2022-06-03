@@ -12,7 +12,7 @@ import { Column } from "./xata/xataSchemas";
  * @example
  * ```json
  * {
- *  "$schema": "xata:{workspaceId}/{db}/{branch}/{table}"
+ *  "$schema": "xata:{workspaceId}/{db}/{branch}/{table}?workspace=0"
  * }
  * ```
  */
@@ -38,8 +38,25 @@ export class XataJsonSchemaProvider
     const [workspaceId, databaseName, branchName, tableName] =
       uri.path.split("/");
 
+    let config: { baseUrl: string; apiKey: string } | undefined = undefined;
+    if (
+      uri.query.startsWith("workspace=") &&
+      vscode.workspace.workspaceFolders
+    ) {
+      const workspaceId = parseInt(uri.query.slice("workspace=".length));
+      if (
+        Number.isFinite(workspaceId) &&
+        workspaceId <= vscode.workspace.workspaceFolders.length - 1
+      ) {
+        config = await this.context.getVSCodeWorkspaceEnvConfig(
+          vscode.workspace.workspaceFolders[workspaceId].uri
+        );
+      }
+    }
+
     const tableSchema = await getTableSchema({
-      baseUrl: this.context.getBaseUrl(workspaceId),
+      baseUrl: config?.baseUrl ?? this.context.getBaseUrl(workspaceId),
+      token: config?.apiKey,
       context: this.context,
       pathParams: {
         dbBranchName: `${databaseName}:${branchName}`,

@@ -7,7 +7,7 @@ export const deleteBranchCommand: TreeItemCommand<BranchTreeItem> = {
   id: "deleteBranch",
   icon: "trash",
   type: "treeItem",
-  action: (context, explorer) => {
+  action: (context, refresh) => {
     return async (branchTreeItem) => {
       const confirm = await vscode.window.showInputBox({
         title: `Delete branch`,
@@ -31,7 +31,7 @@ export const deleteBranchCommand: TreeItemCommand<BranchTreeItem> = {
         },
       });
 
-      return explorer.refresh();
+      return refresh();
     };
   },
 };

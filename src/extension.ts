@@ -1,13 +1,25 @@
 import * as vscode from "vscode";
 import * as commands from "./commands";
 import { getContext } from "./context";
-import { CurrentDatabase } from "./views/currentDatabase";
+import { XataWorkspace } from "./views/xataWorkspace";
 import { XataExplorer } from "./views/xataExplorer";
 import { XataJsonSchemaProvider } from "./xataJsonSchemaProvider";
 
 export function activate(extensionContext: vscode.ExtensionContext) {
-  new CurrentDatabase(extensionContext);
+  const xataWorkspace = new XataWorkspace(extensionContext);
   const xataExplorer = new XataExplorer(extensionContext);
+
+  const refresh = () => {
+    xataExplorer.refresh();
+    xataWorkspace.refresh();
+  };
+
+  // Expose `xata.treeViews` from `package.json:view/item/context` when clauses
+  vscode.commands.executeCommand("setContext", "xata.treeViews", [
+    "xataExplorer",
+    "xataWorkspace",
+  ]);
+
   const context = getContext(extensionContext);
 
   const xataJsonSchema = new XataJsonSchemaProvider(context);
@@ -21,14 +33,14 @@ export function activate(extensionContext: vscode.ExtensionContext) {
       extensionContext.subscriptions.push(
         vscode.commands.registerCommand(
           `xata.palette.${command.id}`,
-          command.action(context, xataExplorer, xataJsonSchema)
+          command.action(context, refresh, xataJsonSchema)
         )
       );
     }
     extensionContext.subscriptions.push(
       vscode.commands.registerCommand(
         `xata.${command.id}`,
-        command.action(context, xataExplorer, xataJsonSchema)
+        command.action(context, refresh, xataJsonSchema)
       )
     );
   });

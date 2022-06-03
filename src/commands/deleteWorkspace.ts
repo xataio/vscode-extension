@@ -7,7 +7,7 @@ export const deleteWorkspaceCommand: TreeItemCommand<WorkspaceTreeItem> = {
   id: "deleteWorkspace",
   icon: "trash",
   type: "treeItem",
-  action: (context, explorer) => {
+  action: (context, refresh) => {
     return async (workspaceTreeItem) => {
       const confirm = await vscode.window.showInputBox({
         title: `Delete workspace`,
@@ -31,7 +31,7 @@ export const deleteWorkspaceCommand: TreeItemCommand<WorkspaceTreeItem> = {
         },
       });
 
-      return explorer.refresh();
+      return refresh();
     };
   },
 };

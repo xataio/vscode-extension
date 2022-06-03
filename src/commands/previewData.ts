@@ -11,7 +11,10 @@ export const previewDataCommand: TreeItemCommand<TableTreeItem> = {
   action: (context) => {
     return async (tableTreeItem) => {
       const table = await queryTable({
-        baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
+        baseUrl:
+          tableTreeItem.scope?.baseUrl ??
+          context.getBaseUrl(tableTreeItem.workspaceId),
+        token: tableTreeItem.scope?.token,
         context: context,
         pathParams: {
           dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,

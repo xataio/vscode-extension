@@ -8,7 +8,7 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
   id: "renameTable",
   icon: "edit",
   type: "treeItem",
-  action: (context, explorer, jsonSchemaProvider) => {
+  action: (context, refresh, jsonSchemaProvider) => {
     return async (tableTreeItem) => {
       const branchDetails = await getBranchDetails({
         baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
@@ -47,7 +47,10 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
 
       try {
         await updateTable({
-          baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
+          baseUrl:
+            tableTreeItem.scope?.baseUrl ??
+            context.getBaseUrl(tableTreeItem.workspaceId),
+          token: tableTreeItem.scope?.token,
           context,
           pathParams: {
             dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
@@ -65,7 +68,7 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
           )
         );
 
-        return explorer.refresh();
+        return refresh();
       } catch (e) {
         if (e instanceof ValidationError) {
           return vscode.window.showErrorMessage(e.details);

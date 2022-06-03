@@ -8,9 +8,9 @@ export const refreshCommand: Command = {
   type: "global",
   icon: "refresh",
   inPalette: true,
-  action: (context, explorer, jsonSchemaProvider) => () => {
+  action: (context, refresh, jsonSchemaProvider) => () => {
     context.setOffline(false);
     jsonSchemaProvider.refresh();
-    explorer.refresh();
+    refresh();
   },
 };

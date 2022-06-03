@@ -1,16 +1,9 @@
 import * as vscode from "vscode";
 import { Context, getContext } from "../context";
-import dotenv from "dotenv";
 
-import {
-  TreeItem,
-  TableTreeItem,
-  VSCodeWorkspaceTreeItem,
-} from "./treeItems/TreeItem";
+import { TreeItem, VSCodeWorkspaceTreeItem } from "./treeItems/TreeItem";
 import { getColumnTreeItems } from "./treeItems/getColumnTreeItems";
 import { getTableTreeItems } from "./treeItems/getTableTreeItems";
-
-import { getBranchDetails } from "../xata/xataComponents";
 
 class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
   #onDidChangeTreeData: vscode.EventEmitter<TreeItem | null> =
@@ -42,7 +35,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
     if (!element) {
       if (vscode.workspace.workspaceFolders.length === 1) {
         // One vscode workspace
-        const config = await this.getVscodeWorkspaceEnvConfig(
+        const config = await this.context.getVSCodeWorkspaceEnvConfig(
           vscode.workspace.workspaceFolders[0].uri
         );
 
@@ -56,6 +49,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
           {
             baseUrl: config.baseUrl,
             token: config.apiKey,
+            vscodeWorkspace: vscode.workspace.workspaceFolders[0],
           }
         );
       } else {
@@ -73,7 +67,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
     // VSCode workspace folder
     if (element.contextValue === "vscodeWorkspace") {
-      const config = await this.getVscodeWorkspaceEnvConfig(
+      const config = await this.context.getVSCodeWorkspaceEnvConfig(
         element.workspaceFolder.uri
       );
 
@@ -87,6 +81,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
         {
           baseUrl: config.baseUrl,
           token: config.apiKey,
+          vscodeWorkspace: element.workspaceFolder,
         }
       );
     }
@@ -111,38 +106,9 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
     return element;
   }
-
-  private async getVscodeWorkspaceEnvConfig(uri: vscode.Uri) {
-    const envFile = await vscode.workspace.fs.readFile(
-      vscode.Uri.joinPath(uri, ".env")
-    );
-    const config = dotenv.parse(Buffer.from(envFile));
-
-    if (
-      typeof config.XATA_DATABASE_URL === "string" &&
-      typeof config.XATA_DATABASE_BRANCH === "string" &&
-      typeof config.XATA_API_KEY === "string"
-    ) {
-      const urlChunks = config.XATA_DATABASE_URL.match(/\/\/([a-z0-9-]*)\./);
-      if (!urlChunks) {
-        throw new Error("XATA_DATABASE_URL is not valid");
-      }
-
-      return {
-        baseUrl: new URL(config.XATA_DATABASE_URL).origin,
-        databaseName: new URL(config.XATA_DATABASE_URL).pathname.split("/")[2],
-        databaseUrl: config.XATA_DATABASE_URL,
-        branch: config.XATA_DATABASE_BRANCH,
-        apiKey: config.XATA_API_KEY,
-        workspaceId: urlChunks[1],
-      };
-    } else {
-      throw new Error(".env is missing"); // TODO improve the error / call to action
-    }
-  }
 }
 
-export class CurrentDatabase {
+export class XataWorkspace {
   private treeDataProvider: XataDataProvider;
 
   public refresh() {
@@ -153,7 +119,7 @@ export class CurrentDatabase {
     this.treeDataProvider = new XataDataProvider(getContext(context));
 
     context.subscriptions.push(
-      vscode.window.createTreeView("currentDatabase", {
+      vscode.window.createTreeView("xataWorkspace", {
         treeDataProvider: this.treeDataProvider,
       })
     );

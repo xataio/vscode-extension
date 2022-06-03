@@ -276,11 +276,11 @@
       "xata": [
         {
           "id": "xataExplorer",
-          "name": "Global",
+          "name": "Explorer",
           "icon": "media/xata-icon.svg"
         },
         {
-          "id": "currentDatabase",
+          "id": "xataWorkspace",
           "name": "Workspace",
           "icon": "media/xata-icon.svg",
           "when": "workspaceFolderCount > 0"
@@ -388,16 +388,16 @@
       "view/item/context": [
         {
           "command": "xata.addColumn",
-          "when": "view == xataExplorer && viewItem == table",
+          "when": "view in xata.treeViews && viewItem == table",
           "group": "inline"
         },
         {
           "command": "xata.deleteColumn",
-          "when": "view == xataExplorer && viewItem == column"
+          "when": "view in xata.treeViews && viewItem == column"
         },
         {
           "command": "xata.renameColumn",
-          "when": "view == xataExplorer && viewItem == column"
+          "when": "view in xata.treeViews && viewItem == column"
         },
         {
           "command": "xata.deleteWorkspace",
@@ -441,7 +441,7 @@
         },
         {
           "command": "xata.renameTable",
-          "when": "view == xataExplorer && viewItem == table",
+          "when": "view in xata.treeViews && viewItem == table",
           "group": "1_actions"
         },
         {
@@ -451,17 +451,17 @@
         },
         {
           "command": "xata.deleteTable",
-          "when": "view == xataExplorer && viewItem == table",
+          "when": "view in xata.treeViews && viewItem == table",
           "group": "1_actions"
         },
         {
           "command": "xata.previewData",
-          "when": "view == xataExplorer && viewItem == table",
+          "when": "view in xata.treeViews && viewItem == table",
           "group": "inline"
         },
         {
           "command": "xata.openInsertRecordsTemplate",
-          "when": "view == xataExplorer && viewItem == table",
+          "when": "view in xata.treeViews && viewItem == table",
           "group": "5_templates"
         }
       ]

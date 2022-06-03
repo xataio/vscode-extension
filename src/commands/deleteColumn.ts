@@ -7,14 +7,14 @@ export const deleteColumnCommand: TreeItemCommand<ColumnTreeItem> = {
   id: "deleteColumn",
   icon: "trash",
   type: "treeItem",
-  action: (context, explorer, jsonSchemaProvider) => {
-    return async (tableTreeItem) => {
+  action: (context, refresh, jsonSchemaProvider) => {
+    return async (columnTreeItem) => {
       const confirm = await vscode.window.showInputBox({
         title: `Delete column`,
         prompt: `Deleting this column will suppress all data associated with it. This action cannot be undone.`,
         validateInput: (value) => {
-          if (value !== tableTreeItem.column.name) {
-            return `Please type "${tableTreeItem.column.name}" to confirm`;
+          if (value !== columnTreeItem.column.name) {
+            return `Please type "${columnTreeItem.column.name}" to confirm`;
           }
         },
       });
@@ -24,23 +24,26 @@ export const deleteColumnCommand: TreeItemCommand<ColumnTreeItem> = {
       }
 
       await deleteColumn({
-        baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
+        baseUrl:
+          columnTreeItem.scope?.baseUrl ??
+          context.getBaseUrl(columnTreeItem.workspaceId),
+        token: columnTreeItem.scope?.token,
         context,
         pathParams: {
-          dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
-          tableName: tableTreeItem.tableName,
-          columnName: tableTreeItem.column.name,
+          dbBranchName: `${columnTreeItem.databaseName}:${columnTreeItem.branchName}`,
+          tableName: columnTreeItem.tableName,
+          columnName: columnTreeItem.column.name,
         },
       });
 
       // Notify the change to our custom jsonSchemaProvider
       jsonSchemaProvider.onDidChangeEmitter.fire(
         vscode.Uri.parse(
-          `xata:${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.tableName}`
+          `xata:${columnTreeItem.workspaceId}/${columnTreeItem.databaseName}/${columnTreeItem.branchName}/${columnTreeItem.tableName}`
         )
       );
 
-      return explorer.refresh();
+      return refresh();
     };
   },
 };

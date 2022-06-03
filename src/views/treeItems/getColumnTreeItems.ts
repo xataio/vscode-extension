@@ -6,7 +6,11 @@ import { getTableSchema } from "../../xata/xataComponents";
 export async function getColumnTreeItems(
   element: TableTreeItem,
   context: Context,
-  scope?: { token: string; baseUrl: string }
+  scope?: {
+    token: string;
+    baseUrl: string;
+    vscodeWorkspace: vscode.WorkspaceFolder;
+  }
 ) {
   const tableSchema = await getTableSchema({
     baseUrl: scope?.baseUrl ?? context.getBaseUrl(element.workspaceId),
@@ -36,7 +40,8 @@ export async function getColumnTreeItems(
           branchName: element.branchName,
           tableName: element.table.name,
         },
-        tableSchema.data.columns
+        tableSchema.data.columns,
+        scope
       )
   );
 }

@@ -7,7 +7,7 @@ export const deleteDatabaseCommand: TreeItemCommand<DatabaseTreeItem> = {
   id: "deleteDatabase",
   icon: "trash",
   type: "treeItem",
-  action: (context, explorer) => {
+  action: (context, refresh) => {
     return async (databaseTreeItem) => {
       const confirm = await vscode.window.showInputBox({
         title: `Delete database`,
@@ -31,7 +31,7 @@ export const deleteDatabaseCommand: TreeItemCommand<DatabaseTreeItem> = {
         },
       });
 
-      return explorer.refresh();
+      return refresh();
     };
   },
 };

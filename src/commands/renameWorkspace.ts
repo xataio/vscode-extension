@@ -8,7 +8,7 @@ export const renameWorkspaceCommand: TreeItemCommand<WorkspaceTreeItem> = {
   id: "renameWorkspace",
   icon: "edit",
   type: "treeItem",
-  action: (context, explorer) => {
+  action: (context, refresh) => {
     return async (workspaceTreeItem) => {
       const name = await vscode.window.showInputBox({
         title: `New workspace name`,
@@ -31,7 +31,7 @@ export const renameWorkspaceCommand: TreeItemCommand<WorkspaceTreeItem> = {
         },
       });
 
-      return explorer.refresh();
+      return refresh();
     };
   },
 };

@@ -12,7 +12,7 @@ export const addDatabaseCommand: TreeItemCommand<WorkspaceTreeItem> = {
   id: "addDatabase",
   type: "treeItem",
   icon: "add",
-  action(context, explorer) {
+  action(context, refresh) {
     return async (workspaceTreeItem) => {
       const databaseList = await getDatabaseList({
         baseUrl: context.getBaseUrl(workspaceTreeItem.workspace.id),
@@ -76,7 +76,7 @@ export const addDatabaseCommand: TreeItemCommand<WorkspaceTreeItem> = {
           },
         });
 
-        return explorer.refresh();
+        return refresh();
       } catch (e) {
         if (e instanceof ValidationError) {
           return vscode.window.showErrorMessage(e.details);

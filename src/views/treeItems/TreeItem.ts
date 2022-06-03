@@ -123,7 +123,11 @@ export class TableTreeItem extends vscode.TreeItem {
     public readonly label: string,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly table: Table,
-    public readonly scope?: { baseUrl: string; token: string }
+    public readonly scope?: {
+      baseUrl: string;
+      token: string;
+      vscodeWorkspace: vscode.WorkspaceFolder;
+    }
   ) {
     super(label, collapsibleState);
 
@@ -144,7 +148,12 @@ export class ColumnTreeItem extends vscode.TreeItem {
     public readonly label: string,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly column: Column,
-    public readonly columns: Schema.Column[]
+    public readonly columns: Schema.Column[],
+    public readonly scope?: {
+      baseUrl: string;
+      token: string;
+      vscodeWorkspace: vscode.WorkspaceFolder;
+    }
   ) {
     super(label, collapsibleState);
 
