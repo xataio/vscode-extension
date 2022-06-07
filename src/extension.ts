@@ -4,6 +4,7 @@ import { getContext } from "./context";
 import { XataWorkspace } from "./views/xataWorkspace";
 import { XataExplorer } from "./views/xataExplorer";
 import { XataJsonSchemaProvider } from "./xataJsonSchemaProvider";
+import { watchWorkspaceConfig } from "./watchWorkspaceConfig";
 
 export function activate(extensionContext: vscode.ExtensionContext) {
   const xataWorkspace = new XataWorkspace(extensionContext);
@@ -52,14 +53,25 @@ export function activate(extensionContext: vscode.ExtensionContext) {
   });
 
   // Handle configuration change
-  vscode.workspace.onDidChangeConfiguration((event) => {
-    if (
-      event.affectsConfiguration("xata.hideBranchLevel") ||
-      event.affectsConfiguration("xata.enableDatabaseColor")
-    ) {
-      xataExplorer.refresh();
-    }
-  });
+  extensionContext.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((event) => {
+      if (
+        event.affectsConfiguration("xata.hideBranchLevel") ||
+        event.affectsConfiguration("xata.enableDatabaseColor")
+      ) {
+        xataExplorer.refresh();
+      }
+
+      if (event.affectsConfiguration("xata.envFilePath")) {
+        xataWorkspace.refresh();
+      }
+    })
+  );
+
+  // Handle config files (.env) changes
+  extensionContext.subscriptions.push(
+    watchWorkspaceConfig(() => xataWorkspace.refresh())
+  );
 }
 
 export function deactivate() {}

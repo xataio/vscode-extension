@@ -20,10 +20,6 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
   }
 
   async getChildren(element?: TreeItem): Promise<TreeItem[]> {
-    if (!(await this.context.getToken())) {
-      return [];
-    }
-
     if (
       !vscode.workspace.workspaceFolders ||
       vscode.workspace.workspaceFolders.length < 1

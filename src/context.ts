@@ -135,7 +135,10 @@ export function getContext(extensionContext: ExtensionContext) {
      * @returns
      */
     async getVSCodeWorkspaceEnvConfig(uri: Uri) {
-      const envFile = await workspace.fs.readFile(Uri.joinPath(uri, ".env"));
+      const envPath =
+        workspace.getConfiguration().get<string>("xata.envFilePath") ?? ".env";
+
+      const envFile = await workspace.fs.readFile(Uri.joinPath(uri, envPath));
       const config = dotenv.parse(Buffer.from(envFile));
 
       if (

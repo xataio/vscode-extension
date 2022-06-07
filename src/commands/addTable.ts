@@ -7,19 +7,47 @@ import { TreeItemCommand } from "../types";
 import { createTable, getBranchDetails } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 
+// Trigger from the top view navigation level
+type WorkspaceNavigationItem = undefined;
+
 export const addTableCommand: TreeItemCommand<
-  OneBranchDatabaseItem | BranchTreeItem
+  OneBranchDatabaseItem | BranchTreeItem | WorkspaceNavigationItem
 > = {
   id: "addTable",
   type: "treeItem",
   icon: "empty-window",
   action: (context, refresh) => {
     return async (branchTreeItem) => {
+      let baseUrl = "";
+      let dbBranchName = "";
+      let token: string | undefined = undefined;
+
+      if (!branchTreeItem) {
+        if (
+          !vscode.workspace.workspaceFolders ||
+          vscode.workspace.workspaceFolders.length > 1
+        ) {
+          throw new Error(
+            "[dev] This action should not be available when the user have multiple workspaces opened"
+          );
+        }
+        const config = await context.getVSCodeWorkspaceEnvConfig(
+          vscode.workspace.workspaceFolders[0].uri
+        );
+        baseUrl = config.baseUrl;
+        dbBranchName = `${config.databaseName}:${config.branch}`;
+        token = config.apiKey;
+      } else {
+        baseUrl = context.getBaseUrl(branchTreeItem.workspaceId);
+        dbBranchName = `${branchTreeItem.databaseName}:${branchTreeItem.branchName}`;
+      }
+
       const branchDetails = await getBranchDetails({
-        baseUrl: context.getBaseUrl(branchTreeItem.workspaceId),
+        baseUrl,
         context: context,
+        token,
         pathParams: {
-          dbBranchName: `${branchTreeItem.databaseName}:${branchTreeItem.branchName}`,
+          dbBranchName,
         },
       });
 
@@ -51,10 +79,11 @@ export const addTableCommand: TreeItemCommand<
 
       try {
         await createTable({
-          baseUrl: context.getBaseUrl(branchTreeItem.workspaceId),
+          baseUrl,
           context,
+          token,
           pathParams: {
-            dbBranchName: `${branchTreeItem.databaseName}:${branchTreeItem.branchName}`,
+            dbBranchName,
             tableName: name,
           },
         });

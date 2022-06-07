@@ -30,7 +30,7 @@ export type Command = {
  * - Assign to one TreeItem
  * - Not visible from the command palette
  */
-export type TreeItemCommand<T extends TreeItem> = {
+export type TreeItemCommand<T extends TreeItem | undefined> = {
   id: string;
   type: "treeItem";
   /**
