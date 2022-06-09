@@ -3,6 +3,7 @@ import { TableTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { PreviewDataPanel } from "../panels/PreviewDataPanel";
 import { queryTable } from "../xata/xataComponents";
+import sanitizeHtml from "sanitize-html";
 
 export const previewDataCommand: TreeItemCommand<TableTreeItem> = {
   id: "previewData",
@@ -43,7 +44,7 @@ export const previewDataCommand: TreeItemCommand<TableTreeItem> = {
           databaseName: tableTreeItem.databaseName,
           tableName: tableTreeItem.table.name,
         },
-        JSON.stringify(flattenRecords)
+        sanitizeHtml(JSON.stringify(flattenRecords))
       );
     };
   },

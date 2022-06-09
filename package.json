@@ -484,6 +484,7 @@
     "@types/flat": "^5.0.2",
     "@types/json-schema": "^7.0.11",
     "@types/node": "14.x",
+    "@types/sanitize-html": "^2.6.2",
     "@types/vscode": "^1.66.0",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
@@ -508,6 +509,7 @@
     "dotenv": "^16.0.1",
     "flat": "^5.0.2",
     "jsonc": "^2.0.0",
-    "node-fetch": "^3.2.4"
+    "node-fetch": "^3.2.4",
+    "sanitize-html": "^2.7.0"
   }
 }
