@@ -3,7 +3,7 @@ import { formatDistanceStrict } from "date-fns";
 import { GetWorkspacesListResponse } from "../../xata/xataComponents";
 import type * as Schema from "../../xata/xataSchemas";
 
-type Workspace = GetWorkspacesListResponse["workspaces"][-1];
+export type Workspace = GetWorkspacesListResponse["workspaces"][-1];
 
 type Database = Required<Schema.ListDatabasesResponse>["databases"][-1] & {
   workspaceId: string;

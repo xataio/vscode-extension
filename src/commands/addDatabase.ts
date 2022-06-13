@@ -5,10 +5,16 @@ import { slugify } from "../utils";
 import { createDatabase, getDatabaseList } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 
+type ResolvedReturnType<U extends (...args: any) => any> =
+  ReturnType<U> extends Promise<infer R> ? R : ReturnType<U>;
+
 /**
  * Command to add a database to a selected workspace
  */
-export const addDatabaseCommand: TreeItemCommand<WorkspaceTreeItem> = {
+export const addDatabaseCommand: TreeItemCommand<
+  WorkspaceTreeItem,
+  ResolvedReturnType<typeof createDatabase> | undefined
+> = {
   id: "addDatabase",
   type: "treeItem",
   icon: "add",
@@ -62,7 +68,7 @@ export const addDatabaseCommand: TreeItemCommand<WorkspaceTreeItem> = {
       }
 
       try {
-        await createDatabase({
+        const response = await createDatabase({
           baseUrl: context.getBaseUrl(workspaceTreeItem.workspace.id),
           context,
           pathParams: {
@@ -76,13 +82,14 @@ export const addDatabaseCommand: TreeItemCommand<WorkspaceTreeItem> = {
           },
         });
 
-        return refresh();
+        refresh();
+        return response;
       } catch (e) {
         if (e instanceof ValidationError) {
-          return vscode.window.showErrorMessage(e.details);
+          vscode.window.showErrorMessage(e.details);
         }
         if (e instanceof Error) {
-          return vscode.window.showErrorMessage(e.message);
+          vscode.window.showErrorMessage(e.message);
         }
       }
     };

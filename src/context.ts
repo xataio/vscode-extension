@@ -143,7 +143,6 @@ export function getContext(extensionContext: ExtensionContext) {
 
       if (
         typeof config.XATA_DATABASE_URL === "string" &&
-        typeof config.XATA_DATABASE_BRANCH === "string" &&
         typeof config.XATA_API_KEY === "string"
       ) {
         const urlChunks = config.XATA_DATABASE_URL.match(/\/\/([a-z0-9-]*)\./);
@@ -157,12 +156,33 @@ export function getContext(extensionContext: ExtensionContext) {
             "/"
           )[2],
           databaseUrl: config.XATA_DATABASE_URL,
-          branch: config.XATA_DATABASE_BRANCH,
+          branch: config.XATA_DATABASE_BRANCH ?? (await this.getGitBranch(uri)),
           apiKey: config.XATA_API_KEY,
           workspaceId: urlChunks[1],
         };
       } else {
-        throw new Error(".env is missing"); // TODO improve the error / call to action
+        commands.executeCommand("setContext", "xata.noConfigFile", true);
+        throw new Error("No config set for xata");
+      }
+    },
+
+    /**
+     * Get current git branch
+     *
+     * @param uri vscode's workspace uri
+     */
+    async getGitBranch(uri: Uri) {
+      try {
+        const HEAD = (
+          await workspace.fs.readFile(Uri.joinPath(uri, ".git/HEAD"))
+        ).toString();
+
+        if (HEAD.startsWith("ref: refs/heads/")) {
+          return HEAD.replace(/^ref: refs\/heads\//, "").trim();
+        }
+        return undefined; // No branch found
+      } catch {
+        return undefined; // No branch found
       }
     },
   };

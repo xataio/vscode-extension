@@ -74,10 +74,12 @@ export const addBranchCommand: TreeItemCommand<
         return refresh();
       } catch (e) {
         if (e instanceof ValidationError) {
-          return vscode.window.showErrorMessage(e.details);
+          vscode.window.showErrorMessage(e.details);
+          return;
         }
         if (e instanceof Error) {
-          return vscode.window.showErrorMessage(e.message);
+          vscode.window.showErrorMessage(e.message);
+          return;
         }
       }
     };

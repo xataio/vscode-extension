@@ -82,7 +82,7 @@ export async function xataFetch<
       };
     }
 
-    return { success: true, data: await response.json() };
+    return { success: true, data: (await response.json()) as any };
   } catch (e) {
     if ((e as NodeJS.ErrnoException).code === "ENOTFOUND") {
       context.setOffline(true);
