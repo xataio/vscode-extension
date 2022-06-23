@@ -167,9 +167,17 @@
         "title": "Insert records"
       },
       {
+        "command": "xata.watchMode",
+        "title": "Xata: Start watch mode"
+      },
+      {
         "command": "xata.refresh",
         "title": "Refresh",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "xata.initWorkspace",
+        "title": "Xata: Init workspace"
       },
       {
         "command": "xata.palette.refresh",
@@ -276,6 +284,11 @@
         "view": "xataExplorer",
         "contents": "You are offline\n[Refresh](command:xata.refresh)",
         "when": "xata.isOffline"
+      },
+      {
+        "view": "xataWorkspace",
+        "contents": "No xatabase found!\n[Setup project](command:xata.initWorkspace)",
+        "when": "workspaceFolderCount == 1 && xata.noConfigFile"
       }
     ],
     "views": {
@@ -370,6 +383,10 @@
         {
           "command": "xata.openInsertRecordsTemplate",
           "when": "false"
+        },
+        {
+          "command": "xata.initWorkspace",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -448,6 +465,11 @@
         {
           "command": "xata.addTable",
           "when": "view == xataExplorer && viewItem == oneBranchDatabase",
+          "group": "inline"
+        },
+        {
+          "command": "xata.addTable",
+          "when": "view == xataWorkspace && viewItem == vscodeWorkspace",
           "group": "inline"
         },
         {

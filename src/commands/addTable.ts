@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import {
   BranchTreeItem,
   OneBranchDatabaseItem,
+  VSCodeWorkspaceTreeItem,
 } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { createTable, getBranchDetails } from "../xata/xataComponents";
@@ -11,7 +12,10 @@ import { ValidationError } from "../xata/xataFetcher";
 type WorkspaceNavigationItem = undefined;
 
 export const addTableCommand: TreeItemCommand<
-  OneBranchDatabaseItem | BranchTreeItem | WorkspaceNavigationItem
+  | OneBranchDatabaseItem
+  | BranchTreeItem
+  | WorkspaceNavigationItem
+  | VSCodeWorkspaceTreeItem
 > = {
   id: "addTable",
   type: "treeItem",
@@ -33,6 +37,13 @@ export const addTableCommand: TreeItemCommand<
         }
         const config = await context.getVSCodeWorkspaceEnvConfig(
           vscode.workspace.workspaceFolders[0].uri
+        );
+        baseUrl = config.baseUrl;
+        dbBranchName = `${config.databaseName}:${config.branch}`;
+        token = config.apiKey;
+      } else if (branchTreeItem.contextValue === "vscodeWorkspace") {
+        const config = await context.getVSCodeWorkspaceEnvConfig(
+          branchTreeItem.workspaceFolder.uri
         );
         baseUrl = config.baseUrl;
         dbBranchName = `${config.databaseName}:${config.branch}`;
