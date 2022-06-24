@@ -201,10 +201,11 @@ export class XataExplorer {
   constructor(context: vscode.ExtensionContext) {
     this.treeDataProvider = new XataDataProvider(getContext(context));
 
-    context.subscriptions.push(
-      vscode.window.createTreeView("xataExplorer", {
-        treeDataProvider: this.treeDataProvider,
-      })
-    );
+    const view = vscode.window.createTreeView("xataExplorer", {
+      treeDataProvider: this.treeDataProvider,
+      showCollapseAll: true,
+    });
+
+    context.subscriptions.push(view);
   }
 }

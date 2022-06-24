@@ -18,7 +18,10 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
     | vscode.Event<TreeItem | TreeItem[] | null>
     | undefined = this.#onDidChangeTreeData.event;
 
-  constructor(private context: Context) {}
+  constructor(
+    private context: Context,
+    private setView: (options: { description?: string; title?: string }) => void
+  ) {}
 
   public refresh() {
     this.#onDidChangeTreeData.fire(null);
@@ -41,8 +44,16 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
         );
 
         if (!config) {
+          this.setView({
+            title: "unknown",
+          });
           return [];
         }
+
+        this.setView({
+          title: config.databaseName,
+          description: config.branch,
+        });
 
         return getTableTreeItems(
           {
@@ -59,6 +70,11 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
         );
       } else {
         // Multiple vscode workspaces
+        this.setView({
+          title: "Workspaces",
+          description: undefined,
+        });
+
         return Promise.all(
           vscode.workspace.workspaceFolders.map(async (workspaceFolder) => {
             const config = await this.context.getVSCodeWorkspaceEnvConfig(
@@ -141,18 +157,25 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
 export class XataWorkspace {
   private treeDataProvider: XataDataProvider;
+  private treeView: vscode.TreeView<unknown>;
 
   public refresh() {
     this.treeDataProvider.refresh();
   }
 
   constructor(context: vscode.ExtensionContext) {
-    this.treeDataProvider = new XataDataProvider(getContext(context));
-
-    context.subscriptions.push(
-      vscode.window.createTreeView("xataWorkspace", {
-        treeDataProvider: this.treeDataProvider,
-      })
+    this.treeDataProvider = new XataDataProvider(
+      getContext(context),
+      ({ description, title }) => {
+        this.treeView.description = description;
+        this.treeView.title = title;
+      }
     );
+    this.treeView = vscode.window.createTreeView("xataWorkspace", {
+      treeDataProvider: this.treeDataProvider,
+      showCollapseAll: true,
+    });
+
+    context.subscriptions.push(this.treeView);
   }
 }
