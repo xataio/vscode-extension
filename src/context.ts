@@ -136,57 +136,58 @@ export function getContext(extensionContext: ExtensionContext) {
      * @returns
      */
     async getVSCodeWorkspaceEnvConfig(uri: Uri) {
-      const envPath =
-        workspace.getConfiguration().get<string>("xata.envFilePath") ?? ".env";
+      try {
+        const envPath =
+          workspace.getConfiguration().get<string>("xata.envFilePath") ??
+          ".env";
 
-      const envFile = await workspace.fs.readFile(Uri.joinPath(uri, envPath));
-      const config = dotenv.parse(Buffer.from(envFile));
+        const envFile = await workspace.fs.readFile(Uri.joinPath(uri, envPath));
+        const config = dotenv.parse(Buffer.from(envFile));
 
-      if (
-        typeof config.XATA_DATABASE_URL === "string" &&
-        typeof config.XATA_API_KEY === "string"
-      ) {
-        const urlChunks = config.XATA_DATABASE_URL.match(/\/\/([a-z0-9-]*)\./);
-        if (!urlChunks) {
-          throw new Error("XATA_DATABASE_URL is not valid");
+        if (
+          typeof config.XATA_DATABASE_URL === "string" &&
+          typeof config.XATA_API_KEY === "string"
+        ) {
+          const urlChunks =
+            config.XATA_DATABASE_URL.match(/\/\/([a-z0-9-]*)\./);
+          if (!urlChunks) {
+            throw new Error("XATA_DATABASE_URL is not valid");
+          }
+
+          const databaseName = new URL(config.XATA_DATABASE_URL).pathname.split(
+            "/"
+          )[2];
+
+          const baseUrl = new URL(config.XATA_DATABASE_URL).origin;
+          const apiKey = config.XATA_API_KEY;
+
+          const branch = await resolveBranch({
+            baseUrl,
+            context: this,
+            token: apiKey,
+            pathParams: {
+              dbName: databaseName,
+            },
+            queryParams: {
+              gitBranch:
+                config.XATA_DATABASE_BRANCH ?? (await this.getGitBranch(uri)),
+            },
+          });
+
+          if (branch.success === false) {
+            throw new Error("Branch can't be resolved");
+          }
+
+          return {
+            baseUrl,
+            databaseName,
+            databaseUrl: config.XATA_DATABASE_URL,
+            branch: branch.data.branch,
+            apiKey,
+            workspaceId: urlChunks[1],
+          };
         }
-
-        const databaseName = new URL(config.XATA_DATABASE_URL).pathname.split(
-          "/"
-        )[2];
-
-        const baseUrl = new URL(config.XATA_DATABASE_URL).origin;
-        const apiKey = config.XATA_API_KEY;
-
-        const branch = await resolveBranch({
-          baseUrl,
-          context: this,
-          token: apiKey,
-          pathParams: {
-            dbName: databaseName,
-          },
-          queryParams: {
-            gitBranch:
-              config.XATA_DATABASE_BRANCH ?? (await this.getGitBranch(uri)),
-          },
-        });
-
-        if (branch.success === false) {
-          throw new Error("Branch can't be resolved");
-        }
-
-        return {
-          baseUrl,
-          databaseName,
-          databaseUrl: config.XATA_DATABASE_URL,
-          branch: branch.data.branch,
-          apiKey,
-          workspaceId: urlChunks[1],
-        };
-      } else {
-        commands.executeCommand("setContext", "xata.noConfigFile", true);
-        throw new Error("No config set for xata");
-      }
+      } catch {}
     },
 
     /**

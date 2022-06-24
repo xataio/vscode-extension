@@ -288,7 +288,7 @@
       {
         "view": "xataWorkspace",
         "contents": "No xatabase found!\n[Setup project](command:xata.initWorkspace)",
-        "when": "workspaceFolderCount == 1 && xata.noConfigFile"
+        "when": "workspaceFolderCount == 1"
       }
     ],
     "views": {

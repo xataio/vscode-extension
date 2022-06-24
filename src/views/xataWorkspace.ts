@@ -39,6 +39,10 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
           vscode.workspace.workspaceFolders[0].uri
         );
 
+        if (!config) {
+          return [];
+        }
+
         return getTableTreeItems(
           {
             workspaceId: config.workspaceId,
@@ -56,17 +60,11 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
         // Multiple vscode workspaces
         return Promise.all(
           vscode.workspace.workspaceFolders.map(async (workspaceFolder) => {
-            try {
-              const config = await this.context.getVSCodeWorkspaceEnvConfig(
-                workspaceFolder.uri
-              );
-              return new VSCodeWorkspaceTreeItem(
-                workspaceFolder.name,
-                vscode.TreeItemCollapsibleState.Collapsed,
-                workspaceFolder,
-                config.branch
-              );
-            } catch {
+            const config = await this.context.getVSCodeWorkspaceEnvConfig(
+              workspaceFolder.uri
+            );
+
+            if (!config) {
               return new VSCodeWorkspaceTreeItem(
                 workspaceFolder.name,
                 vscode.TreeItemCollapsibleState.Collapsed,
@@ -74,6 +72,13 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
                 "" // no xata env
               );
             }
+
+            return new VSCodeWorkspaceTreeItem(
+              workspaceFolder.name,
+              vscode.TreeItemCollapsibleState.Collapsed,
+              workspaceFolder,
+              config.branch
+            );
           })
         );
       }
@@ -81,25 +86,11 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
     // VSCode workspace folder
     if (element.contextValue === "vscodeWorkspace") {
-      try {
-        const config = await this.context.getVSCodeWorkspaceEnvConfig(
-          element.workspaceFolder.uri
-        );
+      const config = await this.context.getVSCodeWorkspaceEnvConfig(
+        element.workspaceFolder.uri
+      );
 
-        return getTableTreeItems(
-          {
-            workspaceId: config.workspaceId,
-            databaseName: config.databaseName,
-            branchName: config.branch,
-          },
-          this.context,
-          {
-            baseUrl: config.baseUrl,
-            token: config.apiKey,
-            vscodeWorkspace: element.workspaceFolder,
-          }
-        );
-      } catch {
+      if (!config) {
         return [
           new NoConfigTreeItem(
             "No xata project found!",
@@ -107,6 +98,20 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
           ),
         ];
       }
+
+      return getTableTreeItems(
+        {
+          workspaceId: config.workspaceId,
+          databaseName: config.databaseName,
+          branchName: config.branch,
+        },
+        this.context,
+        {
+          baseUrl: config.baseUrl,
+          token: config.apiKey,
+          vscodeWorkspace: element.workspaceFolder,
+        }
+      );
     }
 
     // Table level

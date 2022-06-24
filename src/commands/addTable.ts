@@ -38,6 +38,10 @@ export const addTableCommand: TreeItemCommand<
         const config = await context.getVSCodeWorkspaceEnvConfig(
           vscode.workspace.workspaceFolders[0].uri
         );
+        if (!config) {
+          return;
+        }
+
         baseUrl = config.baseUrl;
         dbBranchName = `${config.databaseName}:${config.branch}`;
         token = config.apiKey;
@@ -45,6 +49,10 @@ export const addTableCommand: TreeItemCommand<
         const config = await context.getVSCodeWorkspaceEnvConfig(
           branchTreeItem.workspaceFolder.uri
         );
+
+        if (!config) {
+          return;
+        }
         baseUrl = config.baseUrl;
         dbBranchName = `${config.databaseName}:${config.branch}`;
         token = config.apiKey;
