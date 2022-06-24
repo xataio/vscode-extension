@@ -9,6 +9,7 @@ import {
 import dotenv from "dotenv";
 import { XataTablePath } from "./types";
 import { Column } from "./xata/xataSchemas";
+import { resolveBranch } from "./xata/xataComponents";
 
 /**
  * Wrapper around vscode extension context
@@ -150,14 +151,36 @@ export function getContext(extensionContext: ExtensionContext) {
           throw new Error("XATA_DATABASE_URL is not valid");
         }
 
+        const databaseName = new URL(config.XATA_DATABASE_URL).pathname.split(
+          "/"
+        )[2];
+
+        const baseUrl = new URL(config.XATA_DATABASE_URL).origin;
+        const apiKey = config.XATA_API_KEY;
+
+        const branch = await resolveBranch({
+          baseUrl,
+          context: this,
+          token: apiKey,
+          pathParams: {
+            dbName: databaseName,
+          },
+          queryParams: {
+            gitBranch:
+              config.XATA_DATABASE_BRANCH ?? (await this.getGitBranch(uri)),
+          },
+        });
+
+        if (branch.success === false) {
+          throw new Error("Branch can't be resolved");
+        }
+
         return {
-          baseUrl: new URL(config.XATA_DATABASE_URL).origin,
-          databaseName: new URL(config.XATA_DATABASE_URL).pathname.split(
-            "/"
-          )[2],
+          baseUrl,
+          databaseName,
           databaseUrl: config.XATA_DATABASE_URL,
-          branch: config.XATA_DATABASE_BRANCH ?? (await this.getGitBranch(uri)),
-          apiKey: config.XATA_API_KEY,
+          branch: branch.data.branch,
+          apiKey,
           workspaceId: urlChunks[1],
         };
       } else {

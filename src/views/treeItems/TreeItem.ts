@@ -2,6 +2,8 @@ import * as vscode from "vscode";
 import { formatDistanceStrict } from "date-fns";
 import { GetWorkspacesListResponse } from "../../xata/xataComponents";
 import type * as Schema from "../../xata/xataSchemas";
+import { Context } from "../../context";
+import { timeStamp } from "console";
 
 export type Workspace = GetWorkspacesListResponse["workspaces"][-1];
 
@@ -174,9 +176,19 @@ export class VSCodeWorkspaceTreeItem extends vscode.TreeItem {
   constructor(
     public readonly label: string,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-    public readonly workspaceFolder: vscode.WorkspaceFolder
+    public readonly workspaceFolder: vscode.WorkspaceFolder,
+    public readonly branch: string
   ) {
     super(label, collapsibleState);
+    this.description = branch;
+  }
+}
+
+export class NoConfigTreeItem extends vscode.TreeItem {
+  contextValue = "noConfig" as const;
+
+  constructor(public readonly label: string) {
+    super(label);
   }
 }
 
@@ -187,4 +199,5 @@ export type TreeItem =
   | BranchTreeItem
   | TableTreeItem
   | ColumnTreeItem
-  | VSCodeWorkspaceTreeItem;
+  | VSCodeWorkspaceTreeItem
+  | NoConfigTreeItem;
