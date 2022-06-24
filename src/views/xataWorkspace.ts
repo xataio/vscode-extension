@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { Context, getContext } from "../context";
 
 import {
+  EmptyVSCodeWorkspaceTreeItem,
   NoConfigTreeItem,
   TreeItem,
   VSCodeWorkspaceTreeItem,
@@ -65,11 +66,10 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
             );
 
             if (!config) {
-              return new VSCodeWorkspaceTreeItem(
+              return new EmptyVSCodeWorkspaceTreeItem(
                 workspaceFolder.name,
                 vscode.TreeItemCollapsibleState.Collapsed,
-                workspaceFolder,
-                "" // no xata env
+                workspaceFolder
               );
             }
 
@@ -85,7 +85,10 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
     }
 
     // VSCode workspace folder
-    if (element.contextValue === "vscodeWorkspace") {
+    if (
+      element.contextValue === "vscodeWorkspace" ||
+      element.contextValue === "emptyVscodeWorkspace"
+    ) {
       const config = await this.context.getVSCodeWorkspaceEnvConfig(
         element.workspaceFolder.uri
       );

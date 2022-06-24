@@ -184,6 +184,18 @@ export class VSCodeWorkspaceTreeItem extends vscode.TreeItem {
   }
 }
 
+export class EmptyVSCodeWorkspaceTreeItem extends vscode.TreeItem {
+  contextValue = "emptyVscodeWorkspace" as const;
+
+  constructor(
+    public readonly label: string,
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+    public readonly workspaceFolder: vscode.WorkspaceFolder
+  ) {
+    super(label, collapsibleState);
+  }
+}
+
 export class NoConfigTreeItem extends vscode.TreeItem {
   contextValue = "noConfig" as const;
 
@@ -197,6 +209,7 @@ export class NoConfigTreeItem extends vscode.TreeItem {
       title: "Init xatabase environment",
       arguments: [{ workspaceFolder }],
     };
+    this.description = "Click to start";
   }
 }
 
@@ -208,4 +221,5 @@ export type TreeItem =
   | TableTreeItem
   | ColumnTreeItem
   | VSCodeWorkspaceTreeItem
+  | EmptyVSCodeWorkspaceTreeItem
   | NoConfigTreeItem;
