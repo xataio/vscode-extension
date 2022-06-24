@@ -187,8 +187,16 @@ export class VSCodeWorkspaceTreeItem extends vscode.TreeItem {
 export class NoConfigTreeItem extends vscode.TreeItem {
   contextValue = "noConfig" as const;
 
-  constructor(public readonly label: string) {
+  constructor(
+    public readonly label: string,
+    public readonly workspaceFolder: vscode.WorkspaceFolder
+  ) {
     super(label);
+    this.command = {
+      command: "xata.initWorkspace",
+      title: "Init xatabase environment",
+      arguments: [{ workspaceFolder }],
+    };
   }
 }
 

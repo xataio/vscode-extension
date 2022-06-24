@@ -1,25 +1,44 @@
 import * as vscode from "vscode";
-import { Command } from "../types";
-import { Workspace, WorkspaceTreeItem } from "../views/treeItems/TreeItem";
+import { Command, TreeItemCommand } from "../types";
 import {
-  getBranchList,
-  getDatabaseList,
-  getWorkspacesList,
-} from "../xata/xataComponents";
+  VSCodeWorkspaceTreeItem,
+  Workspace,
+  WorkspaceTreeItem,
+} from "../views/treeItems/TreeItem";
+import { getDatabaseList, getWorkspacesList } from "../xata/xataComponents";
 import { addDatabaseCommand } from "./addDatabase";
 import { loginCommand } from "./login";
+
+// Trigger from welcome view (one vscode workspace case)
+type WelcomeViewAction = undefined;
 
 /**
  * Command to init a workspace (create or modify a .env)
  */
-export const initWorkspaceCommand: Command = {
+export const initWorkspaceCommand: TreeItemCommand<
+  WelcomeViewAction | VSCodeWorkspaceTreeItem
+> = {
   id: "initWorkspace",
-  type: "global",
-  inPalette: true,
+  type: "treeItem",
+  icon: "add",
   action(context, refresh, jsonSchemaProvider) {
-    return async () => {
+    return async (item) => {
       if (!(await context.getToken())) {
         await loginCommand.action(context, refresh, jsonSchemaProvider)();
+      }
+
+      let workspaceFolder: vscode.WorkspaceFolder;
+
+      if (item) {
+        workspaceFolder = item.workspaceFolder;
+      } else {
+        if (
+          !vscode.workspace.workspaceFolders ||
+          vscode.workspace.workspaceFolders.length !== 1
+        ) {
+          return;
+        }
+        workspaceFolder = vscode.workspace.workspaceFolders[0];
       }
 
       // choose workspace
@@ -120,24 +139,16 @@ export const initWorkspaceCommand: Command = {
       }
 
       // create .env file
-      if (
-        !vscode.workspace.workspaceFolders ||
-        vscode.workspace.workspaceFolders.length !== 1
-      ) {
-        // Should not be possible due to the condition for showing the initWorkspace action (see package.json)
-        return;
-      }
-
       const envPath =
         vscode.workspace.getConfiguration().get<string>("xata.envFilePath") ??
         ".env";
 
       const envFile = await readFileSafe(
-        vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, envPath)
+        vscode.Uri.joinPath(workspaceFolder.uri, envPath)
       );
 
       await vscode.workspace.fs.writeFile(
-        vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, envPath),
+        vscode.Uri.joinPath(workspaceFolder.uri, envPath),
         Buffer.concat([
           envFile,
           Buffer.from(

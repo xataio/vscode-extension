@@ -100,7 +100,12 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
           }
         );
       } catch {
-        return [new NoConfigTreeItem("No xata project found!")];
+        return [
+          new NoConfigTreeItem(
+            "No xata project found!",
+            element.workspaceFolder
+          ),
+        ];
       }
     }
 
