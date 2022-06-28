@@ -6,6 +6,7 @@ export const openInsertRecordsTemplateCommand: TreeItemCommand<TableTreeItem> =
   {
     id: "openInsertRecordsTemplate",
     type: "treeItem",
+    views: ["xataExplorer", "xataWorkspace"],
     icon: "json",
     action: () => async (tableTreeItem) => {
       const query = tableTreeItem.scope

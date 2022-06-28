@@ -17,6 +17,7 @@ export const addDatabaseCommand: TreeItemCommand<
 > = {
   id: "addDatabase",
   type: "treeItem",
+  views: ["xataExplorer"],
   icon: "add",
   action(context, refresh) {
     return async (workspaceTreeItem) => {

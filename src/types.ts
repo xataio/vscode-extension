@@ -38,6 +38,23 @@ export type TreeItemCommand<T extends TreeItem | undefined, U = void> = {
    * @see https://microsoft.github.io/vscode-codicons/dist/codicon.html
    */
   icon: Codicon;
+  views: ("xataExplorer" | "xataWorkspace")[];
+  action: (
+    context: Context,
+    refresh: RefreshAction,
+    jsonSchemaProvider: XataJsonSchemaProvider
+  ) => (treeItem: T) => Promise<U>;
+};
+
+/**
+ * Stand alone command.
+ *
+ * Can be triggered from welcome views, treeItem.command or programmatically
+ */
+export type StandAloneCommand<T extends TreeItem | undefined, U = void> = {
+  id: string;
+  type: "standAlone";
+
   action: (
     context: Context,
     refresh: RefreshAction,

@@ -4,7 +4,10 @@ import { describe, it, expect, vi } from "vitest";
 
 import * as commands from ".";
 
-vi.mock("vscode", () => ({}));
+vi.mock("vscode", () => ({
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  TreeItem: class {},
+}));
 
 describe("commands", () => {
   const packageJSON = JSON.parse(
@@ -41,11 +44,27 @@ describe("commands", () => {
       });
 
       it(`should have "${command.id}" declared as a view/item/context`, () => {
-        expect(
-          packageJSON.contributes.menus["view/item/context"].find(
-            (c: { command: string }) => c.command === `xata.${command.id}`
-          )?.when
-        ).toMatch(/view == xataExplorer && viewItem == /);
+        const viewMatcher =
+          command.views.length === 1 && command.views[0] === "xataExplorer"
+            ? "view == xataExplorer"
+            : command.views.length === 1 && command.views[0] === "xataWorkspace"
+            ? "view == xataWorkspace"
+            : "view in xata.treeViews";
+
+        const commandDeclarations = packageJSON.contributes.menus[
+          "view/item/context"
+        ].filter(
+          (c: { command: string }) => c.command === `xata.${command.id}`
+        );
+
+        if (commandDeclarations.length > 0) {
+          // Complex cases as `xata.addTable`
+          return;
+        }
+
+        expect(commandDeclarations[0].when).toMatch(
+          new RegExp(`${viewMatcher} && viewItem == `)
+        );
       });
     }
 

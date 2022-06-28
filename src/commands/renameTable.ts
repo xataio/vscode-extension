@@ -7,6 +7,7 @@ import { ValidationError } from "../xata/xataFetcher";
 export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
   id: "renameTable",
   icon: "edit",
+  views: ["xataExplorer", "xataWorkspace"],
   type: "treeItem",
   action: (context, refresh, jsonSchemaProvider) => {
     return async (tableTreeItem) => {

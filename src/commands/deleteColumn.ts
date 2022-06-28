@@ -6,6 +6,7 @@ import { deleteColumn } from "../xata/xataComponents";
 export const deleteColumnCommand: TreeItemCommand<ColumnTreeItem> = {
   id: "deleteColumn",
   icon: "trash",
+  views: ["xataExplorer", "xataWorkspace"],
   type: "treeItem",
   action: (context, refresh, jsonSchemaProvider) => {
     return async (columnTreeItem) => {

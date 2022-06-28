@@ -6,6 +6,7 @@ import { deleteWorkspace } from "../xata/xataComponents";
 export const deleteWorkspaceCommand: TreeItemCommand<WorkspaceTreeItem> = {
   id: "deleteWorkspace",
   icon: "trash",
+  views: ["xataExplorer"],
   type: "treeItem",
   action: (context, refresh) => {
     return async (workspaceTreeItem) => {

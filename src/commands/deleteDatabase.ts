@@ -6,6 +6,7 @@ import { deleteDatabase } from "../xata/xataComponents";
 export const deleteDatabaseCommand: TreeItemCommand<DatabaseTreeItem> = {
   id: "deleteDatabase",
   icon: "trash",
+  views: ["xataExplorer"],
   type: "treeItem",
   action: (context, refresh) => {
     return async (databaseTreeItem) => {

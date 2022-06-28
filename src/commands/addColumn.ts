@@ -16,6 +16,7 @@ import { Column } from "../xata/xataSchemas";
 export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
   id: "addColumn",
   type: "treeItem",
+  views: ["xataExplorer", "xataWorkspace"],
   icon: "add",
   action(context, refresh, jsonSchemaProvider) {
     return async (tableTreeItem) => {

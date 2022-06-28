@@ -7,6 +7,7 @@ import { ValidationError } from "../xata/xataFetcher";
 export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
   id: "renameColumn",
   icon: "edit",
+  views: ["xataExplorer", "xataWorkspace"],
   type: "treeItem",
   action: (context, refresh) => {
     return async (columnTreeItem) => {

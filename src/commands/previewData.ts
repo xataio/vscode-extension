@@ -8,6 +8,7 @@ import sanitizeHtml from "sanitize-html";
 export const previewDataCommand: TreeItemCommand<TableTreeItem> = {
   id: "previewData",
   icon: "eye",
+  views: ["xataExplorer", "xataWorkspace"],
   type: "treeItem",
   action: (context) => {
     return async (tableTreeItem) => {

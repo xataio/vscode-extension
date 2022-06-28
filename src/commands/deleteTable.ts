@@ -6,6 +6,7 @@ import { deleteTable } from "../xata/xataComponents";
 export const deleteTableCommand: TreeItemCommand<TableTreeItem> = {
   id: "deleteTable",
   icon: "trash",
+  views: ["xataExplorer", "xataWorkspace"],
   type: "treeItem",
   action: (context, refresh) => {
     return async (tableTreeItem) => {

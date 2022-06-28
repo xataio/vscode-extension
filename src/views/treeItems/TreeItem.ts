@@ -2,8 +2,6 @@ import * as vscode from "vscode";
 import { formatDistanceStrict } from "date-fns";
 import { GetWorkspacesListResponse } from "../../xata/xataComponents";
 import type * as Schema from "../../xata/xataSchemas";
-import { Context } from "../../context";
-import { timeStamp } from "console";
 
 export type Workspace = GetWorkspacesListResponse["workspaces"][-1];
 

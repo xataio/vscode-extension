@@ -12,6 +12,7 @@ export const addBranchCommand: TreeItemCommand<
 > = {
   id: "addBranch",
   type: "treeItem",
+  views: ["xataExplorer"],
   icon: "git-pull-request-create",
   action: (context, refresh) => {
     return async (databaseTreeItem) => {

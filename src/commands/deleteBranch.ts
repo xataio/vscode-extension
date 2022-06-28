@@ -6,6 +6,7 @@ import { deleteBranch, deleteTable } from "../xata/xataComponents";
 export const deleteBranchCommand: TreeItemCommand<BranchTreeItem> = {
   id: "deleteBranch",
   icon: "trash",
+  views: ["xataExplorer"],
   type: "treeItem",
   action: (context, refresh) => {
     return async (branchTreeItem) => {

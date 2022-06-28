@@ -19,6 +19,7 @@ export const addTableCommand: TreeItemCommand<
 > = {
   id: "addTable",
   type: "treeItem",
+  views: ["xataExplorer", "xataWorkspace"],
   icon: "empty-window",
   action: (context, refresh) => {
     return async (branchTreeItem) => {

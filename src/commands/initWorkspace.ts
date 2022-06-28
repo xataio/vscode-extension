@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Command, TreeItemCommand } from "../types";
+import { Command, StandAloneCommand, TreeItemCommand } from "../types";
 import {
   VSCodeWorkspaceTreeItem,
   Workspace,
@@ -15,12 +15,11 @@ type WelcomeViewAction = undefined;
 /**
  * Command to init a workspace (create or modify a .env)
  */
-export const initWorkspaceCommand: TreeItemCommand<
+export const initWorkspaceCommand: StandAloneCommand<
   WelcomeViewAction | VSCodeWorkspaceTreeItem
 > = {
   id: "initWorkspace",
-  type: "treeItem",
-  icon: "add",
+  type: "standAlone",
   action(context, refresh, jsonSchemaProvider) {
     return async (item) => {
       if (!(await context.getToken())) {
