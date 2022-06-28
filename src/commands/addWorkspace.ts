@@ -10,7 +10,7 @@ export const addWorkspaceCommand: Command = {
   id: "addWorkspace",
   type: "global",
   icon: "add",
-  action(context, explorer) {
+  action(context, refresh) {
     return async () => {
       const name = await vscode.window.showInputBox({
         prompt: "Enter the name of your workspace",
@@ -30,7 +30,7 @@ export const addWorkspaceCommand: Command = {
         },
       });
 
-      return explorer.refresh();
+      return refresh();
     };
   },
 };

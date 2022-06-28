@@ -1,13 +1,14 @@
 import * as vscode from "vscode";
-import { WorkspaceTreeItem } from "../TreeItem";
+import { WorkspaceTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { deleteWorkspace } from "../xata/xataComponents";
 
 export const deleteWorkspaceCommand: TreeItemCommand<WorkspaceTreeItem> = {
   id: "deleteWorkspace",
   icon: "trash",
+  views: ["xataExplorer"],
   type: "treeItem",
-  action: (context, explorer) => {
+  action: (context, refresh) => {
     return async (workspaceTreeItem) => {
       const confirm = await vscode.window.showInputBox({
         title: `Delete workspace`,
@@ -31,7 +32,7 @@ export const deleteWorkspaceCommand: TreeItemCommand<WorkspaceTreeItem> = {
         },
       });
 
-      return explorer.refresh();
+      return refresh();
     };
   },
 };

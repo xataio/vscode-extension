@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ColumnTreeItem } from "../TreeItem";
+import { ColumnTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { updateColumn } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
@@ -7,10 +7,11 @@ import { ValidationError } from "../xata/xataFetcher";
 export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
   id: "renameColumn",
   icon: "edit",
+  views: ["xataExplorer", "xataWorkspace"],
   type: "treeItem",
-  action: (context, explorer) => {
+  action: (context, refresh) => {
     return async (columnTreeItem) => {
-      const existingTables = columnTreeItem.table.columns.map((c) => c.name);
+      const existingTables = columnTreeItem.columns.map((c) => c.name);
 
       const name = await vscode.window.showInputBox({
         title: `New column name`,
@@ -33,11 +34,14 @@ export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
 
       try {
         await updateColumn({
-          baseUrl: context.getBaseUrl(columnTreeItem.workspace.id),
+          baseUrl:
+            columnTreeItem.scope?.baseUrl ??
+            context.getBaseUrl(columnTreeItem.workspaceId),
+          token: columnTreeItem.scope?.token,
           context,
           pathParams: {
-            dbBranchName: `${columnTreeItem.database.name}:${columnTreeItem.branch.name}`,
-            tableName: columnTreeItem.table.name,
+            dbBranchName: `${columnTreeItem.databaseName}:${columnTreeItem.branchName}`,
+            tableName: columnTreeItem.tableName,
             columnName: columnTreeItem.column.name,
           },
           body: {
@@ -45,13 +49,15 @@ export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
           },
         });
 
-        return explorer.refresh();
+        return refresh();
       } catch (e) {
         if (e instanceof ValidationError) {
-          return vscode.window.showErrorMessage(e.details);
+          vscode.window.showErrorMessage(e.details);
+          return;
         }
         if (e instanceof Error) {
-          return vscode.window.showErrorMessage(e.message);
+          vscode.window.showErrorMessage(e.message);
+          return;
         }
       }
     };

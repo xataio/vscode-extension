@@ -7,10 +7,10 @@ export const logoutCommand: Command = {
   id: "logout",
   type: "global",
   inPalette: true,
-  action(context, explorer) {
+  action(context, refresh) {
     return async () => {
       await context.clearToken();
-      return explorer.refresh();
+      return refresh("explorer");
     };
   },
 };

@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
-import { DatabaseTreeItem, OneBranchDatabaseItem } from "../TreeItem";
+import {
+  DatabaseTreeItem,
+  OneBranchDatabaseItem,
+} from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { createBranch, getBranchList } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
@@ -9,11 +12,12 @@ export const addBranchCommand: TreeItemCommand<
 > = {
   id: "addBranch",
   type: "treeItem",
+  views: ["xataExplorer"],
   icon: "git-pull-request-create",
-  action: (context, explorer) => {
+  action: (context, refresh) => {
     return async (databaseTreeItem) => {
       const branchList = await getBranchList({
-        baseUrl: context.getBaseUrl(databaseTreeItem.workspace.id),
+        baseUrl: context.getBaseUrl(databaseTreeItem.workspaceId),
         context: context,
         pathParams: {
           dbName: databaseTreeItem.database.name,
@@ -58,7 +62,7 @@ export const addBranchCommand: TreeItemCommand<
 
       try {
         await createBranch({
-          baseUrl: context.getBaseUrl(databaseTreeItem.workspace.id),
+          baseUrl: context.getBaseUrl(databaseTreeItem.workspaceId),
           context,
           pathParams: {
             dbBranchName: `${databaseTreeItem.database.name}:${name}`,
@@ -68,13 +72,15 @@ export const addBranchCommand: TreeItemCommand<
           },
         });
 
-        return explorer.refresh();
+        return refresh();
       } catch (e) {
         if (e instanceof ValidationError) {
-          return vscode.window.showErrorMessage(e.details);
+          vscode.window.showErrorMessage(e.details);
+          return;
         }
         if (e instanceof Error) {
-          return vscode.window.showErrorMessage(e.message);
+          vscode.window.showErrorMessage(e.message);
+          return;
         }
       }
     };

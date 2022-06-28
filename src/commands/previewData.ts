@@ -1,20 +1,25 @@
 import flatten from "flat";
-import { TableTreeItem } from "../TreeItem";
+import { TableTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { PreviewDataPanel } from "../panels/PreviewDataPanel";
 import { queryTable } from "../xata/xataComponents";
+import sanitizeHtml from "sanitize-html";
 
 export const previewDataCommand: TreeItemCommand<TableTreeItem> = {
   id: "previewData",
   icon: "eye",
+  views: ["xataExplorer", "xataWorkspace"],
   type: "treeItem",
   action: (context) => {
     return async (tableTreeItem) => {
       const table = await queryTable({
-        baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
+        baseUrl:
+          tableTreeItem.scope?.baseUrl ??
+          context.getBaseUrl(tableTreeItem.workspaceId),
+        token: tableTreeItem.scope?.token,
         context: context,
         pathParams: {
-          dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
+          dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
           tableName: tableTreeItem.table.name,
         },
       });
@@ -35,12 +40,12 @@ export const previewDataCommand: TreeItemCommand<TableTreeItem> = {
       PreviewDataPanel.render(
         context,
         {
-          workspaceId: tableTreeItem.workspace.id,
-          branchName: tableTreeItem.branch.name,
-          databaseName: tableTreeItem.database.name,
+          workspaceId: tableTreeItem.workspaceId,
+          branchName: tableTreeItem.branchName,
+          databaseName: tableTreeItem.databaseName,
           tableName: tableTreeItem.table.name,
         },
-        JSON.stringify(flattenRecords)
+        sanitizeHtml(JSON.stringify(flattenRecords))
       );
     };
   },

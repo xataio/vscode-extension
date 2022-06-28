@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { TableTreeItem } from "../TreeItem";
+import { TableTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { xataColumnTypes } from "../xata/xataColumnTypes";
 import {
@@ -16,8 +16,9 @@ import { Column } from "../xata/xataSchemas";
 export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
   id: "addColumn",
   type: "treeItem",
+  views: ["xataExplorer", "xataWorkspace"],
   icon: "add",
-  action(context, explorer, jsonSchemaProvider) {
+  action(context, refresh, jsonSchemaProvider) {
     return async (tableTreeItem) => {
       let link: AddTableColumnVariables["body"]["link"];
 
@@ -31,10 +32,13 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
 
       if (type === "link") {
         const branchDetails = await getBranchDetails({
-          baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
+          baseUrl:
+            tableTreeItem.scope?.baseUrl ??
+            context.getBaseUrl(tableTreeItem.workspaceId),
+          token: tableTreeItem.scope?.token,
           context,
           pathParams: {
-            dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
+            dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
           },
         });
 
@@ -81,7 +85,10 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
 
       try {
         await addTableColumn({
-          baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
+          baseUrl:
+            tableTreeItem.scope?.baseUrl ??
+            context.getBaseUrl(tableTreeItem.workspaceId),
+          token: tableTreeItem.scope?.token,
           context,
           body: {
             type,
@@ -89,7 +96,7 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
             link,
           },
           pathParams: {
-            dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
+            dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
             tableName: tableTreeItem.table.name,
           },
         });
@@ -97,17 +104,19 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
         // Notify the change to our custom jsonSchemaProvider
         jsonSchemaProvider.onDidChangeEmitter.fire(
           vscode.Uri.parse(
-            `xata:${tableTreeItem.workspace.id}/${tableTreeItem.database.name}/${tableTreeItem.branch.name}/${tableTreeItem.table.name}`
+            `xata:${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.table.name}`
           )
         );
 
-        return explorer.refresh();
+        return refresh();
       } catch (e) {
         if (e instanceof ValidationError) {
-          return vscode.window.showErrorMessage(e.details);
+          vscode.window.showErrorMessage(e.details);
+          return;
         }
         if (e instanceof Error) {
-          return vscode.window.showErrorMessage(e.message);
+          vscode.window.showErrorMessage(e.message);
+          return;
         }
       }
     };

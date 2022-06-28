@@ -8,7 +8,7 @@ export const loginCommand: Command = {
   id: "login",
   type: "global",
   inPalette: true,
-  action(context, explorer) {
+  action(context, refresh) {
     return async () => {
       const token = await vscode.window.showInputBox({
         prompt: "Paste your xata personal access token",
@@ -17,7 +17,7 @@ export const loginCommand: Command = {
 
       if (token) {
         await context.setToken(token);
-        return explorer.refresh();
+        return refresh("explorer");
       }
     };
   },

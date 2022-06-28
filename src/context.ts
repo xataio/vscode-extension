@@ -4,9 +4,12 @@ import {
   window,
   TreeItem,
   commands,
+  Uri,
 } from "vscode";
+import dotenv from "dotenv";
 import { XataTablePath } from "./types";
 import { Column } from "./xata/xataSchemas";
+import { resolveBranch } from "./xata/xataComponents";
 
 /**
  * Wrapper around vscode extension context
@@ -124,6 +127,87 @@ export function getContext(extensionContext: ExtensionContext) {
      */
     setOffline(value: boolean) {
       setContributeContext("xata.isOffline", value);
+    },
+
+    /**
+     * Retrieve and validate the config from the workspace .env
+     *
+     * @param uri vscode's workspace uri
+     * @returns
+     */
+    async getVSCodeWorkspaceEnvConfig(uri: Uri) {
+      try {
+        const envPath =
+          workspace.getConfiguration().get<string>("xata.envFilePath") ??
+          ".env";
+
+        const envFile = await workspace.fs.readFile(Uri.joinPath(uri, envPath));
+        const config = dotenv.parse(Buffer.from(envFile));
+
+        if (
+          typeof config.XATA_DATABASE_URL === "string" &&
+          typeof config.XATA_API_KEY === "string"
+        ) {
+          const urlChunks =
+            config.XATA_DATABASE_URL.match(/\/\/([a-z0-9-]*)\./);
+          if (!urlChunks) {
+            throw new Error("XATA_DATABASE_URL is not valid");
+          }
+
+          const databaseName = new URL(config.XATA_DATABASE_URL).pathname.split(
+            "/"
+          )[2];
+
+          const baseUrl = new URL(config.XATA_DATABASE_URL).origin;
+          const apiKey = config.XATA_API_KEY;
+
+          const branch = await resolveBranch({
+            baseUrl,
+            context: this,
+            token: apiKey,
+            pathParams: {
+              dbName: databaseName,
+            },
+            queryParams: {
+              gitBranch:
+                config.XATA_DATABASE_BRANCH ?? (await this.getGitBranch(uri)),
+            },
+          });
+
+          if (branch.success === false) {
+            throw new Error("Branch can't be resolved");
+          }
+
+          return {
+            baseUrl,
+            databaseName,
+            databaseUrl: config.XATA_DATABASE_URL,
+            branch: branch.data.branch,
+            apiKey,
+            workspaceId: urlChunks[1],
+          };
+        }
+      } catch {}
+    },
+
+    /**
+     * Get current git branch
+     *
+     * @param uri vscode's workspace uri
+     */
+    async getGitBranch(uri: Uri) {
+      try {
+        const HEAD = (
+          await workspace.fs.readFile(Uri.joinPath(uri, ".git/HEAD"))
+        ).toString();
+
+        if (HEAD.startsWith("ref: refs/heads/")) {
+          return HEAD.replace(/^ref: refs\/heads\//, "").trim();
+        }
+        return undefined; // No branch found
+      } catch {
+        return undefined; // No branch found
+      }
     },
   };
 }

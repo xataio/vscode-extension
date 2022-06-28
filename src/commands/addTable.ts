@@ -1,22 +1,73 @@
 import * as vscode from "vscode";
-import { BranchTreeItem, OneBranchDatabaseItem } from "../TreeItem";
+import {
+  BranchTreeItem,
+  OneBranchDatabaseItem,
+  VSCodeWorkspaceTreeItem,
+} from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { createTable, getBranchDetails } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 
+// Trigger from the top view navigation level
+type WorkspaceNavigationItem = undefined;
+
 export const addTableCommand: TreeItemCommand<
-  OneBranchDatabaseItem | BranchTreeItem
+  | OneBranchDatabaseItem
+  | BranchTreeItem
+  | WorkspaceNavigationItem
+  | VSCodeWorkspaceTreeItem
 > = {
   id: "addTable",
   type: "treeItem",
+  views: ["xataExplorer", "xataWorkspace"],
   icon: "empty-window",
-  action: (context, explorer) => {
+  action: (context, refresh) => {
     return async (branchTreeItem) => {
+      let baseUrl = "";
+      let dbBranchName = "";
+      let token: string | undefined = undefined;
+
+      if (!branchTreeItem) {
+        if (
+          !vscode.workspace.workspaceFolders ||
+          vscode.workspace.workspaceFolders.length > 1
+        ) {
+          throw new Error(
+            "[dev] This action should not be available when the user have multiple workspaces opened"
+          );
+        }
+        const config = await context.getVSCodeWorkspaceEnvConfig(
+          vscode.workspace.workspaceFolders[0].uri
+        );
+        if (!config) {
+          return;
+        }
+
+        baseUrl = config.baseUrl;
+        dbBranchName = `${config.databaseName}:${config.branch}`;
+        token = config.apiKey;
+      } else if (branchTreeItem.contextValue === "vscodeWorkspace") {
+        const config = await context.getVSCodeWorkspaceEnvConfig(
+          branchTreeItem.workspaceFolder.uri
+        );
+
+        if (!config) {
+          return;
+        }
+        baseUrl = config.baseUrl;
+        dbBranchName = `${config.databaseName}:${config.branch}`;
+        token = config.apiKey;
+      } else {
+        baseUrl = context.getBaseUrl(branchTreeItem.workspaceId);
+        dbBranchName = `${branchTreeItem.databaseName}:${branchTreeItem.branchName}`;
+      }
+
       const branchDetails = await getBranchDetails({
-        baseUrl: context.getBaseUrl(branchTreeItem.workspace.id),
+        baseUrl,
         context: context,
+        token,
         pathParams: {
-          dbBranchName: `${branchTreeItem.database.name}:${branchTreeItem.branch.name}`,
+          dbBranchName,
         },
       });
 
@@ -48,21 +99,24 @@ export const addTableCommand: TreeItemCommand<
 
       try {
         await createTable({
-          baseUrl: context.getBaseUrl(branchTreeItem.workspace.id),
+          baseUrl,
           context,
+          token,
           pathParams: {
-            dbBranchName: `${branchTreeItem.database.name}:${branchTreeItem.branch.name}`,
+            dbBranchName,
             tableName: name,
           },
         });
 
-        return explorer.refresh();
+        return refresh();
       } catch (e) {
         if (e instanceof ValidationError) {
-          return vscode.window.showErrorMessage(e.details);
+          vscode.window.showErrorMessage(e.details);
+          return;
         }
         if (e instanceof Error) {
-          return vscode.window.showErrorMessage(e.message);
+          vscode.window.showErrorMessage(e.message);
+          return;
         }
       }
     };

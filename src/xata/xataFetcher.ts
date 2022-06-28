@@ -6,6 +6,7 @@ export type ErrorWrapper<TError> = TError;
 export type XataFetcherExtraProps = {
   baseUrl: string;
   context: Context;
+  token?: string;
 };
 
 export type XataFetcherOptions<TBody, THeaders, TQueryParams, TPathParams> = {
@@ -33,6 +34,7 @@ export async function xataFetch<
   queryParams,
   context,
   baseUrl,
+  token,
 }: XataFetcherOptions<TBody, THeaders, TQueryParams, TPathParams>): Promise<
   | { success: true; data: TData }
   | { success: false; error: ErrorWrapper<TError> }
@@ -45,7 +47,10 @@ export async function xataFetch<
         ? fetch
         : (await import("node-fetch")).default;
 
-    const token = await context.getToken();
+    if (!token) {
+      token = await context.getToken();
+    }
+
     const response = await crossFetch(
       `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,
       {
@@ -77,7 +82,7 @@ export async function xataFetch<
       };
     }
 
-    return { success: true, data: await response.json() };
+    return { success: true, data: (await response.json()) as any };
   } catch (e) {
     if ((e as NodeJS.ErrnoException).code === "ENOTFOUND") {
       context.setOffline(true);

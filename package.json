@@ -33,7 +33,8 @@
     "onCommand:xata.login",
     "onCommand:xata.logout",
     "onCommand:xata.refresh",
-    "onView:xataExplorer"
+    "onView:xataExplorer",
+    "onView:xataWorkspace"
   ],
   "main": "./out/extension.js",
   "browser": "./out/extension-browser.js",
@@ -60,6 +61,11 @@
           "type": "boolean",
           "default": "true",
           "description": "Use database color for the icon"
+        },
+        "xata.envFilePath": {
+          "type": "string",
+          "default": ".env",
+          "description": "Relative path to the .env file"
         }
       }
     },
@@ -161,9 +167,17 @@
         "title": "Insert records"
       },
       {
+        "command": "xata.watchMode",
+        "title": "Xata: Start watch mode"
+      },
+      {
         "command": "xata.refresh",
         "title": "Refresh",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "xata.initWorkspace",
+        "title": "Xata: Init workspace"
       },
       {
         "command": "xata.palette.refresh",
@@ -270,14 +284,25 @@
         "view": "xataExplorer",
         "contents": "You are offline\n[Refresh](command:xata.refresh)",
         "when": "xata.isOffline"
+      },
+      {
+        "view": "xataWorkspace",
+        "contents": "No xatabase found!\n[Setup project](command:xata.initWorkspace)",
+        "when": "workspaceFolderCount == 1"
       }
     ],
     "views": {
       "xata": [
         {
           "id": "xataExplorer",
-          "name": "Xata",
+          "name": "Explorer",
           "icon": "media/xata-icon.svg"
+        },
+        {
+          "id": "xataWorkspace",
+          "name": "Workspace",
+          "icon": "media/xata-icon.svg",
+          "when": "workspaceFolderCount > 0"
         }
       ]
     },
@@ -358,12 +383,16 @@
         {
           "command": "xata.openInsertRecordsTemplate",
           "when": "false"
+        },
+        {
+          "command": "xata.initWorkspace",
+          "when": "false"
         }
       ],
       "view/title": [
         {
           "command": "xata.refresh",
-          "when": "view == xataExplorer && xata.isLogged",
+          "when": "view in xata.treeViews",
           "group": "navigation"
         },
         {
@@ -377,21 +406,26 @@
         {
           "command": "xata.login",
           "when": "view == xataExplorer && !xata.isLogged"
+        },
+        {
+          "command": "xata.addTable",
+          "when": "view == xataWorkspace && workspaceFolderCount == 1",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
         {
           "command": "xata.addColumn",
-          "when": "view == xataExplorer && viewItem == table",
+          "when": "view in xata.treeViews && viewItem == table",
           "group": "inline"
         },
         {
           "command": "xata.deleteColumn",
-          "when": "view == xataExplorer && viewItem == column"
+          "when": "view in xata.treeViews && viewItem == column"
         },
         {
           "command": "xata.renameColumn",
-          "when": "view == xataExplorer && viewItem == column"
+          "when": "view in xata.treeViews && viewItem == column"
         },
         {
           "command": "xata.deleteWorkspace",
@@ -434,8 +468,13 @@
           "group": "inline"
         },
         {
+          "command": "xata.addTable",
+          "when": "view == xataWorkspace && viewItem == vscodeWorkspace",
+          "group": "inline"
+        },
+        {
           "command": "xata.renameTable",
-          "when": "view == xataExplorer && viewItem == table",
+          "when": "view in xata.treeViews && viewItem == table",
           "group": "1_actions"
         },
         {
@@ -445,17 +484,17 @@
         },
         {
           "command": "xata.deleteTable",
-          "when": "view == xataExplorer && viewItem == table",
+          "when": "view in xata.treeViews && viewItem == table",
           "group": "1_actions"
         },
         {
           "command": "xata.previewData",
-          "when": "view == xataExplorer && viewItem == table",
+          "when": "view in xata.treeViews && viewItem == table",
           "group": "inline"
         },
         {
           "command": "xata.openInsertRecordsTemplate",
-          "when": "view == xataExplorer && viewItem == table",
+          "when": "view in xata.treeViews && viewItem == table",
           "group": "5_templates"
         }
       ]
@@ -467,12 +506,14 @@
     "@types/flat": "^5.0.2",
     "@types/json-schema": "^7.0.11",
     "@types/node": "14.x",
+    "@types/sanitize-html": "^2.6.2",
     "@types/vscode": "^1.66.0",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
     "buffer": "^6.0.3",
     "eslint": "^8.11.0",
     "husky": "^7.0.4",
+    "npm-run-all": "^4.1.5",
     "ovsx": "^0.3.0",
     "prettier": "^2.6.2",
     "pretty-quick": "^3.1.3",
@@ -488,8 +529,10 @@
     "@vscode/codicons": "^0.0.29",
     "@vscode/webview-ui-toolkit": "^1.0.0",
     "date-fns": "^2.28.0",
+    "dotenv": "^16.0.1",
     "flat": "^5.0.2",
     "jsonc": "^2.0.0",
-    "node-fetch": "^3.2.4"
+    "node-fetch": "^3.2.4",
+    "sanitize-html": "^2.7.0"
   }
 }

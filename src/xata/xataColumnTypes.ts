@@ -10,4 +10,5 @@ export const xataColumnTypes = [
   "multiple",
   "link",
   "object",
+  "datetime",
 ];

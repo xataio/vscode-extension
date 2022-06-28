@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { TableTreeItem } from "../TreeItem";
+import { TableTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { getBranchDetails, updateTable } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
@@ -7,14 +7,15 @@ import { ValidationError } from "../xata/xataFetcher";
 export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
   id: "renameTable",
   icon: "edit",
+  views: ["xataExplorer", "xataWorkspace"],
   type: "treeItem",
-  action: (context, explorer, jsonSchemaProvider) => {
+  action: (context, refresh, jsonSchemaProvider) => {
     return async (tableTreeItem) => {
       const branchDetails = await getBranchDetails({
-        baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
+        baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
         context: context,
         pathParams: {
-          dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
+          dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
         },
       });
 
@@ -47,10 +48,13 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
 
       try {
         await updateTable({
-          baseUrl: context.getBaseUrl(tableTreeItem.workspace.id),
+          baseUrl:
+            tableTreeItem.scope?.baseUrl ??
+            context.getBaseUrl(tableTreeItem.workspaceId),
+          token: tableTreeItem.scope?.token,
           context,
           pathParams: {
-            dbBranchName: `${tableTreeItem.database.name}:${tableTreeItem.branch.name}`,
+            dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
             tableName: tableTreeItem.table.name,
           },
           body: {
@@ -61,17 +65,19 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
         // Notify the change to our custom jsonSchemaProvider
         jsonSchemaProvider.onDidChangeEmitter.fire(
           vscode.Uri.parse(
-            `xata:${tableTreeItem.workspace.id}/${tableTreeItem.database.name}/${tableTreeItem.branch.name}/${tableTreeItem.table.name}`
+            `xata:${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.table.name}`
           )
         );
 
-        return explorer.refresh();
+        return refresh();
       } catch (e) {
         if (e instanceof ValidationError) {
-          return vscode.window.showErrorMessage(e.details);
+          vscode.window.showErrorMessage(e.details);
+          return;
         }
         if (e instanceof Error) {
-          return vscode.window.showErrorMessage(e.message);
+          vscode.window.showErrorMessage(e.message);
+          return;
         }
       }
     };

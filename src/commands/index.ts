@@ -4,6 +4,7 @@ export { logoutCommand } from "./logout";
 export { refreshCommand } from "./refresh";
 export { addWorkspaceCommand } from "./addWorkspace";
 export { insertRecordsCommand } from "./insertRecords";
+export { initWorkspaceCommand } from "./initWorkspace";
 
 // TreeItem
 export { addColumnCommand } from "./addColumn";
