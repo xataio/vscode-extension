@@ -25,7 +25,7 @@ describe("commands", () => {
       expect(contributeCommand).toBeDefined();
     });
 
-    if (command.icon) {
+    if (command.type !== "standAlone" && command.icon) {
       it(`should have the "${command.icon}" icon for "${command.id}"`, () => {
         expect(contributeCommand.icon).toEqual(`$(${command.icon})`);
       });
