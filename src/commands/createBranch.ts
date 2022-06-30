@@ -52,9 +52,12 @@ export const createBranchCommand: TreeItemCommand<
       const { branches } = branchList.data;
 
       const existingBranches = branches.map((b) => b.name);
-      const from = await vscode.window.showQuickPick(existingBranches, {
-        title: "Base branch",
-      });
+      const from =
+        existingBranches.length === 1
+          ? existingBranches[0]
+          : await vscode.window.showQuickPick(existingBranches, {
+              title: "Base branch",
+            });
 
       if (!from) {
         return;
