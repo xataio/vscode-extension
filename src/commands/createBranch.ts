@@ -52,25 +52,27 @@ export const createBranchCommand: TreeItemCommand<
       const { branches } = branchList.data;
 
       const existingBranches = branches.map((b) => b.name);
-      const from =
-        existingBranches.length === 1
-          ? existingBranches[0]
-          : await vscode.window.showQuickPick(existingBranches, {
-              title: "Base branch",
-            });
-
-      if (!from) {
-        return;
-      }
+      let from: string | undefined;
 
       let dbBranchName: string;
 
       if (config.branch !== currentGitBranch) {
         dbBranchName = `${config.databaseName}:${currentGitBranch}`;
+        from =
+          existingBranches.length === 1
+            ? existingBranches[0]
+            : await vscode.window.showQuickPick(existingBranches, {
+                title: "Base branch",
+              });
       } else {
+        from = config.branch;
         await vscode.commands.executeCommand("git.checkout");
         const newBranch = await context.getGitBranch(workspaceFolder.uri);
         dbBranchName = `${config.databaseName}:${newBranch}`;
+      }
+
+      if (!from) {
+        return;
       }
 
       try {
