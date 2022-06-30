@@ -7,9 +7,7 @@
   "publisher": "xata",
   "version": "0.0.1",
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run build",
     "lint": "eslint src --ext ts",
     "test": "vitest",
     "build": "run-p -l build:*",
