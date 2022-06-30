@@ -21,3 +21,4 @@ export { deleteTableCommand } from "./deleteTable";
 export { renameTableCommand } from "./renameTable";
 export { previewDataCommand } from "./previewData";
 export { openInsertRecordsTemplateCommand } from "./openInsertRecordsTemplate";
+export { createBranchCommand } from "./createBranch";

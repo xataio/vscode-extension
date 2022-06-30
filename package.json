@@ -258,6 +258,11 @@
         "command": "xata.openInsertRecordsTemplate",
         "title": "Insert records",
         "icon": "$(json)"
+      },
+      {
+        "command": "xata.createBranch",
+        "title": "Create branch",
+        "icon": "$(git-pull-request-create)"
       }
     ],
     "viewsContainers": {
@@ -387,6 +392,10 @@
         {
           "command": "xata.initWorkspace",
           "when": "false"
+        },
+        {
+          "command": "xata.createBranch",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -409,7 +418,12 @@
         },
         {
           "command": "xata.addTable",
-          "when": "view == xataWorkspace && workspaceFolderCount == 1",
+          "when": "view == xataWorkspace && workspaceFolderCount == 1 && !xata.noConfigFile",
+          "group": "navigation"
+        },
+        {
+          "command": "xata.createBranch",
+          "when": "view == xataWorkspace && workspaceFolderCount == 1 && !xata.noConfigFile",
           "group": "navigation"
         }
       ],
