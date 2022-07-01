@@ -211,6 +211,14 @@ export class NoConfigTreeItem extends vscode.TreeItem {
   }
 }
 
+export class EmptyTreeItem extends vscode.TreeItem {
+  contextValue = "empty" as const;
+
+  constructor(public readonly label: string) {
+    super(label);
+  }
+}
+
 export type TreeItem =
   | WorkspaceTreeItem
   | DatabaseTreeItem
@@ -220,4 +228,5 @@ export type TreeItem =
   | ColumnTreeItem
   | VSCodeWorkspaceTreeItem
   | EmptyVSCodeWorkspaceTreeItem
-  | NoConfigTreeItem;
+  | NoConfigTreeItem
+  | EmptyTreeItem;

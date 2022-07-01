@@ -4,12 +4,9 @@ import {
   OneBranchDatabaseItem,
   VSCodeWorkspaceTreeItem,
 } from "../views/treeItems/TreeItem";
-import { TreeItemCommand } from "../types";
+import { TreeItemCommand, WorkspaceNavigationItem } from "../types";
 import { createTable, getBranchDetails } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
-
-// Trigger from the top view navigation level
-type WorkspaceNavigationItem = undefined;
 
 export const addTableCommand: TreeItemCommand<
   | OneBranchDatabaseItem
@@ -22,12 +19,12 @@ export const addTableCommand: TreeItemCommand<
   views: ["xataExplorer", "xataWorkspace"],
   icon: "empty-window",
   action: (context, refresh) => {
-    return async (branchTreeItem) => {
+    return async (treeItem) => {
       let baseUrl = "";
       let dbBranchName = "";
       let token: string | undefined = undefined;
 
-      if (!branchTreeItem) {
+      if (!treeItem) {
         if (
           !vscode.workspace.workspaceFolders ||
           vscode.workspace.workspaceFolders.length > 1
@@ -46,9 +43,9 @@ export const addTableCommand: TreeItemCommand<
         baseUrl = config.baseUrl;
         dbBranchName = `${config.databaseName}:${config.branch}`;
         token = config.apiKey;
-      } else if (branchTreeItem.contextValue === "vscodeWorkspace") {
+      } else if (treeItem.contextValue === "vscodeWorkspace") {
         const config = await context.getVSCodeWorkspaceEnvConfig(
-          branchTreeItem.workspaceFolder.uri
+          treeItem.workspaceFolder.uri
         );
 
         if (!config) {
@@ -58,8 +55,8 @@ export const addTableCommand: TreeItemCommand<
         dbBranchName = `${config.databaseName}:${config.branch}`;
         token = config.apiKey;
       } else {
-        baseUrl = context.getBaseUrl(branchTreeItem.workspaceId);
-        dbBranchName = `${branchTreeItem.databaseName}:${branchTreeItem.branchName}`;
+        baseUrl = context.getBaseUrl(treeItem.workspaceId);
+        dbBranchName = `${treeItem.databaseName}:${treeItem.branchName}`;
       }
 
       const branchDetails = await getBranchDetails({

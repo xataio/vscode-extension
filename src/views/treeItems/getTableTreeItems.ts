@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { Context } from "../../context";
-import { TableTreeItem } from "./TreeItem";
+import { EmptyTreeItem, TableTreeItem } from "./TreeItem";
 import { getBranchDetails } from "../../xata/xataComponents";
 
 export async function getTableTreeItems(
@@ -26,6 +26,10 @@ export async function getTableTreeItems(
   }
 
   const { schema } = branchDetails.data;
+
+  if (schema.tables.length === 0) {
+    return [new EmptyTreeItem("No table")];
+  }
 
   return schema.tables.map(
     (table) =>

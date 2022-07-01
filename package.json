@@ -7,9 +7,7 @@
   "publisher": "xata",
   "version": "0.0.1",
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run build",
     "lint": "eslint src --ext ts",
     "test": "vitest",
     "build": "run-p -l build:*",
@@ -258,6 +256,11 @@
         "command": "xata.openInsertRecordsTemplate",
         "title": "Insert records",
         "icon": "$(json)"
+      },
+      {
+        "command": "xata.createBranch",
+        "title": "Create branch",
+        "icon": "$(git-pull-request-create)"
       }
     ],
     "viewsContainers": {
@@ -387,6 +390,10 @@
         {
           "command": "xata.initWorkspace",
           "when": "false"
+        },
+        {
+          "command": "xata.createBranch",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -409,7 +416,12 @@
         },
         {
           "command": "xata.addTable",
-          "when": "view == xataWorkspace && workspaceFolderCount == 1",
+          "when": "view == xataWorkspace && workspaceFolderCount == 1 && !xata.noConfigFile",
+          "group": "navigation"
+        },
+        {
+          "command": "xata.createBranch",
+          "when": "view == xataWorkspace && workspaceFolderCount == 1 && !xata.noConfigFile",
           "group": "navigation"
         }
       ],
@@ -496,6 +508,11 @@
           "command": "xata.openInsertRecordsTemplate",
           "when": "view in xata.treeViews && viewItem == table",
           "group": "5_templates"
+        },
+        {
+          "command": "xata.createBranch",
+          "when": "view == xataWorkspace && viewItem == vscodeWorkspace",
+          "group": "inline"
         }
       ]
     }

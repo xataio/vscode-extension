@@ -68,3 +68,6 @@ export interface XataTablePath {
   branchName: string;
   tableName: string;
 }
+
+// Trigger from the top view navigation level
+export type WorkspaceNavigationItem = undefined;

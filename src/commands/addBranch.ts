@@ -7,6 +7,9 @@ import { TreeItemCommand } from "../types";
 import { createBranch, getBranchList } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 
+/**
+ * Add a branch in a context of the xata explorer (when all the others branches is visible)
+ */
 export const addBranchCommand: TreeItemCommand<
   DatabaseTreeItem | OneBranchDatabaseItem
 > = {
