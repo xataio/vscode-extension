@@ -416,12 +416,12 @@
         },
         {
           "command": "xata.addTable",
-          "when": "view == xataWorkspace && workspaceFolderCount == 1 && !xata.noConfigFile",
+          "when": "view == xataWorkspace && workspaceFolderCount == 1 && xata.isConfigValid",
           "group": "navigation"
         },
         {
           "command": "xata.createBranch",
-          "when": "view == xataWorkspace && workspaceFolderCount == 1 && !xata.noConfigFile",
+          "when": "view == xataWorkspace && workspaceFolderCount == 1 && xata.isConfigValid",
           "group": "navigation"
         }
       ],
