@@ -14,7 +14,13 @@ export const loginCommand: Command = {
   inPalette: true,
   action(context, refresh) {
     return async () => {
-      const token = await createAPIKeyThroughWebUI(context.extensionUri.path);
+      const token =
+        process.env.VSCODE_ENV === "browser"
+          ? await vscode.window.showInputBox({
+              prompt: "Paste your xata personal access token",
+              ignoreFocusOut: true,
+            })
+          : await createAPIKeyThroughWebUI(context.extensionUri.path);
 
       if (token) {
         await context.setToken(token);
