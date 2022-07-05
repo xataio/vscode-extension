@@ -28,7 +28,12 @@ export async function getTableTreeItems(
   const { schema } = branchDetails.data;
 
   if (schema.tables.length === 0) {
-    return [new EmptyTreeItem("No table")];
+    return [
+      new EmptyTreeItem("Create table", {
+        command: "xata.addTable",
+        title: "Create table",
+      }),
+    ];
   }
 
   return schema.tables.map(
