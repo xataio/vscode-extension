@@ -108,7 +108,10 @@ function generateURL(
     .replace("-----BEGIN PUBLIC KEY-----", "")
     .replace("-----END PUBLIC KEY-----", "");
   const data = Buffer.from(
-    JSON.stringify({ name: "Xata CLI", redirect: `http://localhost:${port}` })
+    JSON.stringify({
+      name: "Xata VSCode extension",
+      redirect: `http://localhost:${port}`,
+    })
   );
   const info = crypto
     .privateEncrypt({ key: privateKey, passphrase }, data)
