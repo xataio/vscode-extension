@@ -43,6 +43,12 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
           vscode.workspace.workspaceFolders[0].uri
         );
 
+        vscode.commands.executeCommand(
+          "setContext",
+          "xata.isConfigValid",
+          Boolean(config)
+        );
+
         if (!config) {
           this.setView({
             title: "unknown",

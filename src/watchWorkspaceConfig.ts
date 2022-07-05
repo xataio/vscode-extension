@@ -17,18 +17,6 @@ export function watchWorkspaceConfig(onConfigChange: () => void) {
 
       const configUri = vscode.Uri.joinPath(workspaceFolder.uri, envPath);
       configFiles.add(configUri.path.toLowerCase());
-
-      try {
-        // Check if the config exists (not relevant in multi-vscode-workspace context)
-        await vscode.workspace.fs.stat(configUri);
-        vscode.commands.executeCommand(
-          "setContext",
-          "xata.noConfigFile",
-          false
-        );
-      } catch {
-        vscode.commands.executeCommand("setContext", "xata.noConfigFile", true);
-      }
     });
   };
 

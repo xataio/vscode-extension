@@ -33,6 +33,10 @@ export class PreviewDataPanel {
     const openedPanel = PreviewDataPanel.previewPanels.get(tableUid);
     if (openedPanel) {
       openedPanel.panel.reveal(vscode.ViewColumn.One);
+      PreviewDataPanel.previewPanels.set(
+        tableUid,
+        new PreviewDataPanel(context, openedPanel.panel, tableUid, table, data)
+      );
     } else {
       const panel = vscode.window.createWebviewPanel(
         "xata-preview-data",

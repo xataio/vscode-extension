@@ -151,7 +151,9 @@ export const initWorkspaceCommand: StandAloneCommand<
         Buffer.concat([
           envFile,
           Buffer.from(
-            `\nXATA_DATABASE_URL=${context.getBaseUrl(
+            `${
+              envFile.length ? "\n" : ""
+            }XATA_DATABASE_URL=${context.getBaseUrl(
               selectedWorkspace.id
             )}/db/${selectedDatabaseName}`
           ),
