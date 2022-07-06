@@ -32,7 +32,8 @@
     "onCommand:xata.logout",
     "onCommand:xata.refresh",
     "onView:xataExplorer",
-    "onView:xataWorkspace"
+    "onView:xataWorkspace",
+    "onUri"
   ],
   "main": "./out/extension.js",
   "browser": "./out/extension-browser.js",

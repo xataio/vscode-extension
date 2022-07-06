@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import { XataTablePath } from "./types";
 import { Column } from "./xata/xataSchemas";
 import { resolveBranch } from "./xata/xataComponents";
+import crypto from "crypto";
 
 /**
  * Wrapper around vscode extension context
@@ -61,6 +62,20 @@ export function getContext(extensionContext: ExtensionContext) {
       } else {
         return configValue;
       }
+    },
+
+    /**
+     * Get `appBaseUrl` from the workspace configuration
+     */
+    getAppBaseUrl() {
+      const configValue = workspace.getConfiguration().get("xata.appBaseUrl");
+
+      if (!(typeof configValue === "string" && configValue.includes("//"))) {
+        window.showErrorMessage('"xata.baseUrl" is not a valid url');
+        return "";
+      }
+
+      return configValue.replace(/\/^/, "");
     },
 
     /**
@@ -208,6 +223,47 @@ export function getContext(extensionContext: ExtensionContext) {
       } catch {
         return undefined; // No branch found
       }
+    },
+
+    /**
+     * Generate key pairs for the auth flow
+     *
+     * @TODO Make this works for browser (see self.crypto)
+     */
+    generateKeys() {
+      const passphrase = crypto.randomBytes(32).toString("hex");
+      const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
+        modulusLength: 4096,
+        publicKeyEncoding: {
+          type: "spki",
+          format: "pem",
+        },
+        privateKeyEncoding: {
+          type: "pkcs8",
+          format: "pem",
+          cipher: "aes-256-cbc",
+          passphrase,
+        },
+      });
+
+      extensionContext.secrets.store("auth.publicKey", publicKey);
+      extensionContext.secrets.store("auth.privateKey", privateKey);
+      extensionContext.secrets.store("auth.passphrase", passphrase);
+
+      return { publicKey, privateKey, passphrase };
+    },
+
+    /**
+     * Retrieve generated keys from `generateKeys`
+     *
+     * @returns stored keys pairs
+     */
+    async retrieveKeys() {
+      return {
+        publicKey: await extensionContext.secrets.get("auth.publicKey"),
+        privateKey: await extensionContext.secrets.get("auth.privateKey"),
+        passphrase: await extensionContext.secrets.get("auth.passphrase"),
+      };
     },
   };
 }
