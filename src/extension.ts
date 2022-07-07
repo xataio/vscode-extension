@@ -8,8 +8,12 @@ import { watchWorkspaceConfig } from "./watchWorkspaceConfig";
 import { AuthUriHandler } from "./AuthUriHandler";
 
 export function activate(extensionContext: vscode.ExtensionContext) {
-  const xataWorkspace = new XataWorkspace(extensionContext);
-  const xataExplorer = new XataExplorer(extensionContext);
+  const context = getContext(extensionContext);
+  const xataWorkspace = new XataWorkspace(context);
+  const xataExplorer = new XataExplorer(context);
+
+  extensionContext.subscriptions.push(xataExplorer);
+  extensionContext.subscriptions.push(xataWorkspace);
 
   const refresh = (scope?: "explorer" | "workspace") => {
     if (scope === "explorer") {
@@ -27,8 +31,6 @@ export function activate(extensionContext: vscode.ExtensionContext) {
     "xataExplorer",
     "xataWorkspace",
   ]);
-
-  const context = getContext(extensionContext);
 
   const xataJsonSchema = new XataJsonSchemaProvider(context);
   extensionContext.subscriptions.push(

@@ -224,47 +224,6 @@ export function getContext(extensionContext: ExtensionContext) {
         return undefined; // No branch found
       }
     },
-
-    /**
-     * Generate key pairs for the auth flow
-     *
-     * @TODO Make this works for browser (see self.crypto)
-     */
-    generateKeys() {
-      const passphrase = crypto.randomBytes(32).toString("hex");
-      const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
-        modulusLength: 4096,
-        publicKeyEncoding: {
-          type: "spki",
-          format: "pem",
-        },
-        privateKeyEncoding: {
-          type: "pkcs8",
-          format: "pem",
-          cipher: "aes-256-cbc",
-          passphrase,
-        },
-      });
-
-      extensionContext.secrets.store("auth.publicKey", publicKey);
-      extensionContext.secrets.store("auth.privateKey", privateKey);
-      extensionContext.secrets.store("auth.passphrase", passphrase);
-
-      return { publicKey, privateKey, passphrase };
-    },
-
-    /**
-     * Retrieve generated keys from `generateKeys`
-     *
-     * @returns stored keys pairs
-     */
-    async retrieveKeys() {
-      return {
-        publicKey: await extensionContext.secrets.get("auth.publicKey"),
-        privateKey: await extensionContext.secrets.get("auth.privateKey"),
-        passphrase: await extensionContext.secrets.get("auth.passphrase"),
-      };
-    },
   };
 }
 

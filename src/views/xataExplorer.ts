@@ -193,19 +193,22 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
 export class XataExplorer {
   private treeDataProvider: XataDataProvider;
+  private view: vscode.TreeView<unknown>;
 
   public refresh() {
     this.treeDataProvider.refresh();
   }
 
-  constructor(context: vscode.ExtensionContext) {
-    this.treeDataProvider = new XataDataProvider(getContext(context));
+  constructor(context: Context) {
+    this.treeDataProvider = new XataDataProvider(context);
 
-    const view = vscode.window.createTreeView("xataExplorer", {
+    this.view = vscode.window.createTreeView("xataExplorer", {
       treeDataProvider: this.treeDataProvider,
       showCollapseAll: true,
     });
+  }
 
-    context.subscriptions.push(view);
+  dispose() {
+    this.view.dispose();
   }
 }

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import crypto from "crypto";
+import crypto from "./CryptoAdapter";
 import { Context } from "./context";
 import { RefreshAction } from "./types";
 
@@ -19,18 +19,12 @@ export class AuthUriHandler implements vscode.UriHandler {
       return;
     }
 
-    const { privateKey, passphrase } = await this.context.retrieveKeys();
-    if (!privateKey || !passphrase) {
-      vscode.window.showErrorMessage("No key generated");
-      return;
+    try {
+      const apiKey = await crypto.decrypt(key);
+      await this.context.setToken(apiKey);
+      this.refresh("explorer");
+    } catch {
+      vscode.window.showErrorMessage("Can't decrypt the apiKey");
     }
-
-    const privKey = crypto.createPrivateKey({ key: privateKey, passphrase });
-    const apiKey = crypto
-      .privateDecrypt(privKey, Buffer.from(key.replace(/ /g, "+"), "base64"))
-      .toString("utf8");
-
-    await this.context.setToken(apiKey);
-    this.refresh("explorer");
   }
 }
