@@ -17,9 +17,9 @@ export const loginCommand: Command = {
       const token =
         process.env.VSCODE_ENV === "browser"
           ? await vscode.window.showInputBox({
-              prompt: "Paste your xata personal access token",
-              ignoreFocusOut: true,
-            })
+            prompt: "Paste your xata personal access token",
+            ignoreFocusOut: true,
+          })
           : await createAPIKeyThroughWebUI(context.extensionUri.path);
 
       if (token) {
@@ -73,8 +73,7 @@ function handler(
     } catch (err) {
       res.writeHead(500);
       res.end(
-        `Something went wrong: ${
-          err instanceof Error ? err.message : String(err)
+        `Something went wrong: ${err instanceof Error ? err.message : String(err)
         }`
       );
     }

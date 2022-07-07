@@ -214,8 +214,9 @@ export class NoConfigTreeItem extends vscode.TreeItem {
 export class EmptyTreeItem extends vscode.TreeItem {
   contextValue = "empty" as const;
 
-  constructor(public readonly label: string) {
+  constructor(public readonly label: string, command: vscode.Command) {
     super(label);
+    this.command = command;
   }
 }
 

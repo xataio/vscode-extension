@@ -21,7 +21,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
   constructor(
     private context: Context,
     private setView: (options: { description?: string; title?: string }) => void
-  ) {}
+  ) { }
 
   public refresh() {
     this.#onDidChangeTreeData.fire(null);
@@ -51,7 +51,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
         if (!config) {
           this.setView({
-            title: "unknown",
+            title: "(Uninitialized)",
           });
           return [];
         }

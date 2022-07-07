@@ -43,27 +43,27 @@
         "xata.baseUrl": {
           "type": "string",
           "default": "https://xata.sh",
-          "description": "Xata API base url"
+          "description": "The base URL of your workspace on Xata. To get this URL, go to your [workspace](https://docs.xata.io/concepts/workspaces)'s settings."
         },
         "xata.appBaseUrl": {
           "type": "string",
           "default": "https://app.xata.io",
-          "description": "Xata UI base url"
+          "description": "The base URL of Xata. This is usually https://app.xata.io."
         },
         "xata.hideBranchLevel": {
           "type": "boolean",
           "default": "true",
-          "description": "Hide branch level when a database have only one branch"
+          "description": "Hide branch level when a database has only one branch."
         },
         "xata.enableDatabaseColor": {
           "type": "boolean",
           "default": "true",
-          "description": "Use database color for the icon"
+          "description": "Use colored database icons."
         },
         "xata.envFilePath": {
           "type": "string",
           "default": ".env",
-          "description": "Relative path to the .env file"
+          "description": "Relative path to your .env file that contains Xata information."
         }
       }
     },
@@ -158,11 +158,11 @@
       },
       {
         "command": "xata.palette.insertRecords",
-        "title": "Xata: Insert records"
+        "title": "Xata: Insert record(s)"
       },
       {
         "command": "xata.insertRecords",
-        "title": "Insert records"
+        "title": "Insert record(s)"
       },
       {
         "command": "xata.watchMode",
@@ -175,7 +175,7 @@
       },
       {
         "command": "xata.initWorkspace",
-        "title": "Xata: Init workspace"
+        "title": "Xata: Initialize workspace"
       },
       {
         "command": "xata.palette.refresh",
@@ -275,22 +275,22 @@
     "viewsWelcome": [
       {
         "view": "xataExplorer",
-        "contents": "Welcome to xata!\n[Get started](command:xata.login)",
+        "contents": "[Get Started](command:xata.login)",
         "when": "!xata.isLogged"
       },
       {
         "view": "xataExplorer",
-        "contents": "It appears you don’t have any workspaces.\nCreate a workspace to get started.\n[Create workspace](command:xata.addWorkspace)",
+        "contents": "It appears you don't have any [workspaces](https://docs.xata.io/concepts/workspaces). Create a workspace to get started.\n[Create workspace](command:xata.addWorkspace)",
         "when": "xata.isLogged && xata.workspaceCount == 0"
       },
       {
         "view": "xataExplorer",
-        "contents": "You are offline\n[Refresh](command:xata.refresh)",
+        "contents": "You are offline. When you're back online, click refresh.\n[Refresh](command:xata.refresh)",
         "when": "xata.isOffline"
       },
       {
         "view": "xataWorkspace",
-        "contents": "No xatabase found!\n[Setup project](command:xata.initWorkspace)",
+        "contents": "[Get Started](command:xata.initWorkspace)",
         "when": "workspaceFolderCount == 1"
       }
     ],
