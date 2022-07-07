@@ -280,7 +280,7 @@
       },
       {
         "view": "xataExplorer",
-        "contents": "It appears you don't have any [workspaces](https://docs.xata.io/concepts/workspaces).\nCreate a workspace to get started.\n[Create workspace](command:xata.addWorkspace)",
+        "contents": "It appears you don't have any [workspaces](https://docs.xata.io/concepts/workspaces). Create a workspace to get started.\n[Create workspace](command:xata.addWorkspace)",
         "when": "xata.isLogged && xata.workspaceCount == 0"
       },
       {
