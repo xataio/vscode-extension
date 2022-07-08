@@ -13,6 +13,7 @@ export class AuthUriHandler implements vscode.UriHandler {
 
   async handleUri(uri: vscode.Uri) {
     const searchParams = new URLSearchParams(uri.query);
+
     const key = searchParams.get("key");
     if (!key) {
       vscode.window.showErrorMessage("Missing key parameter");
