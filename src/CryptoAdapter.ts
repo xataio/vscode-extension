@@ -5,11 +5,9 @@ class CryptoAdapter {
   private publicKey: CryptoKey | undefined;
   private privateKey: CryptoKey | undefined;
 
-  constructor(private subtle: SubtleCrypto) {
-    this.generateKeys();
-  }
+  constructor(private subtle: SubtleCrypto) {}
 
-  private async generateKeys() {
+  async generateKeys() {
     const keys = await this.subtle.generateKey(
       {
         name: "RSA-OAEP",
@@ -27,7 +25,9 @@ class CryptoAdapter {
 
   async getPublicKey() {
     if (!this.publicKey) {
-      throw new Error("Public key not available");
+      throw new Error(
+        "Public key not available, please call `generateKeys() first`"
+      );
     }
     const exported = await this.subtle.exportKey("spki", this.publicKey);
 
@@ -36,7 +36,9 @@ class CryptoAdapter {
 
   async decrypt(data: string): Promise<string> {
     if (!this.privateKey) {
-      throw new Error("Private key not available");
+      throw new Error(
+        "Private key not available, please call `generateKeys() first`"
+      );
     }
 
     const decrypted = await this.subtle.decrypt(

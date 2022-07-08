@@ -29,6 +29,7 @@ async function generateURL(context: Context) {
     vscode.Uri.parse(`${vscode.env.uriScheme}://xata.xata`)
   );
 
+  await crypto.generateKeys();
   const pub = await crypto.getPublicKey();
 
   return `${context.getAppBaseUrl()}/new-api-key?pub=${encodeURIComponent(
