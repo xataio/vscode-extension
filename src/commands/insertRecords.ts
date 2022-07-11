@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { jsonc } from "jsonc";
 import { Command } from "../types";
 import { bulkInsertTableRecords } from "../xata/xataComponents";
+import { TableTreeItem } from "../views/treeItems/TreeItem";
 
 /**
  * Command to insert a record from a json
@@ -74,11 +75,39 @@ export const insertRecordsCommand: Command = {
           });
 
           if (res.success) {
-            vscode.window.showInformationMessage(
-              `${res.data.recordIDs.length} record${
-                res.data.recordIDs.length > 1 ? "s" : ""
-              } inserted in ${$schema.replace(/^xata:/, "")} 🥳`
-            );
+            vscode.window
+              .showInformationMessage(
+                `${res.data.recordIDs.length} record${
+                  res.data.recordIDs.length > 1 ? "s" : ""
+                } inserted in ${$schema.replace(/^xata:/, "")} 🥳`,
+                "View Data"
+              )
+              .then((value) => {
+                if (value === "View Data") {
+                  vscode.commands.executeCommand(
+                    "xata.previewData",
+                    new TableTreeItem(
+                      tableName,
+                      vscode.TreeItemCollapsibleState.Collapsed,
+                      {
+                        workspaceId,
+                        databaseName,
+                        branchName,
+                        columns: [],
+                        name: tableName,
+                      },
+                      vscode.workspace.workspaceFolders && config
+                        ? {
+                            baseUrl: config.baseUrl,
+                            token: config.apiKey,
+                            vscodeWorkspace:
+                              vscode.workspace.workspaceFolders[0],
+                          }
+                        : undefined
+                    )
+                  );
+                }
+              });
           } else if (res.error.status === 400) {
             // TODO: Improve error feedback
             vscode.window.showErrorMessage(
