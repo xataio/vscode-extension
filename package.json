@@ -152,6 +152,10 @@
         "title": "Xata: Login with token"
       },
       {
+        "command": "xata.loginWithToken",
+        "title": "Xata: Login with token"
+      },
+      {
         "command": "xata.login",
         "title": "Login"
       },
@@ -336,6 +340,10 @@
         },
         {
           "command": "xata.logout",
+          "when": "false"
+        },
+        {
+          "command": "xata.loginWithToken",
           "when": "false"
         },
         {
