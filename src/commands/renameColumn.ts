@@ -3,6 +3,7 @@ import { ColumnTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { updateColumn } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
+import { validateResourceName } from "../utils";
 
 export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
   id: "renameColumn",
@@ -16,16 +17,7 @@ export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
       const name = await vscode.window.showInputBox({
         title: `New column name`,
         value: columnTreeItem.column.name,
-        validateInput: (value) => {
-          const isValid = Boolean(/^[a-zA-Z0-9_-~:]+$/.exec(value));
-          if (existingTables.includes(value)) {
-            return "column already exists";
-          }
-
-          return isValid
-            ? undefined
-            : "only alphanumerics and '-', '_', or '~' are allowed";
-        },
+        validateInput: validateResourceName("column", existingTables),
       });
 
       if (!name) {

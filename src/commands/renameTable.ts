@@ -3,6 +3,7 @@ import { TableTreeItem } from "../views/treeItems/TreeItem";
 import { TreeItemCommand } from "../types";
 import { getBranchDetails, updateTable } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
+import { validateResourceName } from "../utils";
 
 export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
   id: "renameTable",
@@ -30,16 +31,7 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
       const name = await vscode.window.showInputBox({
         title: `New table name`,
         value: tableTreeItem.table.name,
-        validateInput: (value) => {
-          const isValid = Boolean(/^[a-zA-Z0-9_-~:]+$/.exec(value));
-          if (existingTables.includes(value)) {
-            return "table already exists";
-          }
-
-          return isValid
-            ? undefined
-            : "only alphanumerics and '-', '_', or '~' are allowed";
-        },
+        validateInput: validateResourceName("table", existingTables),
       });
 
       if (!name) {
