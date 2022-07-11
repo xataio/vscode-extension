@@ -97,7 +97,7 @@ export function getContext(extensionContext: ExtensionContext) {
       return `${configValue.replace(
         /\/$/,
         ""
-      )}/workspaces/${workspaceId}/dbs/${databaseName}/${branchName}/tables/${tableName}`;
+      )}/workspaces/${workspaceId}/dbs/${databaseName}/branches/${branchName}/tables/${tableName}`;
     },
 
     /**
