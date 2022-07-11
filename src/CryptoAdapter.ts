@@ -13,7 +13,7 @@ class CryptoAdapter {
         name: "RSA-OAEP",
         modulusLength: 4096,
         publicExponent: new Uint8Array([1, 0, 1]),
-        hash: "SHA-256",
+        hash: "SHA-1",
       },
       true,
       ["encrypt", "decrypt"]
