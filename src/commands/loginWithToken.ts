@@ -1,7 +1,5 @@
 import * as vscode from "vscode";
-import crypto from "../CryptoAdapter";
 import { Command } from "../types";
-import { Context } from "../context";
 
 /**
  * Command to ask for xata token
