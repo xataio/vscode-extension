@@ -9,6 +9,7 @@ import {
 } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 import { Column } from "../xata/xataSchemas";
+import { validateResourceName } from "../utils";
 
 /**
  * Command to add a column to selected table
@@ -67,16 +68,7 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
       const name = await vscode.window.showInputBox({
         prompt: "Enter the name of your column",
         title: "Column name",
-        validateInput: (value) => {
-          const isValid = Boolean(/^[a-zA-Z0-9_-~:]+$/.exec(value));
-          if (existingColumns.includes(value)) {
-            return "column already exists";
-          }
-
-          return isValid
-            ? undefined
-            : "only alphanumerics and '-', '_', or '~' are allowed";
-        },
+        validateInput: validateResourceName("column", existingColumns),
       });
 
       if (!name) {

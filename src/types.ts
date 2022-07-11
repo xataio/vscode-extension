@@ -3,7 +3,7 @@ import { Context } from "./context";
 import { TreeItem } from "./views/treeItems/TreeItem";
 import { XataJsonSchemaProvider } from "./xataJsonSchemaProvider";
 
-type RefreshAction = (scope?: "explorer" | "workspace") => void;
+export type RefreshAction = (scope?: "explorer" | "workspace") => void;
 
 /**
  * Global VSCode command.

@@ -99,59 +99,6 @@ export const createBranchCommand: TreeItemCommand<
           return;
         }
       }
-
-      // rest
-      // const name = await vscode.window.showInputBox({
-      //   prompt: "Enter the name of your branch",
-      //   title: "Branch name",
-      //   validateInput: (value) => {
-      //     const isValid = Boolean(/^[a-zA-Z0-9_-~:]+$/.exec(value));
-      //     if (existingBranches.includes(value)) {
-      //       return "branch already exists";
-      //     }
-
-      //     return isValid
-      //       ? undefined
-      //       : "only alphanumerics and '-', '_', or '~' are allowed";
-      //   },
-      // });
-
-      // if (!name) {
-      //   return;
-      // }
-
-      // const from =
-      //   existingBranches.length === 1
-      //     ? existingBranches[0]
-      //     : await vscode.window.showQuickPick(existingBranches);
-
-      // if (!from) {
-      //   return;
-      // }
-
-      // try {
-      //   await createBranch({
-      //     baseUrl: context.getBaseUrl(treeItem.workspaceId),
-      //     context,
-      //     pathParams: {
-      //       dbBranchName: `${treeItem.database.name}:${name}`,
-      //     },
-      //     queryParams: {
-      //       from,
-      //     },
-      //   });
-
-      //   return refresh();
-      // } catch (e) {
-      //   if (e instanceof ValidationError) {
-      //     vscode.window.showErrorMessage(e.details);
-      //     return;
-      //   }
-      //   if (e instanceof Error) {
-      //     vscode.window.showErrorMessage(e.message);
-      //     return;
-      //   }
-      // }
     };
   },
 };

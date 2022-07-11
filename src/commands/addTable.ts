@@ -7,6 +7,7 @@ import {
 import { TreeItemCommand, WorkspaceNavigationItem } from "../types";
 import { createTable, getBranchDetails } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
+import { validateResourceName } from "../utils";
 
 export const addTableCommand: TreeItemCommand<
   | OneBranchDatabaseItem
@@ -78,16 +79,7 @@ export const addTableCommand: TreeItemCommand<
       const name = await vscode.window.showInputBox({
         prompt: "Enter the name of your table",
         title: "Table name",
-        validateInput: (value) => {
-          const isValid = Boolean(/^[a-zA-Z0-9_-~:]+$/.exec(value));
-          if (existingTables.includes(value)) {
-            return "table already exists";
-          }
-
-          return isValid
-            ? undefined
-            : "only alphanumerics and '-', '_', or '~' are allowed";
-        },
+        validateInput: validateResourceName("table", existingTables),
       });
 
       if (!name) {

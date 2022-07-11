@@ -169,9 +169,9 @@ export class XataWorkspace {
     this.treeDataProvider.refresh();
   }
 
-  constructor(context: vscode.ExtensionContext) {
+  constructor(context: Context) {
     this.treeDataProvider = new XataDataProvider(
-      getContext(context),
+      context,
       ({ description, title }) => {
         this.treeView.description = description;
         this.treeView.title = title;
@@ -181,7 +181,9 @@ export class XataWorkspace {
       treeDataProvider: this.treeDataProvider,
       showCollapseAll: true,
     });
+  }
 
-    context.subscriptions.push(this.treeView);
+  dispose() {
+    this.treeView.dispose();
   }
 }

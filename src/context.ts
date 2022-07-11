@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import { XataTablePath } from "./types";
 import { Column } from "./xata/xataSchemas";
 import { resolveBranch } from "./xata/xataComponents";
+import crypto from "crypto";
 
 /**
  * Wrapper around vscode extension context
@@ -64,6 +65,20 @@ export function getContext(extensionContext: ExtensionContext) {
     },
 
     /**
+     * Get `appBaseUrl` from the workspace configuration
+     */
+    getAppBaseUrl() {
+      const configValue = workspace.getConfiguration().get("xata.appBaseUrl");
+
+      if (!(typeof configValue === "string" && configValue.includes("//"))) {
+        window.showErrorMessage('"xata.baseUrl" is not a valid url');
+        return "";
+      }
+
+      return configValue.replace(/\/^/, "");
+    },
+
+    /**
      * Get link to Xata UI
      */
     getAppLink({
@@ -82,7 +97,7 @@ export function getContext(extensionContext: ExtensionContext) {
       return `${configValue.replace(
         /\/$/,
         ""
-      )}/workspaces/${workspaceId}/dbs/${databaseName}/${branchName}/tables/${tableName}`;
+      )}/workspaces/${workspaceId}/dbs/${databaseName}/branches/${branchName}/tables/${tableName}`;
     },
 
     /**

@@ -3,6 +3,7 @@
   "displayName": "xata-vscode-extension",
   "repository": "https://github.com/xataio/vscode-extension",
   "icon": "doc/xata-icon-128.png",
+  "preview": true,
   "description": "Managed your xatabase from VSCode",
   "publisher": "xata",
   "version": "0.0.1",
@@ -29,10 +30,12 @@
   ],
   "activationEvents": [
     "onCommand:xata.login",
+    "onCommand:xata.loginWithToken",
     "onCommand:xata.logout",
     "onCommand:xata.refresh",
     "onView:xataExplorer",
-    "onView:xataWorkspace"
+    "onView:xataWorkspace",
+    "onUri"
   ],
   "main": "./out/extension.js",
   "browser": "./out/extension-browser.js",
@@ -143,6 +146,14 @@
       {
         "command": "xata.palette.login",
         "title": "Xata: Login"
+      },
+      {
+        "command": "xata.palette.loginWithToken",
+        "title": "Xata: Login with token"
+      },
+      {
+        "command": "xata.loginWithToken",
+        "title": "Xata: Login with token"
       },
       {
         "command": "xata.login",
@@ -316,6 +327,10 @@
           "when": "!xata.isLogged"
         },
         {
+          "command": "xata.palette.loginWithToken",
+          "when": "!xata.isLogged"
+        },
+        {
           "command": "xata.palette.logout",
           "when": "xata.isLogged"
         },
@@ -325,6 +340,10 @@
         },
         {
           "command": "xata.logout",
+          "when": "false"
+        },
+        {
+          "command": "xata.loginWithToken",
           "when": "false"
         },
         {

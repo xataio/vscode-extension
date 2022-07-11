@@ -6,6 +6,7 @@ import {
 import { TreeItemCommand } from "../types";
 import { createBranch, getBranchList } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
+import { validateResourceName } from "../utils";
 
 /**
  * Add a branch in a context of the xata explorer (when all the others branches is visible)
@@ -38,16 +39,7 @@ export const addBranchCommand: TreeItemCommand<
       const name = await vscode.window.showInputBox({
         prompt: "Enter the name of your branch",
         title: "Branch name",
-        validateInput: (value) => {
-          const isValid = Boolean(/^[a-zA-Z0-9_-~:]+$/.exec(value));
-          if (existingBranches.includes(value)) {
-            return "branch already exists";
-          }
-
-          return isValid
-            ? undefined
-            : "only alphanumerics and '-', '_', or '~' are allowed";
-        },
+        validateInput: validateResourceName("branch", existingBranches),
       });
 
       if (!name) {
