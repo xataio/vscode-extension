@@ -1,5 +1,6 @@
 // Globals
 export { loginCommand } from "./login";
+export { loginWithTokenCommand } from "./loginWithToken";
 export { logoutCommand } from "./logout";
 export { refreshCommand } from "./refresh";
 export { addWorkspaceCommand } from "./addWorkspace";

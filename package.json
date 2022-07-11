@@ -30,6 +30,7 @@
   ],
   "activationEvents": [
     "onCommand:xata.login",
+    "onCommand:xata.loginWithToken",
     "onCommand:xata.logout",
     "onCommand:xata.refresh",
     "onView:xataExplorer",
@@ -145,6 +146,10 @@
       {
         "command": "xata.palette.login",
         "title": "Xata: Login"
+      },
+      {
+        "command": "xata.palette.loginWithToken",
+        "title": "Xata: Login with token"
       },
       {
         "command": "xata.login",
@@ -315,6 +320,10 @@
       "commandPalette": [
         {
           "command": "xata.palette.login",
+          "when": "!xata.isLogged"
+        },
+        {
+          "command": "xata.palette.loginWithToken",
           "when": "!xata.isLogged"
         },
         {

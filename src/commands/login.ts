@@ -4,7 +4,7 @@ import { Command } from "../types";
 import { Context } from "../context";
 
 /**
- * Command to ask for xata token
+ * Command to login through the UI.
  */
 export const loginCommand: Command = {
   id: "login",
