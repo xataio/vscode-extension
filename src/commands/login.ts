@@ -13,7 +13,7 @@ export const loginCommand: Command = {
   action(context) {
     return async () => {
       const openURL = await generateURL(context);
-      vscode.env.openExternal(vscode.Uri.parse(openURL));
+      vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(openURL).toString(true));
     };
   },
 };
