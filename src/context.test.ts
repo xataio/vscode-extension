@@ -23,40 +23,6 @@ describe("context", () => {
       });
     });
   });
-
-  describe("getVSCodeWorkspaceEnvConfig", () => {
-    it("should retrieve the config for the .env", async () => {
-      vi.mock("vscode", () => ({
-        Uri: {
-          parse: () => "",
-        },
-        workspace: {
-          getConfiguration() {
-            return {
-              get(path: string) {
-                if (path === "xata.envFilePath") {
-                  return ".env";
-                }
-              },
-            };
-          },
-          fs: {
-            async readFile(uri: Uri) {
-              console.log(uri.path);
-            },
-          },
-        },
-      }));
-
-      const extensionContext = Mock.of<ExtensionContext>({});
-
-      const config = await getContext(
-        extensionContext
-      ).getVSCodeWorkspaceEnvConfig(Uri.parse("/"));
-
-      expect(config).toBe("boom");
-    });
-  });
 });
 
 /**
