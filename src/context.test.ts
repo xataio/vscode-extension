@@ -1,7 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import ts, { TypeAliasDeclaration } from "typescript";
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { ExtensionContext, Uri } from "vscode";
+import { getContext } from "./context";
+import { Mock } from "ts-mockery";
 
 describe("context", () => {
   describe("getColumnIcon", () => {
@@ -18,6 +21,40 @@ describe("context", () => {
           existsSync(join(__dirname, `../media/columns/dark/${typeName}.svg`))
         ).toBe(true);
       });
+    });
+  });
+
+  describe("getVSCodeWorkspaceEnvConfig", () => {
+    it("should retrieve the config for the .env", async () => {
+      vi.mock("vscode", () => ({
+        Uri: {
+          parse: () => "",
+        },
+        workspace: {
+          getConfiguration() {
+            return {
+              get(path: string) {
+                if (path === "xata.envFilePath") {
+                  return ".env";
+                }
+              },
+            };
+          },
+          fs: {
+            async readFile(uri: Uri) {
+              console.log(uri.path);
+            },
+          },
+        },
+      }));
+
+      const extensionContext = Mock.of<ExtensionContext>({});
+
+      const config = await getContext(
+        extensionContext
+      ).getVSCodeWorkspaceEnvConfig(Uri.parse("/"));
+
+      expect(config).toBe("boom");
     });
   });
 });

@@ -71,7 +71,7 @@ export function activate(extensionContext: vscode.ExtensionContext) {
     })
   );
 
-  // Handle config files (.env) changes
+  // Handle config files changes
   extensionContext.subscriptions.push(
     watchWorkspaceConfig(() => xataWorkspace.refresh())
   );

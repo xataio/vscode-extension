@@ -48,9 +48,16 @@ export class XataJsonSchemaProvider
         Number.isFinite(workspaceId) &&
         workspaceId <= vscode.workspace.workspaceFolders.length - 1
       ) {
-        config = await this.context.getVSCodeWorkspaceEnvConfig(
+        const envConfig = await this.context.getVSCodeWorkspaceEnvConfig(
           vscode.workspace.workspaceFolders[workspaceId].uri
         );
+        if (!envConfig?.apiKey) {
+          throw new Error("You need to be logged!");
+        }
+        config = {
+          apiKey: envConfig.apiKey,
+          baseUrl: envConfig.baseUrl,
+        };
       }
     }
 
