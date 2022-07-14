@@ -48,9 +48,16 @@ export const insertRecordsCommand: Command = {
         const queryExecArray = /\?workspace=(\d)$/.exec($schema);
         if (queryExecArray && vscode.workspace.workspaceFolders) {
           const workspaceIndex = parseInt(queryExecArray[1]);
-          config = await context.getVSCodeWorkspaceEnvConfig(
+          const envConfig = await context.getVSCodeWorkspaceEnvConfig(
             vscode.workspace.workspaceFolders[workspaceIndex].uri
           );
+          if (!envConfig?.apiKey) {
+            throw new Error("You are not logged-in! Please add a `XATA_API_KEY` to your env configuration.");
+          }
+          config = {
+            apiKey: envConfig.apiKey,
+            baseUrl: envConfig.baseUrl,
+          };
         }
 
         if (!workspaceId || !databaseName || !branchName || !tableName) {

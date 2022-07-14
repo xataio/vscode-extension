@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Context, getContext } from "../context";
+import { Context } from "../context";
 
 import {
   EmptyVSCodeWorkspaceTreeItem,
@@ -21,7 +21,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
   constructor(
     private context: Context,
     private setView: (options: { description?: string; title?: string }) => void
-  ) { }
+  ) {}
 
   public refresh() {
     this.#onDidChangeTreeData.fire(null);
@@ -45,13 +45,19 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
         vscode.commands.executeCommand(
           "setContext",
-          "xata.isConfigValid",
-          Boolean(config)
+          "xata.configState",
+          config ? (config.apiKey ? "logged" : "notLogged") : false
         );
 
         if (!config) {
           this.setView({
             title: "(Uninitialized)",
+          });
+          return [];
+        } else if (!config.apiKey) {
+          this.setView({
+            title: config.databaseName,
+            description: config.branch,
           });
           return [];
         }
@@ -87,7 +93,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
               workspaceFolder.uri
             );
 
-            if (!config) {
+            if (!config || !config.apiKey) {
               return new EmptyVSCodeWorkspaceTreeItem(
                 workspaceFolder.name,
                 vscode.TreeItemCollapsibleState.Collapsed,
@@ -115,7 +121,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
         element.workspaceFolder.uri
       );
 
-      if (!config) {
+      if (!config?.apiKey) {
         return [
           new NoConfigTreeItem(
             "No xata project found!",

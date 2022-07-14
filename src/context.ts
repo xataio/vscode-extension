@@ -10,7 +10,12 @@ import dotenv from "dotenv";
 import { XataTablePath } from "./types";
 import { Column } from "./xata/xataSchemas";
 import { resolveBranch } from "./xata/xataComponents";
-import crypto from "crypto";
+
+export const CONFIG_FILES = [
+  ".xatarc",
+  ".xatarc.json",
+  "package.json",
+] as const;
 
 /**
  * Wrapper around vscode extension context
@@ -151,58 +156,84 @@ export function getContext(extensionContext: ExtensionContext) {
      * @returns
      */
     async getVSCodeWorkspaceEnvConfig(uri: Uri) {
+      let dotenvConfig: any = {}; // validated & typed later
+      let xataRcConfig: any = {}; // validated & typed later
+
       try {
         const envPath =
           workspace.getConfiguration().get<string>("xata.envFilePath") ??
           ".env";
 
         const envFile = await workspace.fs.readFile(Uri.joinPath(uri, envPath));
-        const config = dotenv.parse(Buffer.from(envFile));
+        dotenvConfig = dotenv.parse(Buffer.from(envFile));
+      } catch {
+        // No .env in the workspace
+      }
 
-        if (
-          typeof config.XATA_DATABASE_URL === "string" &&
-          typeof config.XATA_API_KEY === "string"
-        ) {
-          const urlChunks =
-            config.XATA_DATABASE_URL.match(/\/\/([a-z0-9-]*)\./);
-          if (!urlChunks) {
-            throw new Error("XATA_DATABASE_URL is not valid");
+      // Load config from files (example: `.xatarc`)
+      for (const fileName of CONFIG_FILES) {
+        try {
+          const raw = await workspace.fs.readFile(Uri.joinPath(uri, fileName));
+          const json = JSON.parse(Buffer.from(raw).toString("utf-8"));
+          if (fileName === "package.json") {
+            xataRcConfig = {
+              ...xataRcConfig,
+              ...json.xata,
+            };
+          } else {
+            xataRcConfig = {
+              ...xataRcConfig,
+              ...json,
+            };
           }
-
-          const databaseName = new URL(config.XATA_DATABASE_URL).pathname.split(
-            "/"
-          )[2];
-
-          const baseUrl = new URL(config.XATA_DATABASE_URL).origin;
-          const apiKey = config.XATA_API_KEY;
-
-          const branch = await resolveBranch({
-            baseUrl,
-            context: this,
-            token: apiKey,
-            pathParams: {
-              dbName: databaseName,
-            },
-            queryParams: {
-              gitBranch:
-                config.XATA_DATABASE_BRANCH ?? (await this.getGitBranch(uri)),
-            },
-          });
-
-          if (branch.success === false) {
-            throw new Error("Branch can't be resolved");
-          }
-
-          return {
-            baseUrl,
-            databaseName,
-            databaseUrl: config.XATA_DATABASE_URL,
-            branch: branch.data.branch,
-            apiKey,
-            workspaceId: urlChunks[1],
-          };
+        } catch {
+          /* The file doesn't exist or is not a valid json */
         }
-      } catch {}
+      }
+
+      const databaseURL =
+        dotenvConfig.XATA_DATABASE_URL ?? xataRcConfig.databaseURL;
+
+      if (typeof databaseURL === "string") {
+        const urlChunks = databaseURL.match(/\/\/([a-z0-9-]*)\./);
+        if (!urlChunks) {
+          throw new Error("`XATA_DATABASE_URL` is not valid. Check your DB Configuration tab at https://app.xata.io");
+        }
+
+        const databaseName = new URL(databaseURL).pathname.split("/")[2];
+        const baseUrl = new URL(databaseURL).origin;
+        const apiKey: string | undefined =
+          typeof dotenvConfig.XATA_API_KEY === "string"
+            ? dotenvConfig.XATA_API_KEY
+            : undefined;
+
+        const branch = await resolveBranch({
+          baseUrl,
+          context: this,
+          token: apiKey,
+          pathParams: {
+            dbName: databaseName,
+          },
+          queryParams: {
+            gitBranch:
+              dotenvConfig.XATA_DATABASE_BRANCH ??
+              (await this.getGitBranch(uri)),
+          },
+        });
+
+        if (branch.success === false) {
+          throw new Error("Branch can't be resolved");
+        }
+
+        return {
+          baseUrl,
+          databaseName,
+          databaseURL,
+          branch: branch.data.branch,
+          apiKey,
+          workspaceId: urlChunks[1],
+        } as const;
+      }
     },
 
     /**

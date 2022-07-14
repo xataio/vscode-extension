@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { Context } from "./context";
+import { CONFIG_FILES } from "./context";
 
 /**
- * Watch all `.env` files to trigger a refresh
+ * Watch all configuration related files to trigger a refresh
  *
  * @param onConfigChange
  */
@@ -17,6 +17,13 @@ export function watchWorkspaceConfig(onConfigChange: () => void) {
 
       const configUri = vscode.Uri.joinPath(workspaceFolder.uri, envPath);
       configFiles.add(configUri.path.toLowerCase());
+
+      // JSON configs
+      CONFIG_FILES.map((fileName) =>
+        configFiles.add(
+          vscode.Uri.joinPath(workspaceFolder.uri, fileName).path.toLowerCase()
+        )
+      );
     });
   };
 

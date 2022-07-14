@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
-import { Command, StandAloneCommand, TreeItemCommand } from "../types";
+import { CONFIG_FILES } from "../context";
+import { StandAloneCommand } from "../types";
 import {
   VSCodeWorkspaceTreeItem,
   Workspace,
@@ -13,7 +14,7 @@ import { loginCommand } from "./login";
 type WelcomeViewAction = undefined;
 
 /**
- * Command to init a workspace (create or modify a .env)
+ * Command to init a workspace (create or modify a .env/.xatarc)
  */
 export const initWorkspaceCommand: StandAloneCommand<
   WelcomeViewAction | VSCodeWorkspaceTreeItem
@@ -40,89 +41,64 @@ export const initWorkspaceCommand: StandAloneCommand<
         workspaceFolder = vscode.workspace.workspaceFolders[0];
       }
 
-      // choose workspace
-      const workspacesList = await getWorkspacesList({
-        baseUrl: context.getBaseUrl(),
-        context: context,
-      });
+      const config = await context.getVSCodeWorkspaceEnvConfig(
+        workspaceFolder.uri
+      );
 
-      if (!workspacesList.success) {
-        throw new Error(workspacesList.error.payload.message);
-      }
+      if (!config) {
+        // choose workspace
+        const workspacesList = await getWorkspacesList({
+          baseUrl: context.getBaseUrl(),
+          context: context,
+        });
 
-      const { workspaces } = workspacesList.data;
-      let selectedWorkspace: undefined | Workspace;
+        if (!workspacesList.success) {
+          throw new Error(workspacesList.error.payload.message);
+        }
 
-      if (workspaces.length === 1) {
-        selectedWorkspace = workspaces[0];
-      } else {
-        const workspaceChoice = await vscode.window.showQuickPick(
-          workspaces.map((i) => ({
-            label: `$(rocket) ${i.name}`,
-            payload: i,
-          }))
-        );
+        const { workspaces } = workspacesList.data;
+        let selectedWorkspace: undefined | Workspace;
 
-        if (workspaceChoice) {
-          selectedWorkspace = workspaceChoice.payload;
+        if (workspaces.length === 1) {
+          selectedWorkspace = workspaces[0];
         } else {
-          return;
+          const workspaceChoice = await vscode.window.showQuickPick(
+            workspaces.map((i) => ({
+              label: `$(rocket) ${i.name}`,
+              payload: i,
+            }))
+          );
+
+          if (workspaceChoice) {
+            selectedWorkspace = workspaceChoice.payload;
+          } else {
+            return;
+          }
         }
-      }
 
-      // choose database
-      const databaseList = await getDatabaseList({
-        baseUrl: context.getBaseUrl(selectedWorkspace.id),
-        context: context,
-      });
+        // choose database
+        const databaseList = await getDatabaseList({
+          baseUrl: context.getBaseUrl(selectedWorkspace.id),
+          context: context,
+        });
 
-      if (!databaseList.success) {
-        throw new Error(databaseList.error.payload.message);
-      }
-
-      let selectedDatabaseName: string | undefined;
-
-      const { databases } = databaseList.data;
-      const createDatabaseId = Symbol();
-
-      if (!databases) {
-        const res = await addDatabaseCommand.action(
-          context,
-          refresh,
-          jsonSchemaProvider
-        )(
-          new WorkspaceTreeItem(
-            `$(rocket) ${selectedWorkspace.name}`,
-            vscode.TreeItemCollapsibleState.Collapsed,
-            selectedWorkspace
-          )
-        );
-
-        if (!res || !res.success) {
-          return;
+        if (!databaseList.success) {
+          throw new Error(databaseList.error.payload.message);
         }
-        selectedDatabaseName = res.data.databaseName;
-      } else if (databases.length === 1) {
-        selectedDatabaseName = databases[0].name;
-      } else {
-        const databaseChoice = await vscode.window.showQuickPick([
-          { label: "$(add) New database", name: createDatabaseId },
-          ...databases.map((i) => ({
-            label: `$(database) ${i.displayName}`,
-            name: i.name,
-          })),
-        ]);
 
-        if (typeof databaseChoice?.name === "string") {
-          selectedDatabaseName = databaseChoice.name;
-        } else if (databaseChoice?.name === createDatabaseId) {
+        let selectedDatabaseName: string | undefined;
+
+        const { databases } = databaseList.data;
+        const createDatabaseId = Symbol();
+
+        if (!databases) {
           const res = await addDatabaseCommand.action(
             context,
             refresh,
             jsonSchemaProvider
           )(
             new WorkspaceTreeItem(
-              selectedWorkspace.name,
+              `$(rocket) ${selectedWorkspace.name}`,
               vscode.TreeItemCollapsibleState.Collapsed,
               selectedWorkspace
             )
@@ -132,8 +108,72 @@ export const initWorkspaceCommand: StandAloneCommand<
             return;
           }
           selectedDatabaseName = res.data.databaseName;
+        } else if (databases.length === 1) {
+          selectedDatabaseName = databases[0].name;
         } else {
-          return;
+          const databaseChoice = await vscode.window.showQuickPick([
+            { label: "$(add) New database", name: createDatabaseId },
+            ...databases.map((i) => ({
+              label: `$(database) ${i.displayName}`,
+              name: i.name,
+            })),
+          ]);
+
+          if (typeof databaseChoice?.name === "string") {
+            selectedDatabaseName = databaseChoice.name;
+          } else if (databaseChoice?.name === createDatabaseId) {
+            const res = await addDatabaseCommand.action(
+              context,
+              refresh,
+              jsonSchemaProvider
+            )(
+              new WorkspaceTreeItem(
+                selectedWorkspace.name,
+                vscode.TreeItemCollapsibleState.Collapsed,
+                selectedWorkspace
+              )
+            );
+
+            if (!res || !res.success) {
+              return;
+            }
+            selectedDatabaseName = res.data.databaseName;
+          } else {
+            return;
+          }
+        }
+
+        const databaseURL = `${context.getBaseUrl(
+          selectedWorkspace.id
+        )}/db/${selectedDatabaseName}`;
+
+        // create .xatarc file
+        const xataRcUri = vscode.Uri.joinPath(
+          workspaceFolder.uri,
+          CONFIG_FILES[0]
+        );
+        const xataRcFile = await readFileSafe(xataRcUri);
+        const writeInitialFile = async () =>
+          await vscode.workspace.fs.writeFile(
+            xataRcUri,
+            Buffer.from(JSON.stringify({ databaseURL }, null, 2))
+          );
+
+        if (xataRcFile.length) {
+          try {
+            const xataRcData = JSON.parse(
+              Buffer.from(xataRcFile).toString("utf-8")
+            );
+            xataRcData.databaseURL = databaseURL;
+            await vscode.workspace.fs.writeFile(
+              xataRcUri,
+              Buffer.from(JSON.stringify(xataRcData, null, 2))
+            );
+          } catch {
+            await writeInitialFile();
+          }
+        } else {
+          await writeInitialFile();
         }
       }
 
@@ -153,11 +193,8 @@ export const initWorkspaceCommand: StandAloneCommand<
           Buffer.from(
             `${
               envFile.length ? "\n" : ""
-            }XATA_DATABASE_URL=${context.getBaseUrl(
-              selectedWorkspace.id
-            )}/db/${selectedDatabaseName}`
+            }XATA_API_KEY=${await context.getToken()}`
           ),
-          Buffer.from(`\nXATA_API_KEY=${await context.getToken()}`),
         ])
       );
 

@@ -1,7 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import ts, { TypeAliasDeclaration } from "typescript";
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { ExtensionContext, Uri } from "vscode";
+import { getContext } from "./context";
+import { Mock } from "ts-mockery";
 
 describe("context", () => {
   describe("getColumnIcon", () => {
