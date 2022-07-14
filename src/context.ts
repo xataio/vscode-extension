@@ -197,7 +197,7 @@ export function getContext(extensionContext: ExtensionContext) {
       if (typeof databaseURL === "string") {
         const urlChunks = databaseURL.match(/\/\/([a-z0-9-]*)\./);
         if (!urlChunks) {
-          throw new Error("XATA_DATABASE_URL is not valid");
+          throw new Error("`XATA_DATABASE_URL` is not valid. Check your DB Configuration tab at https://app.xata.io");
         }
 
         const databaseName = new URL(databaseURL).pathname.split("/")[2];
