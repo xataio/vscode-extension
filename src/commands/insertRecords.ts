@@ -52,7 +52,7 @@ export const insertRecordsCommand: Command = {
             vscode.workspace.workspaceFolders[workspaceIndex].uri
           );
           if (!envConfig?.apiKey) {
-            throw new Error("You are not logged!");
+            throw new Error("You are not logged-in! Please add a `XATA_API_KEY` to your env configuration.");
           }
           config = {
             apiKey: envConfig.apiKey,
