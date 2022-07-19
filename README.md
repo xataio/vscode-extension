@@ -1,6 +1,6 @@
 # Xata VSCode extension
 
-Manage your [Xata](https://xata.io) database without leaving VSCode!
+Manage your [Xata](https://xata.io) databases without leaving VS Code!
 
 ## Gettings started
 
