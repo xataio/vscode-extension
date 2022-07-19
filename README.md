@@ -8,7 +8,7 @@ Once the extension is installed it from the [VS Code Marketplace](), it should s
 
 ![Setup view for the VSCode Extension](https://github.com/xataio/vscode-extension/raw/main/doc/get-started-view.png)
 
-Clicking on any of the **Get Started** buttons should open your default browser's, login to your Xata account, and it will prompt you to create an API code.
+Clicking on any of the **Get Started** buttons should open your default browser. From there, login to your Xata account, and it will prompt you to create an [API key](https://docs.xata.io/concepts/api-keys). 
 
 Once the key is created, there will be a new prompt to return to VSCode studio nad your **Explorer** tab should be populated with your workspaces.
 
