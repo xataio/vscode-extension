@@ -16,7 +16,7 @@ Once the key is created, there will be a new prompt to return to VS Code and you
 
 ## Features
 
-### Manage your databases
+### Manage Your Databases
 
 Create workspaces, databases, branches and columns directly from the sidebar.
 
