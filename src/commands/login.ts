@@ -6,14 +6,18 @@ import { Context } from "../context";
 /**
  * Command to login through the UI.
  */
-export const loginCommand: Command = {
+export const loginCommand: Command<string> = {
   id: "login",
   type: "global",
   inPalette: true,
   action(context) {
-    return async () => {
+    return async (commandId?: string) => {
       const openURL = await generateURL(context);
-      vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(openURL).toString(true));
+      vscode.commands.executeCommand(
+        "vscode.open",
+        vscode.Uri.parse(openURL).toString(true) +
+          (commandId ? encodeURIComponent(`&commandId=${commandId}`) : "")
+      );
     };
   },
 };

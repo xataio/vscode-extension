@@ -8,7 +8,7 @@ export type RefreshAction = (scope?: "explorer" | "workspace") => void;
 /**
  * Global VSCode command.
  */
-export type Command = {
+export type Command<T = void> = {
   id: string;
   type: "global";
   /**
@@ -21,7 +21,7 @@ export type Command = {
     context: Context,
     refresh: RefreshAction,
     jsonSchemaProvider: XataJsonSchemaProvider
-  ) => () => void;
+  ) => (params?: T) => void;
 };
 
 /**

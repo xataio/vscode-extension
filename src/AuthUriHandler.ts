@@ -27,5 +27,10 @@ export class AuthUriHandler implements vscode.UriHandler {
     } catch {
       vscode.window.showErrorMessage("Can't decrypt the apiKey");
     }
+
+    const commandId = searchParams.get("commandId");
+    if (commandId) {
+      vscode.commands.executeCommand(`xata.${commandId}`);
+    }
   }
 }

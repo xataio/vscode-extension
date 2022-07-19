@@ -24,7 +24,11 @@ export const initWorkspaceCommand: StandAloneCommand<
   action(context, refresh, jsonSchemaProvider) {
     return async (item) => {
       if (!(await context.getToken())) {
-        await loginCommand.action(context, refresh, jsonSchemaProvider)();
+        await loginCommand.action(
+          context,
+          refresh,
+          jsonSchemaProvider
+        )("initWorkspace");
       }
 
       let workspaceFolder: vscode.WorkspaceFolder;
