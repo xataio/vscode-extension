@@ -15,7 +15,7 @@ Once the key is created, there will be a new prompt to return to VS Code and you
 ![List of workspaces on Xata VSCode Extension](https://github.com/xataio/vscode-extension/raw/main/doc/workspaces-view.png)
 
 ## Features
-
+Here are some ways you can interact with Xata from our VS Code extension. 
 ### Manage Your Databases
 
 Create workspaces, databases, branches and columns directly from the sidebar.
