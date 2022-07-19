@@ -32,6 +32,7 @@ export async function getTableTreeItems(
       new EmptyTreeItem("Create table", {
         command: "xata.addTable",
         title: "Create table",
+        arguments: [element],
       }),
     ];
   }
