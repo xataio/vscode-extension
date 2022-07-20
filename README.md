@@ -14,7 +14,7 @@ Once the key is created, there will be a new prompt to return to VS Code and you
 
 ![List of workspaces on Xata VSCode Extension](https://github.com/xataio/vscode-extension/raw/main/doc/workspaces-view.png)
 
-The second panel (`(Unititilized)` in the screenshot)) is related to your current VS Code project. After being initialized, this will add a `.env` with an API key and a `.xatarc` with your database access details.
+The second panel (`(uninitialized)` in the screenshot)) is related to your current VS Code project. After being initialized, this will add a `.env` with an API key and a `.xatarc` with your database access details.
 
 While we recommend to version control the `.xatarc`, you should always add `.env` in `.gitignore` to avoid leaking the `XATA_API_TOKEN` and potentially other secrets.
 
