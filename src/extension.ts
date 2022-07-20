@@ -80,6 +80,45 @@ export function activate(extensionContext: vscode.ExtensionContext) {
   extensionContext.subscriptions.push(
     vscode.window.registerUriHandler(new AuthUriHandler(context, refresh))
   );
+
+  // Extends jsonc to add "Insert Records" code lens action
+  extensionContext.subscriptions.push(
+    vscode.languages.registerCodeLensProvider("jsonc", {
+      async provideCodeLenses(document) {
+        try {
+          const { jsonc } = await import("jsonc");
+          const data = jsonc.parse(document.getText());
+          const schema = data.$schema;
+          if (typeof schema === "string" && schema.startsWith("xata:")) {
+            let i = 0;
+            for (const line of document.getText().split("\n")) {
+              if (line.trimLeft().startsWith('"records":')) {
+                break;
+              }
+              i++;
+            }
+
+            return [
+              {
+                range: new vscode.Range(
+                  new vscode.Position(i, 0),
+                  new vscode.Position(i, 1)
+                ),
+                isResolved: true,
+                command: {
+                  title: "Insert records",
+                  command: "xata.insertRecords",
+                },
+              },
+            ];
+          }
+          return [];
+        } catch {
+          return [];
+        }
+      },
+    })
+  );
 }
 
 export function deactivate() {}

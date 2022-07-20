@@ -16,8 +16,9 @@ export const openInsertRecordsTemplateCommand: TreeItemCommand<TableTreeItem> =
       const doc = await vscode.workspace.openTextDocument({
         language: "jsonc",
         content:
-          `// Insert a record to ${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.table.name}\n\n` +
+          `// Insert records to ${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.table.name}\n\n` +
           "// 1. Add your records\n" +
+          "// 2. Press F1 - 'Xata: Insert records' or click on the 'Insert records' code lens action\n" +
           JSON.stringify(
             {
               $schema: `xata:${tableTreeItem.workspaceId}/${tableTreeItem.databaseName}/${tableTreeItem.branchName}/${tableTreeItem.table.name}${query}`,
@@ -25,8 +26,7 @@ export const openInsertRecordsTemplateCommand: TreeItemCommand<TableTreeItem> =
             },
             null,
             2
-          ) +
-          "\n// 2. Press F1 - 'Xata: Insert records'",
+          ),
       });
 
       vscode.window.showTextDocument(doc);
