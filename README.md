@@ -16,7 +16,7 @@ Once the key is created, there will be a new prompt to return to VS Code and you
 
 The second panel (`(Unititilized)` in the screenshot)) is related to your current VS Code project. After being initialized, this will add a `.env` with an API key and a `.xatarc` with your database access details.
 
-We recommend to version controlled the `.xatarc` and keep the `.env` for yourself.
+While we recommend to version control the `.xatarc`, you should always add `.env` in `.gitignore` to avoid leaking the `XATA_API_TOKEN` and potentially other secrets.
 
 If a `.xatarc` is already set, you will just need to login.
 
