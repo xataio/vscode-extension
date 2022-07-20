@@ -440,12 +440,12 @@
         },
         {
           "command": "xata.addTable",
-          "when": "view == xataWorkspace && workspaceFolderCount == 1 && xata.configState === logged",
+          "when": "view == xataWorkspace && workspaceFolderCount == 1 && xata.configState == logged",
           "group": "navigation"
         },
         {
           "command": "xata.createBranch",
-          "when": "view == xataWorkspace && workspaceFolderCount == 1 && xata.configState === logged",
+          "when": "view == xataWorkspace && workspaceFolderCount == 1 && xata.configState == logged",
           "group": "navigation"
         }
       ],
