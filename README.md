@@ -1,8 +1,8 @@
-# Xata VSCode extension
+# [Xata](https://xata.io) [VS Code](https://code.visualstudio.com/) Extension
 
-Manage your [Xata](https://xata.io) databases without leaving VS Code!
+This extension enables users to work with [Xata](https://xata.io) without leaving Visual Studio Code.
 
-## Gettings started
+## Getting Started
 
 Once the extension is installed it from the [VS Code Marketplace](), it should show up in your Activity Bar like in the image below.
 
