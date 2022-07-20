@@ -22,11 +22,13 @@ Create workspaces, databases, branches and columns directly from the sidebar.
 
 ![create-schema](https://github.com/xataio/vscode-extension/raw/main/doc/create-schema.gif)
 
-### Insert & preview your records
+### Preview & Insert Records
 
-Insert your records with auto-completion / validation and preview them.
+Preview, then insert your records into a database of your choice on Xata with auto-completion and validation.
 
 ![insert-record](https://github.com/xataio/vscode-extension/raw/main/doc/insert-preview-records.gif)
+
+After successfully inserting the record, you can save the file into your project for easy insertion in the future, or for sharing it with others: if they change the `"$schema"` parameter, the same record can be inserted into another database.
 
 ---
 
