@@ -7,7 +7,7 @@ This extension enables users to work with [Xata](https://xata.io) without leavin
 
 ## Getting Started
 
-Once the extension is installed it from the [VS Code Marketplace](), it should show up in your Activity Bar like in the image below.
+Once the extension is installed from the [VS Code Marketplace](), it should show up in your Activity Bar like in the image below.
 
 ![Setup view for the VSCode Extension](https://github.com/xataio/vscode-extension/raw/main/doc/get-started-view.png)
 
