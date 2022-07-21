@@ -26,15 +26,19 @@ Here are some ways you can interact with Xata from our VS Code extension.
 
 ### Manage Your Databases
 
-Create workspaces, databases, branches and columns directly from the sidebar.
+Here are some ways you can interact with Xata from our VS Code extension.
+
+### Manage Your Databases
 
 ![create-schema](https://github.com/xataio/vscode-extension/raw/main/doc/create-schema.gif)
 
+Using this extension, you can create [workspaces](https://docs.xata.io/concepts/workspaces), databases, branches, tables, and columns directly from the sidebar.
+
 ### Preview & Insert Records
 
-Preview, then insert your records into a database of your choice on Xata with auto-completion and validation.
-
 ![insert-record](https://github.com/xataio/vscode-extension/raw/main/doc/insert-preview-records.gif)
+
+This extension also allows users to preview, then insert records into a database of your choice on Xata with autocompletion and validation.
 
 After successfully inserting the record, you can save the file into your project for easy insertion in the future, or for sharing it with others: if they change the `"$schema"` parameter, the same record can be inserted into another database.
 
