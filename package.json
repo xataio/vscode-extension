@@ -1,12 +1,12 @@
 {
   "name": "xata",
-  "displayName": "xata-vscode-extension",
+  "displayName": "Xata",
   "repository": "https://github.com/xataio/vscode-extension",
-  "icon": "doc/xata-icon-128.png",
+  "icon": "https://github.com/xataio/vscode-extension/raw/main/doc/xata-icon-128.png",
   "preview": true,
   "description": "Manage your Xata database from VS Code",
   "publisher": "xata",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "vscode:prepublish": "npm run build",
     "lint": "eslint src --ext ts",
