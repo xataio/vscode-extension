@@ -46,7 +46,7 @@
         "xata.baseUrl": {
           "type": "string",
           "default": "https://xata.sh",
-          "description": "The base URL of your workspace on Xata. To get this URL, go to your [workspace](https://docs.xata.io/concepts/workspaces)'s settings."
+          "description": "The base URL of your workspace on Xata. To get this URL, go to your workspace's (https://docs.xata.io/concepts/workspaces) settings."
         },
         "xata.appBaseUrl": {
           "type": "string",
