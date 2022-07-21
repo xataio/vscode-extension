@@ -2,7 +2,7 @@
   "name": "xata",
   "displayName": "xata-vscode-extension",
   "repository": "https://github.com/xataio/vscode-extension",
-  "icon": "https://raw.githubusercontent.com/xataio/vscode-extension/main/doc/xata-icon-128.png",
+  "icon": "doc/xata-icon-128.png",
   "preview": true,
   "description": "Manage your Xata database from VS Code",
   "publisher": "xata",
