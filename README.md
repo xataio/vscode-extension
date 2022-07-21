@@ -2,14 +2,13 @@
 
 ![image](https://user-images.githubusercontent.com/1761469/180163941-94a75bdd-6d3f-4a0c-bf53-1f5dbe4d45ef.png)
 
-
 This extension enables users to work with [Xata](https://xata.io) without leaving Visual Studio Code.
 
 ## Getting Started
 
 Once the extension is installed from the [VS Code Marketplace](), it should show up in your Activity Bar like in the image below.
 
-![Setup view for the VSCode Extension](https://github.com/xataio/vscode-extension/raw/main/doc/get-started-view.png)
+![Setup view for the VSCode Extension](https://raw.githubusercontent.com/xataio/vscode-extension/5a541d1c7d9ec0327dee5f6f3ebece2500ec27df/doc/get-started-view.png)
 
 Clicking on any of the **Get Started** buttons should open your default browser. From there, login to your Xata account, and it will prompt you to create an [API key](https://docs.xata.io/concepts/api-keys).
 
@@ -29,13 +28,13 @@ Here are some ways you can interact with Xata from our VS Code extension.
 
 ### Manage Your Databases
 
-![create-schema](https://github.com/xataio/vscode-extension/raw/main/doc/create-schema.gif)
+![Creating schema via VS Code Xata Extension](https://raw.githubusercontent.com/xataio/vscode-extension/5a541d1c7d9ec0327dee5f6f3ebece2500ec27df/doc/create-schema.gif)
 
 Using this extension, you can create [workspaces](https://docs.xata.io/concepts/workspaces), databases, branches, tables, and columns directly from the sidebar.
 
 ### Preview & Insert Records
 
-![insert-record](https://github.com/xataio/vscode-extension/raw/main/doc/insert-preview-records.gif)
+![Inserting records via VS Code Xata Extension](https://raw.githubusercontent.com/xataio/vscode-extension/5a541d1c7d9ec0327dee5f6f3ebece2500ec27df/doc/insert-preview-records.gif)
 
 This extension also allows users to preview, then insert records into a database of your choice on Xata with autocompletion and validation.
 
@@ -45,11 +44,11 @@ After successfully inserting the record, you can save the file into your project
 
 This is how you can create a new database branch in Xata. It also creates a git branch of the same name in your project if your project is associated with a git repository. If not, it will just create a branch of your database on Xata.
 
-![create-branch](https://github.com/xataio/vscode-extension/raw/main/doc/create-branch.gif)
+![create-branch](https://github.com/xataio/vscode-extension/blob/5a541d1c7d9ec0327dee5f6f3ebece2500ec27df/doc/create-branch.gif)
 
 You can always see on which branch you are currently working next to the name of your database. If your git branch matches a Xata branch, the extension automatically infers it. If it doesn't, the extension falls back on using the `XATA_FALLBACK_BRANCH` specified in your `.env`, or `main` if the fallback branch is unspecified. More about the fallback branch in the [docs](https://docs.xata.io/cli/getting-started#:~:text=fallback%20branch).
 
-![image](https://user-images.githubusercontent.com/9947422/180236005-49c4d470-ab15-4867-bc5f-08b37813d82d.png)
+![circled branch name on VS Code Xata Extension explorer pane](https://user-images.githubusercontent.com/9947422/180236005-49c4d470-ab15-4867-bc5f-08b37813d82d.png)
 
 The intended flow of working with Xata branches is the following:
 
