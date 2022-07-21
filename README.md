@@ -17,7 +17,7 @@ Once the key is created, there will be a new prompt to return to VS Code and you
 
 ![List of workspaces on Xata VSCode Extension](https://github.com/xataio/vscode-extension/raw/main/doc/workspaces-view.png)
 
-The second panel (`(uninitialized)` in the screenshot)) is related to your current VS Code project. After being initialized, this will add a `.env` with an API key and a `.xatarc` with your database access details.
+The second panel (`(uninitialized)` in the screenshot) is related to your current VS Code project. After being initialized, this will add a `.env` with an API key and a `.xatarc` with your database access details.
 
 While we recommend to version control the `.xatarc`, you should always add `.env` in `.gitignore` to avoid leaking the `XATA_API_TOKEN` and potentially other secrets.
 
@@ -41,21 +41,23 @@ This extension also allows users to preview, then insert records into a database
 
 After successfully inserting the record, you can save the file into your project for easy insertion in the future, or for sharing it with others: if they change the `"$schema"` parameter, the same record can be inserted into another database.
 
-### Create branch
+### Create a [Branch](https://docs.xata.io/concepts/branches)
 
-Create a new database branch that follow your git branch.
+This is how you can create a new database branch in Xata. It also creates a git branch of the same name in your project if your project is associated with a git repository. If not, it will just create a branch of your database on Xata.
 
 ![create-branch](https://github.com/xataio/vscode-extension/raw/main/doc/create-branch.gif)
 
-You can always see on which branch you are currently working, if your git branch match a Xata branch, the extension will automatically infer it.
+You can always see on which branch you are currently working next to the name of your database. If your git branch matches a Xata branch, the extension automatically infers it. If it doesn't, the extension falls back on using the `XATA_FALLBACK_BRANCH` specified in your `.env`, or `main` if the fallback branch is unspecified. More about the fallback branch in the [docs](https://docs.xata.io/cli/getting-started#:~:text=fallback%20branch).
 
-The intended flow is the following:
+![image](https://user-images.githubusercontent.com/9947422/180236005-49c4d470-ab15-4867-bc5f-08b37813d82d.png)
 
-- I start a feature and create a new git branch (Xata branch = `main` / git branch = `my-new-feature`)
-- I need to tweak the schema or data of my database
-- I create a new Xata branch (Xata branch = `my-new-feature` / git branch = `my-new-feature`)
+The intended flow of working with Xata branches is the following:
 
-Therefore, everybody (including CI and pull-request previews) testing the code on this git branch will automatically have the associated database branch.
+- You start to work on a feature and create a new git branch (Current Xata branch is `main` and current git branch is `my-new-feature`)
+- You need to tweak the schema or data of your database
+- You create a new Xata branch (Xata branch = `my-new-feature` / git branch = `my-new-feature`)
+
+Therefore, everybody (including CI and Pull Request previews) testing the code on this git branch will automatically have the associated database branch.
 
 ---
 
