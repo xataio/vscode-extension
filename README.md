@@ -38,7 +38,21 @@ Preview, then insert your records into a database of your choice on Xata with au
 
 After successfully inserting the record, you can save the file into your project for easy insertion in the future, or for sharing it with others: if they change the `"$schema"` parameter, the same record can be inserted into another database.
 
-### Create branches
+### Create branch
+
+Create a new database branch that follow your git branch.
+
+![create-branch](https://github.com/xataio/vscode-extension/raw/main/doc/create-branch.gif)
+
+You can always see on which branch you are currently working, if your git branch match a Xata branch, the extension will automatically infer it.
+
+The intended flow is the following:
+
+- I start a feature and create a new git branch (Xata branch = `main` / git branch = `my-new-feature`)
+- I need to tweak the schema or data of my database
+- I create a new Xata branch (Xata branch = `my-new-feature` / git branch = `my-new-feature`)
+
+Therefore, everybody (including CI and pull-request previews) testing the code on this git branch will automatically have the associated database branch.
 
 ---
 
