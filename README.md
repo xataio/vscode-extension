@@ -1,4 +1,7 @@
-# [Xata](https://xata.io) [VS Code](https://code.visualstudio.com/) Extension
+# Xata VS Code Extension
+
+![image](https://user-images.githubusercontent.com/1761469/180163941-94a75bdd-6d3f-4a0c-bf53-1f5dbe4d45ef.png)
+
 
 This extension enables users to work with [Xata](https://xata.io) without leaving Visual Studio Code.
 
