@@ -26,10 +26,6 @@ Here are some ways you can interact with Xata from our VS Code extension.
 
 ### Manage Your Databases
 
-Here are some ways you can interact with Xata from our VS Code extension.
-
-### Manage Your Databases
-
 ![create-schema](https://github.com/xataio/vscode-extension/raw/main/doc/create-schema.gif)
 
 Using this extension, you can create [workspaces](https://docs.xata.io/concepts/workspaces), databases, branches, tables, and columns directly from the sidebar.
