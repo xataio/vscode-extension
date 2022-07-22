@@ -97,7 +97,7 @@ export class PreviewDataPanel {
         <div class="top-bar">
           <a href="${this.context.getAppLink(this.path)}">
             <vscode-button appearance="primary">
-              Open in xata
+              Open in Xata
               <span slot="start" class="codicon codicon-link-external"></span>
             </vscode-button>
           </a>
