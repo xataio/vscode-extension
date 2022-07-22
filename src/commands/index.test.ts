@@ -7,6 +7,10 @@ import * as commands from ".";
 vi.mock("vscode", () => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
   TreeItem: class {},
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  Uri: {
+    from: () => "",
+  },
 }));
 
 describe("commands", () => {

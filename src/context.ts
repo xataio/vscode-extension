@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import { XataTablePath } from "./types";
 import { Column } from "./xata/xataSchemas";
 import { resolveBranch } from "./xata/xataComponents";
+import { xataColumnIcons } from "./xata/xataColumnIcons";
 
 export const CONFIG_FILES = [
   ".xatarc",
@@ -129,12 +130,7 @@ export function getContext(extensionContext: ExtensionContext) {
      * Retrieve a column icon by type
      */
     getColumnIcon(type: Column["type"]): TreeItem["iconPath"] {
-      return {
-        light: extensionContext.asAbsolutePath(
-          `media/columns/light/${type}.svg`
-        ),
-        dark: extensionContext.asAbsolutePath(`media/columns/dark/${type}.svg`),
-      };
+      return xataColumnIcons[type];
     },
 
     /**
@@ -197,7 +193,9 @@ export function getContext(extensionContext: ExtensionContext) {
       if (typeof databaseURL === "string") {
         const urlChunks = databaseURL.match(/\/\/([a-z0-9-]*)\./);
         if (!urlChunks) {
-          throw new Error("`XATA_DATABASE_URL` is not valid. Check your DB Configuration tab at https://app.xata.io");
+          throw new Error(
+            "`XATA_DATABASE_URL` is not valid. Check your DB Configuration tab at https://app.xata.io"
+          );
         }
 
         const databaseName = new URL(databaseURL).pathname.split("/")[2];
