@@ -314,6 +314,11 @@ export type SortOrder = "asc" | "desc";
 export type FuzzinessExpression = number;
 
 /**
+ * If the prefix type is set to "disabled" (the default), the search only matches full words. If the prefix type is set to "phrase", the search will return results that match prefixes of the search phrase.
+ */
+export type PrefixExpression = "phrase" | "disabled";
+
+/**
  * @minProperties 1
  */
 export type FilterExpression = {
@@ -325,6 +330,17 @@ export type FilterExpression = {
   $not?: FilterList;
 } & {
   [key: string]: FilterColumn;
+};
+
+export type HighlightExpression = {
+  /*
+   * Set to `false` to disable highlighting. By default it is `true`.
+   */
+  enabled?: boolean;
+  /*
+   * Set to `false` to disable HTML encoding in highlight snippets. By default it is `true`.
+   */
+  encodeHTML?: boolean;
 };
 
 export type FilterList = FilterExpression | FilterExpression[];
@@ -431,9 +447,19 @@ export type Record = {
      */
     version: number;
     /*
-     * The record's table name. APIs that return records from multiple tables will set _table accordingly.
+     * The record's table name. APIs that return records from multiple tables will set this field accordingly.
      */
     table?: string;
+    /*
+     * Highlights of the record. This is used by the search APIs to indicate which fields and parts of the fields have matched the search.
+     */
+    highlight?: {
+      [key: string]:
+        | string[]
+        | {
+            [key: string]: any;
+          };
+    };
     /*
      * Encoding/Decoding errors
      */
