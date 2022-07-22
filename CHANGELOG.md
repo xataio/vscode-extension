@@ -6,8 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-### Added
+## 0.0.2
 
-- Authentication with personal access token
-- Schema management (add, edit, delete resources)
-- Insert record
+### Fixed
+
+- Columns icons on web extension
+
+## 0.0.1
+
+First version on the marketplace 🎉
