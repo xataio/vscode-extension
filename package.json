@@ -31,9 +31,13 @@
   ],
   "activationEvents": [
     "onCommand:xata.login",
+    "onCommand:xata.palette.login",
     "onCommand:xata.loginWithToken",
+    "onCommand:xata.palette.loginWithToken",
     "onCommand:xata.logout",
+    "onCommand:xata.palette.logout",
     "onCommand:xata.refresh",
+    "onCommand:xata.palette.refresh",
     "onView:xataExplorer",
     "onView:xataWorkspace",
     "onUri"
