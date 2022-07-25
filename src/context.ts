@@ -214,8 +214,7 @@ export function getContext(extensionContext: ExtensionContext) {
           },
           queryParams: {
             gitBranch:
-              dotenvConfig.XATA_DATABASE_BRANCH ??
-              (await this.getGitBranch(uri)),
+              dotenvConfig.XATA_BRANCH ?? (await this.getGitBranch(uri)),
           },
         });
 
