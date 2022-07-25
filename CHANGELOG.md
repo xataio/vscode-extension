@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+### Added
+
+- Deal with xata branch creation in a non git environment.
+
 ## 0.0.2
 
 ### Fixed
