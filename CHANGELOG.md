@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+### Fixed
+
+- Extension not activated on palette commands (login, loginWithToken, logout)
+
 ## 0.0.2
 
 ### Fixed
