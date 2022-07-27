@@ -20,6 +20,7 @@ export const initWorkspaceCommand: StandAloneCommand<
   WelcomeViewAction | VSCodeWorkspaceTreeItem
 > = {
   id: "initWorkspace",
+  title: "Initialize workspace",
   type: "standAlone",
   action(context, refresh, jsonSchemaProvider) {
     return async (item) => {
@@ -180,6 +181,11 @@ export const initWorkspaceCommand: StandAloneCommand<
           await writeInitialFile();
         }
       }
+
+      // look for the gitignore
+      // if .env is here -> .env
+      // if no .env and .env.local -> .env.local
+      // if no .gitignore or no .env entry -> create a gitignore
 
       // create .env file
       const envPath =

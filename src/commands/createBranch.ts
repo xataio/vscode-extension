@@ -16,6 +16,9 @@ export const createBranchCommand: TreeItemCommand<
   VSCodeWorkspaceTreeItem | WorkspaceNavigationItem
 > = {
   id: "createBranch",
+  title: "Create branch",
+  group: "inline",
+  viewItems: ["vscodeWorkspace"],
   type: "treeItem",
   views: ["xataWorkspace"],
   icon: "git-pull-request-create",

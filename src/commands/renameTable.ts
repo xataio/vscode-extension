@@ -7,6 +7,9 @@ import { validateResourceName } from "../utils";
 
 export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
   id: "renameTable",
+  title: "Rename table",
+  viewItems: ["table"],
+  group: "1_actions",
   icon: "edit",
   views: ["xataExplorer", "xataWorkspace"],
   type: "treeItem",

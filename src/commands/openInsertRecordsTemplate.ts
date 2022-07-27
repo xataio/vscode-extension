@@ -5,6 +5,9 @@ import { TreeItemCommand } from "../types";
 export const openInsertRecordsTemplateCommand: TreeItemCommand<TableTreeItem> =
   {
     id: "openInsertRecordsTemplate",
+    title: "Insert records",
+    viewItems: ["table"],
+    group: "5_templates",
     type: "treeItem",
     views: ["xataExplorer", "xataWorkspace"],
     icon: "json",

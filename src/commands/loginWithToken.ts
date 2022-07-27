@@ -6,6 +6,8 @@ import { Command } from "../types";
  */
 export const loginWithTokenCommand: Command = {
   id: "loginWithToken",
+  title: "Login with token",
+  paletteCondition: "isNotLogged",
   type: "global",
   inPalette: true,
   action(context, refresh) {

@@ -6,6 +6,8 @@ import { updateWorkspace } from "../xata/xataComponents";
 
 export const renameWorkspaceCommand: TreeItemCommand<WorkspaceTreeItem> = {
   id: "renameWorkspace",
+  title: "Rename workspace",
+  viewItems: ["workspace"],
   icon: "edit",
   views: ["xataExplorer"],
   type: "treeItem",

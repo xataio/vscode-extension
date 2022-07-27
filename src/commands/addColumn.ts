@@ -16,6 +16,9 @@ import { validateResourceName } from "../utils";
  */
 export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
   id: "addColumn",
+  title: "Add column",
+  viewItems: ["table"],
+  group: "inline",
   type: "treeItem",
   views: ["xataExplorer", "xataWorkspace"],
   icon: "add",

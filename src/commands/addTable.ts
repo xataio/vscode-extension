@@ -16,7 +16,10 @@ export const addTableCommand: TreeItemCommand<
   | VSCodeWorkspaceTreeItem
 > = {
   id: "addTable",
+  title: "Add table",
+  viewItems: ["oneBranchDatabase", "vscodeWorkspace", "branch"],
   type: "treeItem",
+  group: "inline",
   views: ["xataExplorer", "xataWorkspace"],
   icon: "empty-window",
   action: (context, refresh) => {

@@ -15,8 +15,11 @@ export const addBranchCommand: TreeItemCommand<
   DatabaseTreeItem | OneBranchDatabaseItem
 > = {
   id: "addBranch",
+  title: "Add branch",
   type: "treeItem",
+  group: "inline",
   views: ["xataExplorer"],
+  viewItems: ["database", "oneBranchDatabase"],
   icon: "git-pull-request-create",
   action: (context, refresh) => {
     return async (databaseTreeItem) => {

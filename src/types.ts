@@ -10,6 +10,7 @@ export type RefreshAction = (scope?: "explorer" | "workspace") => void;
  */
 export type Command<T = void> = {
   id: string;
+  title: string;
   type: "global";
   /**
    * Icon
@@ -17,12 +18,23 @@ export type Command<T = void> = {
    */
   icon?: Codicon;
   inPalette?: boolean;
+  /**
+   * Add the entry in the palette only if the condition is `true`
+   */
+  paletteCondition?: "isLogged" | "isNotLogged";
   action: (
     context: Context,
     refresh: RefreshAction,
     jsonSchemaProvider: XataJsonSchemaProvider
   ) => (params?: T) => void;
 };
+
+type TupleUnion<U extends string, R extends string[] = []> = {
+  [S in U]: Exclude<U, S> extends never
+    ? [...R, S]
+    : TupleUnion<Exclude<U, S>, [...R, S]>;
+}[U] &
+  string[];
 
 /**
  * TreeItem command.
@@ -32,6 +44,8 @@ export type Command<T = void> = {
  */
 export type TreeItemCommand<T extends TreeItem | undefined, U = void> = {
   id: string;
+  title: string;
+  viewItems: TupleUnion<T extends TreeItem ? T["contextValue"] : never>;
   type: "treeItem";
   /**
    * Icon
@@ -39,6 +53,7 @@ export type TreeItemCommand<T extends TreeItem | undefined, U = void> = {
    */
   icon: Codicon;
   views: ("xataExplorer" | "xataWorkspace")[];
+  group?: "inline" | "1_actions" | "5_templates";
   action: (
     context: Context,
     refresh: RefreshAction,
@@ -53,6 +68,7 @@ export type TreeItemCommand<T extends TreeItem | undefined, U = void> = {
  */
 export type StandAloneCommand<T extends TreeItem | undefined, U = void> = {
   id: string;
+  title: string;
   type: "standAlone";
 
   action: (

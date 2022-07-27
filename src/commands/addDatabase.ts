@@ -16,9 +16,12 @@ export const addDatabaseCommand: TreeItemCommand<
   ResolvedReturnType<typeof createDatabase> | undefined
 > = {
   id: "addDatabase",
+  title: "Add database",
+  viewItems: ["workspace"],
   type: "treeItem",
   views: ["xataExplorer"],
   icon: "add",
+  group: "inline",
   action(context, refresh) {
     return async (workspaceTreeItem) => {
       const databaseList = await getDatabaseList({
