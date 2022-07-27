@@ -181,10 +181,6 @@
         "title": "Insert record(s)"
       },
       {
-        "command": "xata.watchMode",
-        "title": "Xata: Start watch mode"
-      },
-      {
         "command": "xata.refresh",
         "title": "Refresh",
         "icon": "$(refresh)"
@@ -318,15 +314,15 @@
     "views": {
       "xata": [
         {
-          "id": "xataExplorer",
-          "name": "Explorer",
-          "icon": "media/xata-icon.svg"
-        },
-        {
           "id": "xataWorkspace",
           "name": "Workspace",
           "icon": "media/xata-icon.svg",
           "when": "workspaceFolderCount > 0"
+        },
+        {
+          "id": "xataExplorer",
+          "name": "Explorer",
+          "icon": "media/xata-icon.svg"
         }
       ]
     },
