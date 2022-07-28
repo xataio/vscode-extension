@@ -149,8 +149,8 @@
     ],
     "commands": [
       {
-        "command": "xata.login",
-        "title": "Login"
+        "command": "BOOOMMM",
+        "title": "DO NOT MERGE!"
       },
       {
         "command": "xata.palette.login",
