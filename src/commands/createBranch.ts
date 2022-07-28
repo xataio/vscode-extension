@@ -20,6 +20,9 @@ export const createBranchCommand = createTreeItemCommand({
       view: "xataWorkspace",
       group: "inline",
     },
+    {
+      item: "workspaceNavigationItem",
+    },
   ],
   icon: "git-pull-request-create",
   action: (context, refresh) => {

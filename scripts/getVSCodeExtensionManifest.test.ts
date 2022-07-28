@@ -12,9 +12,7 @@ import * as registeredCommands from "../src/commands";
 import { createTreeItemCommand } from "../src/types";
 
 vi.mock("vscode", () => ({
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   TreeItem: class {},
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   Uri: {
     from: () => "",
   },

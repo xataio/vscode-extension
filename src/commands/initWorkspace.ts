@@ -182,11 +182,6 @@ export const initWorkspaceCommand: StandAloneCommand<
         }
       }
 
-      // look for the gitignore
-      // if .env is here -> .env
-      // if no .env and .env.local -> .env.local
-      // if no .gitignore or no .env entry -> create a gitignore
-
       // create .env file
       const envPath =
         vscode.workspace.getConfiguration().get<string>("xata.envFilePath") ??
