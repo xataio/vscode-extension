@@ -1,17 +1,23 @@
 import * as vscode from "vscode";
-import { ColumnTreeItem } from "../views/treeItems/TreeItem";
-import { TreeItemCommand } from "../types";
+import { createTreeItemCommand } from "../types";
 import { updateColumn } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 import { validateResourceName } from "../utils";
 
-export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
+export const renameColumnCommand = createTreeItemCommand({
   id: "renameColumn",
   title: "Rename column",
-  viewItems: ["column"],
+  contexts: [
+    {
+      item: "column",
+      view: "xataExplorer",
+    },
+    {
+      item: "column",
+      view: "xataWorkspace",
+    },
+  ],
   icon: "edit",
-  views: ["xataExplorer", "xataWorkspace"],
-  type: "treeItem",
   action: (context, refresh) => {
     return async (columnTreeItem) => {
       const existingTables = columnTreeItem.columns.map((c) => c.name);
@@ -56,4 +62,4 @@ export const renameColumnCommand: TreeItemCommand<ColumnTreeItem> = {
       }
     };
   },
-};
+});

@@ -1,27 +1,33 @@
 import * as vscode from "vscode";
-import {
-  BranchTreeItem,
-  OneBranchDatabaseItem,
-  VSCodeWorkspaceTreeItem,
-} from "../views/treeItems/TreeItem";
-import { TreeItemCommand, WorkspaceNavigationItem } from "../types";
+import { createTreeItemCommand } from "../types";
 import { createTable, getBranchDetails } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 import { validateResourceName } from "../utils";
 
-export const addTableCommand: TreeItemCommand<
-  | OneBranchDatabaseItem
-  | BranchTreeItem
-  | WorkspaceNavigationItem
-  | VSCodeWorkspaceTreeItem
-> = {
+export const addTableCommand = createTreeItemCommand({
   id: "addTable",
   title: "Add table",
-  viewItems: ["oneBranchDatabase", "vscodeWorkspace", "branch"],
-  type: "treeItem",
-  group: "inline",
-  views: ["xataExplorer", "xataWorkspace"],
   icon: "empty-window",
+  contexts: [
+    {
+      item: "oneBranchDatabase",
+      view: "xataExplorer",
+      group: "inline",
+    },
+    {
+      item: "branch",
+      view: "xataExplorer",
+      group: "inline",
+    },
+    {
+      item: "vscodeWorkspace",
+      view: "xataWorkspace",
+      group: "inline",
+    },
+    {
+      item: "workspaceNavigationItem",
+    },
+  ],
   action: (context, refresh) => {
     return async (treeItem) => {
       let baseUrl = "";
@@ -113,4 +119,4 @@ export const addTableCommand: TreeItemCommand<
       }
     };
   },
-};
+});

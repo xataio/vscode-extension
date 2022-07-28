@@ -1,16 +1,23 @@
 import * as vscode from "vscode";
-import { TableTreeItem } from "../views/treeItems/TreeItem";
-import { TreeItemCommand } from "../types";
+import { createTreeItemCommand } from "../types";
 import { deleteTable } from "../xata/xataComponents";
 
-export const deleteTableCommand: TreeItemCommand<TableTreeItem> = {
+export const deleteTableCommand = createTreeItemCommand({
   id: "deleteTable",
   title: "Delete table",
-  viewItems: ["table"],
-  group: "1_actions",
+  contexts: [
+    {
+      item: "table",
+      view: "xataExplorer",
+      group: "1_actions",
+    },
+    {
+      item: "table",
+      view: "xataWorkspace",
+      group: "1_actions",
+    },
+  ],
   icon: "trash",
-  views: ["xataExplorer", "xataWorkspace"],
-  type: "treeItem",
   action: (context, refresh) => {
     return async (tableTreeItem) => {
       const confirm = await vscode.window.showInputBox({
@@ -42,4 +49,4 @@ export const deleteTableCommand: TreeItemCommand<TableTreeItem> = {
       return refresh();
     };
   },
-};
+});

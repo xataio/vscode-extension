@@ -1,9 +1,5 @@
 import * as vscode from "vscode";
-import {
-  DatabaseTreeItem,
-  OneBranchDatabaseItem,
-} from "../views/treeItems/TreeItem";
-import { TreeItemCommand } from "../types";
+import { createTreeItemCommand } from "../types";
 import { createBranch, getBranchList } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 import { validateResourceName } from "../utils";
@@ -11,15 +7,21 @@ import { validateResourceName } from "../utils";
 /**
  * Add a branch in a context of the xata explorer (when all the others branches is visible)
  */
-export const addBranchCommand: TreeItemCommand<
-  DatabaseTreeItem | OneBranchDatabaseItem
-> = {
+export const addBranchCommand = createTreeItemCommand({
   id: "addBranch",
   title: "Add branch",
-  type: "treeItem",
-  group: "inline",
-  views: ["xataExplorer"],
-  viewItems: ["database", "oneBranchDatabase"],
+  contexts: [
+    {
+      item: "database",
+      view: "xataExplorer",
+      group: "inline",
+    },
+    {
+      item: "oneBranchDatabase",
+      view: "xataExplorer",
+      group: "inline",
+    },
+  ],
   icon: "git-pull-request-create",
   action: (context, refresh) => {
     return async (databaseTreeItem) => {
@@ -83,4 +85,4 @@ export const addBranchCommand: TreeItemCommand<
       }
     };
   },
-};
+});

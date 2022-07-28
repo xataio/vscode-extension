@@ -5,12 +5,11 @@ import {
   Commands,
   getVSCodeExtensionManifest,
 } from "./getVSCodeExtensionManifest";
-import { TreeItemCommand } from "./types";
-import { BranchTreeItem, ColumnTreeItem } from "./views/treeItems/TreeItem";
 import { VSCodeExtensionsManifest } from "./vscodeExtensionsManifest";
 import { writeFileSync, readFileSync } from "fs";
 
 import * as registeredCommands from "../src/commands";
+import { createTreeItemCommand } from "../src/types";
 
 vi.mock("vscode", () => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -161,10 +160,8 @@ describe("getVSCodeExtensionManifest", () => {
         type: "treeItem",
         id: "commandId",
         icon: "account",
-        viewItems: ["branch"],
-        views: [],
+        contexts: [{ item: "branch", view: "xataExplorer" }],
         title: "My command",
-        action: () => async () => {},
       },
     ];
     const expected: VSCodeExtensionsManifest = {
@@ -182,15 +179,13 @@ describe("getVSCodeExtensionManifest", () => {
   });
 
   it("should generate an item in the context menu for tree item (xataExplorer)", () => {
-    const command: TreeItemCommand<BranchTreeItem> = {
-      type: "treeItem",
+    const command = createTreeItemCommand({
       id: "commandId",
-      viewItems: ["branch"], // Value inferred from the generic value
+      contexts: [{ item: "branch", view: "xataExplorer" }],
       icon: "account",
-      views: ["xataExplorer"],
       title: "My command",
       action: () => async () => {},
-    };
+    });
 
     const expected: VSCodeExtensionsManifest = {
       contributes: {
@@ -208,15 +203,16 @@ describe("getVSCodeExtensionManifest", () => {
   });
 
   it("should generate an item in the context menu for tree item (xataWorkspace)", () => {
-    const command: TreeItemCommand<BranchTreeItem | ColumnTreeItem> = {
-      type: "treeItem",
+    const command = createTreeItemCommand({
       id: "commandId",
-      viewItems: ["branch", "column"], // Value inferred from the generic value
+      contexts: [
+        { item: "branch", view: "xataWorkspace" },
+        { item: "column", view: "xataWorkspace" },
+      ],
       icon: "account",
-      views: ["xataWorkspace"],
       title: "My command",
       action: () => async () => {},
-    };
+    });
 
     const expected: VSCodeExtensionsManifest = {
       contributes: {
@@ -238,16 +234,18 @@ describe("getVSCodeExtensionManifest", () => {
   });
 
   it("should generate an item in the context menu for tree item (xataWorkspace & xataExplorer)", () => {
-    const command: TreeItemCommand<BranchTreeItem | ColumnTreeItem> = {
-      type: "treeItem",
+    const command = createTreeItemCommand({
       id: "commandId",
-      viewItems: ["branch", "column"], // Value inferred from the generic value
+      contexts: [
+        { item: "branch", view: "xataExplorer", group: "inline" },
+        { item: "column", view: "xataExplorer", group: "inline" },
+        { item: "branch", view: "xataWorkspace", group: "inline" },
+        { item: "column", view: "xataWorkspace", group: "inline" },
+      ],
       icon: "account",
-      views: ["xataWorkspace", "xataExplorer"],
       title: "My command",
-      group: "inline",
       action: () => async () => {},
-    };
+    });
 
     const expected: VSCodeExtensionsManifest = {
       contributes: {
@@ -255,12 +253,22 @@ describe("getVSCodeExtensionManifest", () => {
           "view/item/context": [
             {
               command: "xata.commandId",
-              when: "view in xata.treeViews && viewItem == branch",
+              when: "view == xataExplorer && viewItem == branch",
               group: "inline",
             },
             {
               command: "xata.commandId",
-              when: "view in xata.treeViews && viewItem == column",
+              when: "view == xataExplorer && viewItem == column",
+              group: "inline",
+            },
+            {
+              command: "xata.commandId",
+              when: "view == xataWorkspace && viewItem == branch",
+              group: "inline",
+            },
+            {
+              command: "xata.commandId",
+              when: "view == xataWorkspace && viewItem == column",
               group: "inline",
             },
           ],

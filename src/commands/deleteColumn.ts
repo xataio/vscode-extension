@@ -1,15 +1,21 @@
 import * as vscode from "vscode";
-import { ColumnTreeItem } from "../views/treeItems/TreeItem";
-import { TreeItemCommand } from "../types";
+import { createTreeItemCommand } from "../types";
 import { deleteColumn } from "../xata/xataComponents";
 
-export const deleteColumnCommand: TreeItemCommand<ColumnTreeItem> = {
+export const deleteColumnCommand = createTreeItemCommand({
   id: "deleteColumn",
   title: "Delete column",
-  viewItems: ["column"],
+  contexts: [
+    {
+      item: "column",
+      view: "xataExplorer",
+    },
+    {
+      item: "column",
+      view: "xataWorkspace",
+    },
+  ],
   icon: "trash",
-  views: ["xataExplorer", "xataWorkspace"],
-  type: "treeItem",
   action: (context, refresh, jsonSchemaProvider) => {
     return async (columnTreeItem) => {
       const confirm = await vscode.window.showInputBox({
@@ -49,4 +55,4 @@ export const deleteColumnCommand: TreeItemCommand<ColumnTreeItem> = {
       return refresh();
     };
   },
-};
+});

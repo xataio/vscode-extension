@@ -1,18 +1,17 @@
 import * as vscode from "vscode";
-import { TableTreeItem } from "../views/treeItems/TreeItem";
-import { TreeItemCommand } from "../types";
+import { createTreeItemCommand } from "../types";
 import { getBranchDetails, updateTable } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 import { validateResourceName } from "../utils";
 
-export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
+export const renameTableCommand = createTreeItemCommand({
   id: "renameTable",
   title: "Rename table",
-  viewItems: ["table"],
-  group: "1_actions",
+  contexts: [
+    { item: "table", view: "xataExplorer", group: "1_actions" },
+    { item: "table", view: "xataWorkspace", group: "1_actions" },
+  ],
   icon: "edit",
-  views: ["xataExplorer", "xataWorkspace"],
-  type: "treeItem",
   action: (context, refresh, jsonSchemaProvider) => {
     return async (tableTreeItem) => {
       const branchDetails = await getBranchDetails({
@@ -77,4 +76,4 @@ export const renameTableCommand: TreeItemCommand<TableTreeItem> = {
       }
     };
   },
-};
+});

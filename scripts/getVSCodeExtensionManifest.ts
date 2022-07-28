@@ -1,4 +1,6 @@
-import { Command, StandAloneCommand, TreeItemCommand } from "../src/types";
+import { Command, StandAloneCommand } from "../src/types";
+import { Codicon } from "./codicon";
+import { TreeItem } from "../src/views/treeItems/TreeItem";
 import { VSCodeExtensionsManifest } from "./vscodeExtensionsManifest";
 
 /**
@@ -88,20 +90,15 @@ export function getVSCodeExtensionManifest(
       contributesCommands.push(treeItemCommand);
       hideFromPalette(`xata.${command.id}`);
 
-      const viewMatcher =
-        command.views.length === 1 && command.views[0] === "xataExplorer"
-          ? "view == xataExplorer"
-          : command.views.length === 1 && command.views[0] === "xataWorkspace"
-          ? "view == xataWorkspace"
-          : "view in xata.treeViews";
+      command.contexts.forEach((context) => {
+        if (context.item === "workspaceNavigationItem") return;
 
-      command.viewItems.forEach((viewItem) => {
         const menuItem: MenuItemContext[-1] = {
           command: commandId,
-          when: `${viewMatcher} && viewItem == ${viewItem}`,
+          when: `view == ${context.view} && viewItem == ${context.item}`,
         };
 
-        if (command.group) menuItem.group = command.group;
+        if (context.group) menuItem.group = context.group;
 
         contributeMenusItemContext.push(menuItem);
       });
@@ -149,7 +146,22 @@ export function getVSCodeExtensionManifest(
 }
 
 export type Commands = Array<
-  Command<any> | TreeItemCommand<any, any> | StandAloneCommand<any, any>
+  | Command<any>
+  | {
+      type: "treeItem";
+      id: string;
+      title: string;
+      icon: Codicon;
+      contexts: Array<
+        | {
+            item: TreeItem["contextValue"];
+            view: "xataExplorer" | "xataWorkspace";
+            group?: "inline" | "1_actions" | "5_templates";
+          }
+        | { item: "workspaceNavigationItem" }
+      >;
+    }
+  | StandAloneCommand<any, any>
 >;
 
 type ContributesCommands = ArrayOnly<

@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
-import { VSCodeWorkspaceTreeItem } from "../views/treeItems/TreeItem";
-import { TreeItemCommand, WorkspaceNavigationItem } from "../types";
+import { createTreeItemCommand } from "../types";
 import { createBranch, getBranchList } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 import { validateResourceName } from "../utils";
@@ -12,15 +11,16 @@ import { validateResourceName } from "../utils";
  *
  * If the workspace doesn't have any git environment, the branching will be handled with the `XATA_BRANCH` env var instead.
  */
-export const createBranchCommand: TreeItemCommand<
-  VSCodeWorkspaceTreeItem | WorkspaceNavigationItem
-> = {
+export const createBranchCommand = createTreeItemCommand({
   id: "createBranch",
   title: "Create branch",
-  group: "inline",
-  viewItems: ["vscodeWorkspace"],
-  type: "treeItem",
-  views: ["xataWorkspace"],
+  contexts: [
+    {
+      item: "vscodeWorkspace",
+      view: "xataWorkspace",
+      group: "inline",
+    },
+  ],
   icon: "git-pull-request-create",
   action: (context, refresh) => {
     return async (treeItem) => {
@@ -125,7 +125,7 @@ export const createBranchCommand: TreeItemCommand<
       }
     };
   },
-};
+});
 
 async function updateXataBranchInDotEnv(
   workspaceFolder: vscode.WorkspaceFolder,
