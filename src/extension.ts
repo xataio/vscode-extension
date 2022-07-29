@@ -26,12 +26,6 @@ export function activate(extensionContext: vscode.ExtensionContext) {
     }
   };
 
-  // Expose `xata.treeViews` from `package.json:view/item/context` when clauses
-  vscode.commands.executeCommand("setContext", "xata.treeViews", [
-    "xataExplorer",
-    "xataWorkspace",
-  ]);
-
   const xataJsonSchema = new XataJsonSchemaProvider(context);
   extensionContext.subscriptions.push(
     vscode.workspace.registerTextDocumentContentProvider("xata", xataJsonSchema)

@@ -9,6 +9,7 @@ import { TableTreeItem } from "../views/treeItems/TreeItem";
  */
 export const insertRecordsCommand: Command = {
   id: "insertRecords",
+  title: "Insert record(s)",
   type: "global",
   inPalette: true,
   action: (context) => {
@@ -52,7 +53,9 @@ export const insertRecordsCommand: Command = {
             vscode.workspace.workspaceFolders[workspaceIndex].uri
           );
           if (!envConfig?.apiKey) {
-            throw new Error("You are not logged-in! Please add a `XATA_API_KEY` to your env configuration.");
+            throw new Error(
+              "You are not logged-in! Please add a `XATA_API_KEY` to your env configuration."
+            );
           }
           config = {
             apiKey: envConfig.apiKey,

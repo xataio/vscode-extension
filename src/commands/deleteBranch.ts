@@ -1,13 +1,12 @@
 import * as vscode from "vscode";
-import { BranchTreeItem, TableTreeItem } from "../views/treeItems/TreeItem";
-import { TreeItemCommand } from "../types";
-import { deleteBranch, deleteTable } from "../xata/xataComponents";
+import { createTreeItemCommand } from "../types";
+import { deleteBranch } from "../xata/xataComponents";
 
-export const deleteBranchCommand: TreeItemCommand<BranchTreeItem> = {
+export const deleteBranchCommand = createTreeItemCommand({
   id: "deleteBranch",
+  title: "Delete branch",
+  contexts: [{ item: "branch", view: "xataExplorer" }],
   icon: "trash",
-  views: ["xataExplorer"],
-  type: "treeItem",
   action: (context, refresh) => {
     return async (branchTreeItem) => {
       const confirm = await vscode.window.showInputBox({
@@ -35,4 +34,4 @@ export const deleteBranchCommand: TreeItemCommand<BranchTreeItem> = {
       return refresh();
     };
   },
-};
+});

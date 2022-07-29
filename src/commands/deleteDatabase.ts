@@ -1,13 +1,12 @@
 import * as vscode from "vscode";
-import { DatabaseTreeItem } from "../views/treeItems/TreeItem";
-import { TreeItemCommand } from "../types";
+import { createTreeItemCommand } from "../types";
 import { deleteDatabase } from "../xata/xataComponents";
 
-export const deleteDatabaseCommand: TreeItemCommand<DatabaseTreeItem> = {
+export const deleteDatabaseCommand = createTreeItemCommand({
   id: "deleteDatabase",
+  title: "Delete database",
+  contexts: [{ item: "database", view: "xataExplorer" }],
   icon: "trash",
-  views: ["xataExplorer"],
-  type: "treeItem",
   action: (context, refresh) => {
     return async (databaseTreeItem) => {
       const confirm = await vscode.window.showInputBox({
@@ -35,4 +34,4 @@ export const deleteDatabaseCommand: TreeItemCommand<DatabaseTreeItem> = {
       return refresh();
     };
   },
-};
+});

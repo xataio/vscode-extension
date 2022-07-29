@@ -1,15 +1,25 @@
 import flatten from "flat";
-import { TableTreeItem } from "../views/treeItems/TreeItem";
-import { TreeItemCommand } from "../types";
+import { createTreeItemCommand } from "../types";
 import { PreviewDataPanel } from "../panels/PreviewDataPanel";
 import { getTableSchema, queryTable } from "../xata/xataComponents";
 import sanitizeHtml from "sanitize-html";
 
-export const previewDataCommand: TreeItemCommand<TableTreeItem> = {
+export const previewDataCommand = createTreeItemCommand({
   id: "previewData",
+  title: "Preview data",
+  contexts: [
+    {
+      item: "table",
+      view: "xataExplorer",
+      group: "inline",
+    },
+    {
+      item: "table",
+      view: "xataWorkspace",
+      group: "inline",
+    },
+  ],
   icon: "eye",
-  views: ["xataExplorer", "xataWorkspace"],
-  type: "treeItem",
   action: (context) => {
     return async (tableTreeItem) => {
       const params = {
@@ -65,4 +75,4 @@ export const previewDataCommand: TreeItemCommand<TableTreeItem> = {
       );
     };
   },
-};
+});

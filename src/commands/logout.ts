@@ -5,6 +5,8 @@ import { Command } from "../types";
  */
 export const logoutCommand: Command = {
   id: "logout",
+  title: "Logout",
+  paletteCondition: "isLogged",
   type: "global",
   inPalette: true,
   action(context, refresh) {

@@ -8,6 +8,8 @@ import { Context } from "../context";
  */
 export const loginCommand: Command<string> = {
   id: "login",
+  title: "Login",
+  paletteCondition: "isNotLogged",
   type: "global",
   inPalette: true,
   action(context) {

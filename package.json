@@ -149,40 +149,28 @@
     ],
     "commands": [
       {
+        "command": "xata.login",
+        "title": "Login"
+      },
+      {
         "command": "xata.palette.login",
         "title": "Xata: Login"
+      },
+      {
+        "command": "xata.loginWithToken",
+        "title": "Login with token"
       },
       {
         "command": "xata.palette.loginWithToken",
         "title": "Xata: Login with token"
       },
       {
-        "command": "xata.loginWithToken",
-        "title": "Xata: Login with token"
-      },
-      {
-        "command": "xata.login",
-        "title": "Login"
-      },
-      {
-        "command": "xata.palette.logout",
-        "title": "Xata: Logout"
-      },
-      {
         "command": "xata.logout",
         "title": "Logout"
       },
       {
-        "command": "xata.palette.insertRecords",
-        "title": "Xata: Insert record(s)"
-      },
-      {
-        "command": "xata.insertRecords",
-        "title": "Insert record(s)"
-      },
-      {
-        "command": "xata.watchMode",
-        "title": "Xata: Start watch mode"
+        "command": "xata.palette.logout",
+        "title": "Xata: Logout"
       },
       {
         "command": "xata.refresh",
@@ -190,13 +178,26 @@
         "icon": "$(refresh)"
       },
       {
-        "command": "xata.initWorkspace",
-        "title": "Xata: Initialize workspace"
-      },
-      {
         "command": "xata.palette.refresh",
         "title": "Xata: Refresh",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "xata.addWorkspace",
+        "title": "Add workspace",
+        "icon": "$(add)"
+      },
+      {
+        "command": "xata.insertRecords",
+        "title": "Insert record(s)"
+      },
+      {
+        "command": "xata.palette.insertRecords",
+        "title": "Xata: Insert record(s)"
+      },
+      {
+        "command": "xata.initWorkspace",
+        "title": "Initialize workspace"
       },
       {
         "command": "xata.addColumn",
@@ -214,9 +215,9 @@
         "icon": "$(edit)"
       },
       {
-        "command": "xata.addWorkspace",
-        "title": "Add workspace",
-        "icon": "$(add)"
+        "command": "xata.deleteWorkspace",
+        "title": "Delete workspace",
+        "icon": "$(trash)"
       },
       {
         "command": "xata.renameWorkspace",
@@ -229,18 +230,8 @@
         "icon": "$(add)"
       },
       {
-        "command": "xata.deleteWorkspace",
-        "title": "Delete workspace",
-        "icon": "$(trash)"
-      },
-      {
         "command": "xata.deleteDatabase",
         "title": "Delete database",
-        "icon": "$(trash)"
-      },
-      {
-        "command": "xata.deleteTable",
-        "title": "Delete table",
         "icon": "$(trash)"
       },
       {
@@ -259,14 +250,19 @@
         "icon": "$(empty-window)"
       },
       {
-        "command": "xata.previewData",
-        "title": "Preview data",
-        "icon": "$(eye)"
+        "command": "xata.deleteTable",
+        "title": "Delete table",
+        "icon": "$(trash)"
       },
       {
         "command": "xata.renameTable",
         "title": "Rename table",
         "icon": "$(edit)"
+      },
+      {
+        "command": "xata.previewData",
+        "title": "Preview data",
+        "icon": "$(eye)"
       },
       {
         "command": "xata.openInsertRecordsTemplate",
@@ -318,42 +314,58 @@
     "views": {
       "xata": [
         {
-          "id": "xataExplorer",
-          "name": "Explorer",
-          "icon": "media/xata-icon.svg"
-        },
-        {
           "id": "xataWorkspace",
           "name": "Workspace",
           "icon": "media/xata-icon.svg",
           "when": "workspaceFolderCount > 0"
+        },
+        {
+          "id": "xataExplorer",
+          "name": "Explorer",
+          "icon": "media/xata-icon.svg"
         }
       ]
     },
     "menus": {
       "commandPalette": [
         {
+          "command": "xata.login",
+          "when": "false"
+        },
+        {
           "command": "xata.palette.login",
           "when": "!xata.isLogged"
+        },
+        {
+          "command": "xata.loginWithToken",
+          "when": "false"
         },
         {
           "command": "xata.palette.loginWithToken",
           "when": "!xata.isLogged"
         },
         {
-          "command": "xata.palette.logout",
-          "when": "xata.isLogged"
-        },
-        {
-          "command": "xata.login",
-          "when": "false"
-        },
-        {
           "command": "xata.logout",
           "when": "false"
         },
         {
-          "command": "xata.loginWithToken",
+          "command": "xata.palette.logout",
+          "when": "xata.isLogged"
+        },
+        {
+          "command": "xata.refresh",
+          "when": "false"
+        },
+        {
+          "command": "xata.addWorkspace",
+          "when": "false"
+        },
+        {
+          "command": "xata.insertRecords",
+          "when": "false"
+        },
+        {
+          "command": "xata.initWorkspace",
           "when": "false"
         },
         {
@@ -369,14 +381,6 @@
           "when": "false"
         },
         {
-          "command": "xata.addDatabase",
-          "when": "false"
-        },
-        {
-          "command": "xata.deleteDatabase",
-          "when": "false"
-        },
-        {
           "command": "xata.deleteWorkspace",
           "when": "false"
         },
@@ -385,7 +389,11 @@
           "when": "false"
         },
         {
-          "command": "xata.addWorkspace",
+          "command": "xata.addDatabase",
+          "when": "false"
+        },
+        {
+          "command": "xata.deleteDatabase",
           "when": "false"
         },
         {
@@ -417,12 +425,127 @@
           "when": "false"
         },
         {
-          "command": "xata.initWorkspace",
+          "command": "xata.createBranch",
           "when": "false"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "xata.addColumn",
+          "when": "view == xataExplorer && viewItem == table",
+          "group": "inline"
+        },
+        {
+          "command": "xata.addColumn",
+          "when": "view == xataWorkspace && viewItem == table",
+          "group": "inline"
+        },
+        {
+          "command": "xata.deleteColumn",
+          "when": "view == xataExplorer && viewItem == column"
+        },
+        {
+          "command": "xata.deleteColumn",
+          "when": "view == xataWorkspace && viewItem == column"
+        },
+        {
+          "command": "xata.renameColumn",
+          "when": "view == xataExplorer && viewItem == column"
+        },
+        {
+          "command": "xata.renameColumn",
+          "when": "view == xataWorkspace && viewItem == column"
+        },
+        {
+          "command": "xata.deleteWorkspace",
+          "when": "view == xataExplorer && viewItem == workspace"
+        },
+        {
+          "command": "xata.renameWorkspace",
+          "when": "view == xataExplorer && viewItem == workspace"
+        },
+        {
+          "command": "xata.addDatabase",
+          "when": "view == xataExplorer && viewItem == workspace",
+          "group": "inline"
+        },
+        {
+          "command": "xata.deleteDatabase",
+          "when": "view == xataExplorer && viewItem == database"
+        },
+        {
+          "command": "xata.addBranch",
+          "when": "view == xataExplorer && viewItem == database",
+          "group": "inline"
+        },
+        {
+          "command": "xata.addBranch",
+          "when": "view == xataExplorer && viewItem == oneBranchDatabase",
+          "group": "inline"
+        },
+        {
+          "command": "xata.deleteBranch",
+          "when": "view == xataExplorer && viewItem == branch"
+        },
+        {
+          "command": "xata.addTable",
+          "when": "view == xataExplorer && viewItem == oneBranchDatabase",
+          "group": "inline"
+        },
+        {
+          "command": "xata.addTable",
+          "when": "view == xataExplorer && viewItem == branch",
+          "group": "inline"
+        },
+        {
+          "command": "xata.addTable",
+          "when": "view == xataWorkspace && viewItem == vscodeWorkspace",
+          "group": "inline"
+        },
+        {
+          "command": "xata.deleteTable",
+          "when": "view == xataExplorer && viewItem == table",
+          "group": "1_actions"
+        },
+        {
+          "command": "xata.deleteTable",
+          "when": "view == xataWorkspace && viewItem == table",
+          "group": "1_actions"
+        },
+        {
+          "command": "xata.renameTable",
+          "when": "view == xataExplorer && viewItem == table",
+          "group": "1_actions"
+        },
+        {
+          "command": "xata.renameTable",
+          "when": "view == xataWorkspace && viewItem == table",
+          "group": "1_actions"
+        },
+        {
+          "command": "xata.previewData",
+          "when": "view == xataExplorer && viewItem == table",
+          "group": "inline"
+        },
+        {
+          "command": "xata.previewData",
+          "when": "view == xataWorkspace && viewItem == table",
+          "group": "inline"
+        },
+        {
+          "command": "xata.openInsertRecordsTemplate",
+          "when": "view == xataExplorer && viewItem == table",
+          "group": "5_templates"
+        },
+        {
+          "command": "xata.openInsertRecordsTemplate",
+          "when": "view == xataWorkspace && viewItem == table",
+          "group": "5_templates"
         },
         {
           "command": "xata.createBranch",
-          "when": "false"
+          "when": "view == xataWorkspace && viewItem == vscodeWorkspace",
+          "group": "inline"
         }
       ],
       "view/title": [
@@ -452,96 +575,6 @@
           "command": "xata.createBranch",
           "when": "view == xataWorkspace && workspaceFolderCount == 1 && xata.configState == logged",
           "group": "navigation"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "xata.addColumn",
-          "when": "view in xata.treeViews && viewItem == table",
-          "group": "inline"
-        },
-        {
-          "command": "xata.deleteColumn",
-          "when": "view in xata.treeViews && viewItem == column"
-        },
-        {
-          "command": "xata.renameColumn",
-          "when": "view in xata.treeViews && viewItem == column"
-        },
-        {
-          "command": "xata.deleteWorkspace",
-          "when": "view == xataExplorer && viewItem == workspace"
-        },
-        {
-          "command": "xata.renameWorkspace",
-          "when": "view == xataExplorer && viewItem == workspace"
-        },
-        {
-          "command": "xata.addDatabase",
-          "when": "view == xataExplorer && viewItem == workspace",
-          "group": "inline"
-        },
-        {
-          "command": "xata.deleteDatabase",
-          "when": "view == xataExplorer && viewItem == database"
-        },
-        {
-          "command": "xata.deleteDatabase",
-          "when": "view == xataExplorer && viewItem == oneBranchDatabase"
-        },
-        {
-          "command": "xata.addBranch",
-          "when": "view == xataExplorer && viewItem == database",
-          "group": "inline"
-        },
-        {
-          "command": "xata.deleteBranch",
-          "when": "view == xataExplorer && viewItem == branch"
-        },
-        {
-          "command": "xata.addBranch",
-          "when": "view == xataExplorer && viewItem == oneBranchDatabase",
-          "group": "inline"
-        },
-        {
-          "command": "xata.addTable",
-          "when": "view == xataExplorer && viewItem == oneBranchDatabase",
-          "group": "inline"
-        },
-        {
-          "command": "xata.addTable",
-          "when": "view == xataWorkspace && viewItem == vscodeWorkspace",
-          "group": "inline"
-        },
-        {
-          "command": "xata.renameTable",
-          "when": "view in xata.treeViews && viewItem == table",
-          "group": "1_actions"
-        },
-        {
-          "command": "xata.addTable",
-          "when": "view == xataExplorer && viewItem == branch",
-          "group": "inline"
-        },
-        {
-          "command": "xata.deleteTable",
-          "when": "view in xata.treeViews && viewItem == table",
-          "group": "1_actions"
-        },
-        {
-          "command": "xata.previewData",
-          "when": "view in xata.treeViews && viewItem == table",
-          "group": "inline"
-        },
-        {
-          "command": "xata.openInsertRecordsTemplate",
-          "when": "view in xata.treeViews && viewItem == table",
-          "group": "5_templates"
-        },
-        {
-          "command": "xata.createBranch",
-          "when": "view == xataWorkspace && viewItem == vscodeWorkspace",
-          "group": "inline"
         }
       ]
     }

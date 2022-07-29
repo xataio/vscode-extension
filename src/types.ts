@@ -10,6 +10,7 @@ export type RefreshAction = (scope?: "explorer" | "workspace") => void;
  */
 export type Command<T = void> = {
   id: string;
+  title: string;
   type: "global";
   /**
    * Icon
@@ -17,6 +18,10 @@ export type Command<T = void> = {
    */
   icon?: Codicon;
   inPalette?: boolean;
+  /**
+   * Add the entry in the palette only if the condition is `true`
+   */
+  paletteCondition?: "isLogged" | "isNotLogged";
   action: (
     context: Context,
     refresh: RefreshAction,
@@ -30,21 +35,36 @@ export type Command<T = void> = {
  * - Assign to one TreeItem
  * - Not visible from the command palette
  */
-export type TreeItemCommand<T extends TreeItem | undefined, U = void> = {
+export function createTreeItemCommand<
+  TContext extends Array<
+    | {
+        item: TreeItem["contextValue"];
+        view: "xataExplorer" | "xataWorkspace";
+        group?: "inline" | "1_actions" | "5_templates";
+      }
+    | { item: "workspaceNavigationItem" }
+  >,
+  U
+>(command: {
   id: string;
-  type: "treeItem";
+  title: string;
   /**
    * Icon
    * @see https://microsoft.github.io/vscode-codicons/dist/codicon.html
    */
   icon: Codicon;
-  views: ("xataExplorer" | "xataWorkspace")[];
+  /**
+   * Where is the command accessible?
+   */
+  contexts: TContext;
   action: (
     context: Context,
     refresh: RefreshAction,
     jsonSchemaProvider: XataJsonSchemaProvider
-  ) => (treeItem: T) => Promise<U>;
-};
+  ) => (treeItem: ResolveItem<TreeItem, TContext[-1]["item"]>) => U;
+}) {
+  return { type: "treeItem" as const, ...command };
+}
 
 /**
  * Stand alone command.
@@ -53,6 +73,7 @@ export type TreeItemCommand<T extends TreeItem | undefined, U = void> = {
  */
 export type StandAloneCommand<T extends TreeItem | undefined, U = void> = {
   id: string;
+  title: string;
   type: "standAlone";
 
   action: (
@@ -71,3 +92,14 @@ export interface XataTablePath {
 
 // Trigger from the top view navigation level
 export type WorkspaceNavigationItem = undefined;
+
+/**
+ * Helper to narrowing `TreeItem` union with a union of `contextValue`
+ */
+type ResolveItem<Item extends TreeItem, ContextValue extends string> =
+  | (Item extends {
+      contextValue: ContextValue;
+    }
+      ? Item
+      : never)
+  | (ContextValue extends "workspaceNavigationItem" ? undefined : never);

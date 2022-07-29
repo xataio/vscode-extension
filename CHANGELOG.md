@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## Fixed
+
+- Reduce extension size from 7.74MB to 1.84MB
+
 ## 0.1.0
 
 ### Added

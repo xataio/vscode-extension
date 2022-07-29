@@ -6,6 +6,7 @@ import { Command } from "../types";
 export const refreshCommand: Command = {
   id: "refresh",
   type: "global",
+  title: "Refresh",
   icon: "refresh",
   inPalette: true,
   action: (context, refresh, jsonSchemaProvider) => () => {

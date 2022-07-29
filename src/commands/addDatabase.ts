@@ -1,23 +1,22 @@
 import * as vscode from "vscode";
-import { WorkspaceTreeItem } from "../views/treeItems/TreeItem";
-import { TreeItemCommand } from "../types";
+import { createTreeItemCommand } from "../types";
 import { slugify } from "../utils";
 import { createDatabase, getDatabaseList } from "../xata/xataComponents";
 import { ValidationError } from "../xata/xataFetcher";
 
-type ResolvedReturnType<U extends (...args: any) => any> =
-  ReturnType<U> extends Promise<infer R> ? R : ReturnType<U>;
-
 /**
  * Command to add a database to a selected workspace
  */
-export const addDatabaseCommand: TreeItemCommand<
-  WorkspaceTreeItem,
-  ResolvedReturnType<typeof createDatabase> | undefined
-> = {
+export const addDatabaseCommand = createTreeItemCommand({
   id: "addDatabase",
-  type: "treeItem",
-  views: ["xataExplorer"],
+  title: "Add database",
+  contexts: [
+    {
+      item: "workspace",
+      view: "xataExplorer",
+      group: "inline",
+    },
+  ],
   icon: "add",
   action(context, refresh) {
     return async (workspaceTreeItem) => {
@@ -95,4 +94,4 @@ export const addDatabaseCommand: TreeItemCommand<
       }
     };
   },
-};
+});

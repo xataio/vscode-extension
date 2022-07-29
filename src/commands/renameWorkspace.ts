@@ -1,14 +1,18 @@
 import * as vscode from "vscode";
-import { WorkspaceTreeItem } from "../views/treeItems/TreeItem";
-import { TreeItemCommand } from "../types";
+import { createTreeItemCommand } from "../types";
 import { slugify } from "../utils";
 import { updateWorkspace } from "../xata/xataComponents";
 
-export const renameWorkspaceCommand: TreeItemCommand<WorkspaceTreeItem> = {
+export const renameWorkspaceCommand = createTreeItemCommand({
   id: "renameWorkspace",
+  title: "Rename workspace",
+  contexts: [
+    {
+      item: "workspace",
+      view: "xataExplorer",
+    },
+  ],
   icon: "edit",
-  views: ["xataExplorer"],
-  type: "treeItem",
   action: (context, refresh) => {
     return async (workspaceTreeItem) => {
       const name = await vscode.window.showInputBox({
@@ -35,4 +39,4 @@ export const renameWorkspaceCommand: TreeItemCommand<WorkspaceTreeItem> = {
       return refresh();
     };
   },
-};
+});

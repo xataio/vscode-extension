@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
-import { TableTreeItem } from "../views/treeItems/TreeItem";
-import { TreeItemCommand } from "../types";
+import { createTreeItemCommand } from "../types";
 import { xataColumnTypes } from "../xata/xataColumnTypes";
 import {
   addTableColumn,
@@ -14,10 +13,21 @@ import { validateResourceName } from "../utils";
 /**
  * Command to add a column to selected table
  */
-export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
+export const addColumnCommand = createTreeItemCommand({
   id: "addColumn",
-  type: "treeItem",
-  views: ["xataExplorer", "xataWorkspace"],
+  title: "Add column",
+  contexts: [
+    {
+      item: "table",
+      view: "xataExplorer",
+      group: "inline",
+    },
+    {
+      item: "table",
+      view: "xataWorkspace",
+      group: "inline",
+    },
+  ],
   icon: "add",
   action(context, refresh, jsonSchemaProvider) {
     return async (tableTreeItem) => {
@@ -113,4 +123,4 @@ export const addColumnCommand: TreeItemCommand<TableTreeItem> = {
       }
     };
   },
-};
+});

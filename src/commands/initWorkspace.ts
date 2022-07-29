@@ -20,6 +20,7 @@ export const initWorkspaceCommand: StandAloneCommand<
   WelcomeViewAction | VSCodeWorkspaceTreeItem
 > = {
   id: "initWorkspace",
+  title: "Initialize workspace",
   type: "standAlone",
   action(context, refresh, jsonSchemaProvider) {
     return async (item) => {
