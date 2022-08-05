@@ -2,29 +2,48 @@
 
 ![Xata + VS Code banner](https://user-images.githubusercontent.com/1761469/180163941-94a75bdd-6d3f-4a0c-bf53-1f5dbe4d45ef.png)
 
-This extension enables users to work with [Xata](https://xata.io) without leaving Visual Studio Code.
+This extension enables users to manage their entire workspace at [Xata](https://xata.io) without leaving Visual Studio Code.
 
 ## Getting Started
 
-Once the extension is installed from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=xata.xata), it should show up in your Activity Bar like in the image below.
+1. Install the extension from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=xata.xata)
 
-![Setup view for the VSCode Extension](https://raw.githubusercontent.com/xataio/vscode-extension/5a541d1c7d9ec0327dee5f6f3ebece2500ec27df/doc/get-started-view.png)
+   Once it will show in your Activity Bar like in the image below.
 
-Clicking on any of the **Get Started** buttons should open your default browser. From there, login to your Xata account, and it will prompt you to create an [API key](https://docs.xata.io/concepts/api-keys).
+2. Connect your Xata Workspace to the extension
+   The first step is to connect the extension to a Xata Workspace. To the that, a `XATA_API_TOKEN` is required. Clicking the **Get Started** button on the **Explorer Pane**.
 
-Once the key is created, there will be a new prompt to return to VS Code and your **Explorer** pane should be populated with your workspaces.
+   ![Setup view for the VSCode Extension](https://raw.githubusercontent.com/xataio/vscode-extension/5a541d1c7d9ec0327dee5f6f3ebece2500ec27df/doc/get-started-view.png)
 
-![List of workspaces on Xata VSCode Extension](https://github.com/xataio/vscode-extension/raw/main/doc/workspaces-view.png)
+   > 💡 if you are logged out, the **Get Started** on the **Project Pane** will have the same action. It is impossible to connect to databases while there is no Xata Workspace available.
 
-The second panel (`(uninitialized)` in the screenshot) is related to your current VS Code project. After being initialized, this will add a `.env` with an API key and a `.xatarc` with your database access details.
+   When fired, this action will take you to your Xata Dashboard to create an [API key](https://docs.xata.io/concepts/api-keys). Once the key is created, there will be a new prompt to return to VS Code and your **Explorer Pane** should be populated with your workspaces.
 
-> ⚠️ While we recommend to version control the `.xatarc`, you should always add `.env` in `.gitignore` to avoid leaking the `XATA_API_TOKEN` and potentially other secrets.
+   ![List of workspaces on Xata VSCode Extension](https://github.com/xataio/vscode-extension/raw/main/doc/workspaces-view.png)
 
-If a `.xatarc` is already set, you will just need to login.
+3. Connect your project to Xata databases
 
-## Features
+   The **Project Panel** (`(uninitialized)` in the screenshot) is related to your current VS Code project. After being initialized, this will add a `.env` with an API key and a `.xatarc` with your database access details.
 
-Here are some ways you can interact with Xata from our VS Code extension.
+   > ⚠️ While we recommend to version control the `.xatarc`, you should always add `.env` in `.gitignore` to avoid leaking the `XATA_API_TOKEN` and potentially other secrets.
+
+   If a `.xatarc` is already set, you will just need to login.
+
+## Productivity Features
+
+The main goal of this extension is be protective of the user's [flow state](<https://en.wikipedia.org/wiki/Flow_(psychology)>). Translating this intention, our User Interface becomes all about ergonomics and making the tasks achieveable with as little clicks as possible.
+
+### Explorer Pane
+
+Once an account is connected to a Xata Workspace, the Explorer Pane is popullated with all databases available. Available actions will be consistent with the permissions of the provided token.
+
+### Project Pane
+
+Once a `.xatarc` is found in your project, the **Project Pane** will be populated with all databases and tables available for that project according to the definitions of the `.xatarc` and the permissions the `XATA_API_TOKEN` provided to the extension.
+
+## Database Features
+
+The Xata VS Code extension aims for complete parity with our web dashboard. We dilligently work on providing full support so a developer never needs to leave VS Code to get work done.
 
 ### Manage Your Databases
 
@@ -58,9 +77,12 @@ The intended flow of working with Xata branches is the following:
 
 Therefore, everybody (including CI and Pull Request previews) testing the code on this git branch will automatically have the associated database branch.
 
-## Useful resources
+## Xata's link tree
 
-- [Xata Docs](https://docs.xata.io)
+- [Xata Serverless Database Community](https://xata.io/discord): You are invited to join us on Discord.
+- [@Xata on twitter](https://twitter.com/xata): Share some `#XataVibes` with us.
+- [Xata Support](https://support.xata.io): if you found a bug or have a feature request to Xata, use our user forum so the feedback arrives faster to who will implement it.
+- [Xata Docs](https://docs.xata.io): check the docs for the Xata SDK, Xata CLI, and all other tools and interfaces.
 
 ---
 
