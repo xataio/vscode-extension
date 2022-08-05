@@ -12,7 +12,7 @@ export const deleteColumnCommand = createTreeItemCommand({
     },
     {
       item: "column",
-      view: "xataWorkspace",
+      view: "xataProject",
     },
   ],
   icon: "trash",

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as commands from "./commands";
 import { getContext } from "./context";
-import { XataWorkspace } from "./views/xataWorkspace";
+import { XataProject } from "./views/xataProject";
 import { XataExplorer } from "./views/xataExplorer";
 import { XataJsonSchemaProvider } from "./xataJsonSchemaProvider";
 import { watchWorkspaceConfig } from "./watchWorkspaceConfig";
@@ -9,20 +9,20 @@ import { AuthUriHandler } from "./AuthUriHandler";
 
 export function activate(extensionContext: vscode.ExtensionContext) {
   const context = getContext(extensionContext);
-  const xataWorkspace = new XataWorkspace(context);
+  const xataProject = new XataProject(context);
   const xataExplorer = new XataExplorer(context);
 
   extensionContext.subscriptions.push(xataExplorer);
-  extensionContext.subscriptions.push(xataWorkspace);
+  extensionContext.subscriptions.push(xataProject);
 
   const refresh = (scope?: "explorer" | "workspace") => {
     if (scope === "explorer") {
       xataExplorer.refresh();
     } else if (scope === "workspace") {
-      xataWorkspace.refresh();
+      xataProject.refresh();
     } else {
       xataExplorer.refresh();
-      xataWorkspace.refresh();
+      xataProject.refresh();
     }
   };
 
@@ -60,14 +60,14 @@ export function activate(extensionContext: vscode.ExtensionContext) {
       }
 
       if (event.affectsConfiguration("xata.envFilePath")) {
-        xataWorkspace.refresh();
+        xataProject.refresh();
       }
     })
   );
 
   // Handle config files changes
   extensionContext.subscriptions.push(
-    watchWorkspaceConfig(() => xataWorkspace.refresh())
+    watchWorkspaceConfig(() => xataProject.refresh())
   );
 
   // Uri handler

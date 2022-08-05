@@ -6,7 +6,7 @@ export const openInsertRecordsTemplateCommand = createTreeItemCommand({
   title: "Insert records",
   contexts: [
     { item: "table", view: "xataExplorer", group: "5_templates" },
-    { item: "table", view: "xataWorkspace", group: "5_templates" },
+    { item: "table", view: "xataProject", group: "5_templates" },
   ],
   icon: "json",
   action: () => async (tableTreeItem) => {

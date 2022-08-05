@@ -24,7 +24,7 @@ export const addColumnCommand = createTreeItemCommand({
     },
     {
       item: "table",
-      view: "xataWorkspace",
+      view: "xataProject",
       group: "inline",
     },
   ],

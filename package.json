@@ -39,7 +39,7 @@
     "onCommand:xata.refresh",
     "onCommand:xata.palette.refresh",
     "onView:xataExplorer",
-    "onView:xataWorkspace",
+    "onView:xataProject",
     "onUri"
   ],
   "main": "./out/extension.js",
@@ -301,12 +301,12 @@
         "when": "xata.isOffline"
       },
       {
-        "view": "xataWorkspace",
+        "view": "xataProject",
         "contents": "[Get Started](command:xata.initWorkspace)",
         "when": "workspaceFolderCount == 1 && !xata.configState"
       },
       {
-        "view": "xataWorkspace",
+        "view": "xataProject",
         "contents": "Your workspace is already configured.\n[Login](command:xata.initWorkspace)\n(This will add a token in your `.env` file)",
         "when": "workspaceFolderCount == 1 && xata.configState == notLogged"
       }
@@ -314,7 +314,7 @@
     "views": {
       "xata": [
         {
-          "id": "xataWorkspace",
+          "id": "xataProject",
           "name": "Workspace",
           "icon": "media/xata-icon.svg",
           "when": "workspaceFolderCount > 0"
@@ -437,7 +437,7 @@
         },
         {
           "command": "xata.addColumn",
-          "when": "view == xataWorkspace && viewItem == table",
+          "when": "view == xataProject && viewItem == table",
           "group": "inline"
         },
         {
@@ -446,7 +446,7 @@
         },
         {
           "command": "xata.deleteColumn",
-          "when": "view == xataWorkspace && viewItem == column"
+          "when": "view == xataProject && viewItem == column"
         },
         {
           "command": "xata.renameColumn",
@@ -454,7 +454,7 @@
         },
         {
           "command": "xata.renameColumn",
-          "when": "view == xataWorkspace && viewItem == column"
+          "when": "view == xataProject && viewItem == column"
         },
         {
           "command": "xata.deleteWorkspace",
@@ -499,7 +499,7 @@
         },
         {
           "command": "xata.addTable",
-          "when": "view == xataWorkspace && viewItem == vscodeWorkspace",
+          "when": "view == xataProject && viewItem == vscodeWorkspace",
           "group": "inline"
         },
         {
@@ -509,7 +509,7 @@
         },
         {
           "command": "xata.deleteTable",
-          "when": "view == xataWorkspace && viewItem == table",
+          "when": "view == xataProject && viewItem == table",
           "group": "1_actions"
         },
         {
@@ -519,7 +519,7 @@
         },
         {
           "command": "xata.renameTable",
-          "when": "view == xataWorkspace && viewItem == table",
+          "when": "view == xataProject && viewItem == table",
           "group": "1_actions"
         },
         {
@@ -529,7 +529,7 @@
         },
         {
           "command": "xata.previewData",
-          "when": "view == xataWorkspace && viewItem == table",
+          "when": "view == xataProject && viewItem == table",
           "group": "inline"
         },
         {
@@ -539,12 +539,12 @@
         },
         {
           "command": "xata.openInsertRecordsTemplate",
-          "when": "view == xataWorkspace && viewItem == table",
+          "when": "view == xataProject && viewItem == table",
           "group": "5_templates"
         },
         {
           "command": "xata.createBranch",
-          "when": "view == xataWorkspace && viewItem == vscodeWorkspace",
+          "when": "view == xataProject && viewItem == vscodeWorkspace",
           "group": "inline"
         }
       ],
@@ -568,12 +568,12 @@
         },
         {
           "command": "xata.addTable",
-          "when": "view == xataWorkspace && workspaceFolderCount == 1 && xata.configState == logged",
+          "when": "view == xataProject && workspaceFolderCount == 1 && xata.configState == logged",
           "group": "navigation"
         },
         {
           "command": "xata.createBranch",
-          "when": "view == xataWorkspace && workspaceFolderCount == 1 && xata.configState == logged",
+          "when": "view == xataProject && workspaceFolderCount == 1 && xata.configState == logged",
           "group": "navigation"
         }
       ]

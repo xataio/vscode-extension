@@ -15,7 +15,7 @@ export const previewDataCommand = createTreeItemCommand({
     },
     {
       item: "table",
-      view: "xataWorkspace",
+      view: "xataProject",
       group: "inline",
     },
   ],

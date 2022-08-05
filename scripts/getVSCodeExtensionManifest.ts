@@ -131,12 +131,12 @@ export function getVSCodeExtensionManifest(
           },
           {
             command: "xata.addTable",
-            when: "view == xataWorkspace && workspaceFolderCount == 1 && xata.configState == logged",
+            when: "view == xataProject && workspaceFolderCount == 1 && xata.configState == logged",
             group: "navigation",
           },
           {
             command: "xata.createBranch",
-            when: "view == xataWorkspace && workspaceFolderCount == 1 && xata.configState == logged",
+            when: "view == xataProject && workspaceFolderCount == 1 && xata.configState == logged",
             group: "navigation",
           },
         ],
@@ -155,7 +155,7 @@ export type Commands = Array<
       contexts: Array<
         | {
             item: TreeItem["contextValue"];
-            view: "xataExplorer" | "xataWorkspace";
+            view: "xataExplorer" | "xataProject";
             group?: "inline" | "1_actions" | "5_templates";
           }
         | { item: "workspaceNavigationItem" }
