@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## 0.1.1
+
 ## Fixed
 
 - Reduce extension size from 7.74MB to 1.84MB
