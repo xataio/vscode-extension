@@ -13,7 +13,7 @@ export const deleteTableCommand = createTreeItemCommand({
     },
     {
       item: "table",
-      view: "xataWorkspace",
+      view: "xataProject",
       group: "1_actions",
     },
   ],

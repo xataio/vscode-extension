@@ -167,7 +167,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
   }
 }
 
-export class XataWorkspace {
+export class XataProject {
   private treeDataProvider: XataDataProvider;
   private treeView: vscode.TreeView<unknown>;
 
@@ -183,7 +183,7 @@ export class XataWorkspace {
         this.treeView.title = title;
       }
     );
-    this.treeView = vscode.window.createTreeView("xataWorkspace", {
+    this.treeView = vscode.window.createTreeView("XataProject", {
       treeDataProvider: this.treeDataProvider,
       showCollapseAll: true,
     });

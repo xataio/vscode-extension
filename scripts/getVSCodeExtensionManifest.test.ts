@@ -200,12 +200,12 @@ describe("getVSCodeExtensionManifest", () => {
     expectMenuItemContext(getVSCodeExtensionManifest([command]), expected);
   });
 
-  it("should generate an item in the context menu for tree item (xataWorkspace)", () => {
+  it("should generate an item in the context menu for tree item (xataProject)", () => {
     const command = createTreeItemCommand({
       id: "commandId",
       contexts: [
-        { item: "branch", view: "xataWorkspace" },
-        { item: "column", view: "xataWorkspace" },
+        { item: "branch", view: "xataProject" },
+        { item: "column", view: "xataProject" },
       ],
       icon: "account",
       title: "My command",
@@ -218,11 +218,11 @@ describe("getVSCodeExtensionManifest", () => {
           "view/item/context": [
             {
               command: "xata.commandId",
-              when: "view == xataWorkspace && viewItem == branch",
+              when: "view == xataProject && viewItem == branch",
             },
             {
               command: "xata.commandId",
-              when: "view == xataWorkspace && viewItem == column",
+              when: "view == xataProject && viewItem == column",
             },
           ],
         },
@@ -231,14 +231,14 @@ describe("getVSCodeExtensionManifest", () => {
     expectMenuItemContext(getVSCodeExtensionManifest([command]), expected);
   });
 
-  it("should generate an item in the context menu for tree item (xataWorkspace & xataExplorer)", () => {
+  it("should generate an item in the context menu for tree item (xataProject & xataExplorer)", () => {
     const command = createTreeItemCommand({
       id: "commandId",
       contexts: [
         { item: "branch", view: "xataExplorer", group: "inline" },
         { item: "column", view: "xataExplorer", group: "inline" },
-        { item: "branch", view: "xataWorkspace", group: "inline" },
-        { item: "column", view: "xataWorkspace", group: "inline" },
+        { item: "branch", view: "xataProject", group: "inline" },
+        { item: "column", view: "xataProject", group: "inline" },
       ],
       icon: "account",
       title: "My command",
@@ -261,12 +261,12 @@ describe("getVSCodeExtensionManifest", () => {
             },
             {
               command: "xata.commandId",
-              when: "view == xataWorkspace && viewItem == branch",
+              when: "view == xataProject && viewItem == branch",
               group: "inline",
             },
             {
               command: "xata.commandId",
-              when: "view == xataWorkspace && viewItem == column",
+              when: "view == xataProject && viewItem == column",
               group: "inline",
             },
           ],

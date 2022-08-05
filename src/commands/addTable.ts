@@ -21,7 +21,7 @@ export const addTableCommand = createTreeItemCommand({
     },
     {
       item: "vscodeWorkspace",
-      view: "xataWorkspace",
+      view: "xataProject",
       group: "inline",
     },
     {

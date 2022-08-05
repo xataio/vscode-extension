@@ -9,7 +9,7 @@ export const renameTableCommand = createTreeItemCommand({
   title: "Rename table",
   contexts: [
     { item: "table", view: "xataExplorer", group: "1_actions" },
-    { item: "table", view: "xataWorkspace", group: "1_actions" },
+    { item: "table", view: "xataProject", group: "1_actions" },
   ],
   icon: "edit",
   action: (context, refresh, jsonSchemaProvider) => {

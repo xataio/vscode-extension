@@ -17,7 +17,7 @@ export const createBranchCommand = createTreeItemCommand({
   contexts: [
     {
       item: "vscodeWorkspace",
-      view: "xataWorkspace",
+      view: "xataProject",
       group: "inline",
     },
     {

@@ -39,7 +39,7 @@ export function createTreeItemCommand<
   TContext extends Array<
     | {
         item: TreeItem["contextValue"];
-        view: "xataExplorer" | "xataWorkspace";
+        view: "xataExplorer" | "xataProject";
         group?: "inline" | "1_actions" | "5_templates";
       }
     | { item: "workspaceNavigationItem" }

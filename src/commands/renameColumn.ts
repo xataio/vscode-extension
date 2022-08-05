@@ -14,7 +14,7 @@ export const renameColumnCommand = createTreeItemCommand({
     },
     {
       item: "column",
-      view: "xataWorkspace",
+      view: "xataProject",
     },
   ],
   icon: "edit",
