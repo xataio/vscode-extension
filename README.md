@@ -86,4 +86,4 @@ Therefore, everybody (including CI and Pull Request previews) testing the code o
 
 ---
 
-Made by 🦋
+Made by <img alt="Xatafly, Xata's logo" src="https://raw.githubusercontent.com/xataio/vscode-extension/2e3d0b877cf6aff1e0fc717e05ada714465ca783/doc/xata-icon-128.png" width="24" /> />
