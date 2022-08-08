@@ -315,7 +315,7 @@
       "xata": [
         {
           "id": "xataProject",
-          "name": "Workspace",
+          "name": "Project",
           "icon": "media/xata-icon.svg",
           "when": "workspaceFolderCount > 0"
         },
