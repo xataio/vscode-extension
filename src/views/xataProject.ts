@@ -183,7 +183,7 @@ export class XataProject {
         this.treeView.title = title;
       }
     );
-    this.treeView = vscode.window.createTreeView("XataProject", {
+    this.treeView = vscode.window.createTreeView("xataProject", {
       treeDataProvider: this.treeDataProvider,
       showCollapseAll: true,
     });
