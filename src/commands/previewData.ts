@@ -33,12 +33,14 @@ export const previewDataCommand = createTreeItemCommand({
           tableName: tableTreeItem.table.name,
         },
       };
+
       const schema = await getTableSchema(params);
-      const table = await queryTable(params);
 
       if (!schema.success) {
         throw new Error(schema.error.payload.message);
       }
+
+      const table = await queryTable(params);
 
       if (!table.success) {
         throw new Error(table.error.payload.message);
