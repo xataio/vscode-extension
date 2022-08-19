@@ -265,6 +265,11 @@
         "icon": "$(eye)"
       },
       {
+        "command": "xata.refreshData",
+        "title": "Refresh data",
+        "icon": "$(refresh)"
+      },
+      {
         "command": "xata.openInsertRecordsTemplate",
         "title": "Insert records",
         "icon": "$(json)"
@@ -421,6 +426,10 @@
           "when": "false"
         },
         {
+          "command": "xata.refreshData",
+          "when": "false"
+        },
+        {
           "command": "xata.openInsertRecordsTemplate",
           "when": "false"
         },
@@ -437,6 +446,16 @@
         },
         {
           "command": "xata.addColumn",
+          "when": "view == xataProject && viewItem == table",
+          "group": "inline"
+        },
+        {
+          "command": "xata.refreshData",
+          "when": "view == xataExplorer && viewItem == table",
+          "group": "inline"
+        },
+        {
+          "command": "xata.refreshData",
           "when": "view == xataProject && viewItem == table",
           "group": "inline"
         },

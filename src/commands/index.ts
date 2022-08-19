@@ -21,5 +21,6 @@ export { addTableCommand } from "./addTable";
 export { deleteTableCommand } from "./deleteTable";
 export { renameTableCommand } from "./renameTable";
 export { previewDataCommand } from "./previewData";
+export { refrshDataCommand } from "./refreshData";
 export { openInsertRecordsTemplateCommand } from "./openInsertRecordsTemplate";
 export { createBranchCommand } from "./createBranch";
