@@ -471,7 +471,8 @@
         },
         {
           "command": "xata.deleteDatabase",
-          "when": "view == xataExplorer && viewItem == database"
+          "when": "view == xataExplorer && viewItem == oneBranchDatabase",
+          "group": "inline"
         },
         {
           "command": "xata.addBranch",
