@@ -141,10 +141,9 @@ function generateIconUri(svg: string) {
           f.createPropertyAssignment(
             f.createIdentifier("path"),
             f.createStringLiteral(
-              `image/svg+xml;utf8,${svg.replace(
-                '<?xml version="1.0" encoding="UTF-8"?>',
-                ""
-              )}`
+              `image/svg+xml;utf8,${svg
+                .replace('<?xml version="1.0" encoding="UTF-8"?>', "")
+                .replace(/[\n\r]/gm, "")}`
             )
           ),
         ],
