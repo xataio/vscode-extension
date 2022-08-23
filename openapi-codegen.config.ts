@@ -12,11 +12,8 @@ const { factory: f } = ts;
 export default defineConfig({
   xata: {
     from: {
-      source: "github",
-      owner: "xataio",
-      repository: "openapi",
-      ref: "main",
-      specPath: "bundled/openapi.yaml",
+      source: "url",
+      url: "https://docs.xata.io/api/openapi",
     },
     outputDir: "src/xata",
     to: async (context) => {
@@ -144,10 +141,9 @@ function generateIconUri(svg: string) {
           f.createPropertyAssignment(
             f.createIdentifier("path"),
             f.createStringLiteral(
-              `image/svg+xml;utf8,${svg.replace(
-                '<?xml version="1.0" encoding="UTF-8"?>',
-                ""
-              )}`
+              `image/svg+xml;utf8,${svg
+                .replace('<?xml version="1.0" encoding="UTF-8"?>', "")
+                .replace(/[\n\r]/gm, "")}`
             )
           ),
         ],

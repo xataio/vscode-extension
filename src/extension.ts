@@ -52,14 +52,20 @@ export function activate(extensionContext: vscode.ExtensionContext) {
   // Handle configuration change
   extensionContext.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((event) => {
+      // We need to refresh the treeViews to have the correct icons
+      const hasThemeChange =
+        event.affectsConfiguration("workbench.iconTheme") ||
+        event.affectsConfiguration("workbench.colorTheme");
+
       if (
+        hasThemeChange ||
         event.affectsConfiguration("xata.hideBranchLevel") ||
         event.affectsConfiguration("xata.enableDatabaseColor")
       ) {
         xataExplorer.refresh();
       }
 
-      if (event.affectsConfiguration("xata.envFilePath")) {
+      if (event.affectsConfiguration("xata.envFilePath") || hasThemeChange) {
         xataProject.refresh();
       }
     })

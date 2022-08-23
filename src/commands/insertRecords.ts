@@ -85,10 +85,15 @@ export const insertRecordsCommand: Command = {
           });
 
           if (res.success) {
+            const resultLength =
+              "recordIDs" in res.data
+                ? res.data.recordIDs.length
+                : res.data.records.length;
+
             vscode.window
               .showInformationMessage(
-                `${res.data.recordIDs.length} record${
-                  res.data.recordIDs.length > 1 ? "s" : ""
+                `${resultLength} record${
+                  resultLength > 1 ? "s" : ""
                 } inserted in ${$schema.replace(/^xata:/, "")} 🥳`,
                 "View Data"
               )

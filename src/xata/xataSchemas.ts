@@ -3,140 +3,24 @@
  *
  * @version 1.0
  */
-export type User = {
-  /*
-   * @format email
-   */
-  email: string;
-  fullname: string;
-  image: string;
-};
-
-/**
- * @pattern [a-zA-Z0-9_-~:]+
- */
-export type UserID = string;
-
-export type UserWithID = User & {
-  id: UserID;
-};
-
-/**
- * @format date-time
- * @x-go-type string
- */
-export type DateTime = string;
-
 /**
  * @pattern [a-zA-Z0-9_\-~]*
  */
 export type APIKeyName = string;
 
 /**
- * @pattern ^([a-zA-Z0-9][a-zA-Z0-9_\-~]+-)?[a-zA-Z0-9]{6}
- * @x-go-type auth.WorkspaceID
+ * Booster Expression
  */
-export type WorkspaceID = string;
-
-/**
- * @x-go-type auth.Role
- */
-export type Role = "owner" | "maintainer";
-
-export type WorkspaceMeta = {
-  name: string;
-  slug: string;
-};
-
-export type Workspace = WorkspaceMeta & {
-  id: WorkspaceID;
-  memberCount: number;
-  plan: "free";
-};
-
-export type WorkspaceMember = {
-  userId: UserID;
-  fullname: string;
-  /*
-   * @format email
-   */
-  email: string;
-  role: Role;
-};
-
-/**
- * @pattern [a-zA-Z0-9]+
- */
-export type InviteID = string;
-
-export type WorkspaceInvite = {
-  inviteId: InviteID;
-  /*
-   * @format email
-   */
-  email: string;
-  /*
-   * @format date-time
-   */
-  expires: string;
-  role: Role;
-};
-
-export type WorkspaceMembers = {
-  members: WorkspaceMember[];
-  invites: WorkspaceInvite[];
-};
-
-/**
- * @pattern ^ik_[a-zA-Z0-9]+
- */
-export type InviteKey = string;
-
-export type ListDatabasesResponse = {
-  /*
-   * A list of databases in a Xata workspace
-   */
-  databases?: {
-    /*
-     * The machine-readable name of a database
-     */
-    name: string;
-    /*
-     * The human-readable name of a database
-     */
-    displayName: string;
-    /*
-     * The time this database was created
-     */
-    createdAt: DateTime;
-    /*
-     * The number of branches the database has
-     */
-    numberOfBranches: number;
-    /*
-     * Metadata about the database for display in Xata user interfaces
-     */
-    ui?: {
-      /*
-       * The user-selected color for this database across interfaces
-       */
-      color?: string;
+export type BoosterExpression =
+  | {
+      valueBooster?: ValueBooster;
+    }
+  | {
+      numericBooster?: NumericBooster;
+    }
+  | {
+      dateBooster?: DateBooster;
     };
-  }[];
-};
-
-export type ListBranchesResponse = {
-  databaseName: string;
-  displayName: string;
-  branches: Branch[];
-};
-
-export type ListGitBranchesResponse = {
-  mapping: {
-    gitBranch: string;
-    xataBranch: string;
-  }[];
-};
 
 export type Branch = {
   name: string;
@@ -145,7 +29,6 @@ export type Branch = {
 
 /**
  * @example {"repository":"github.com/my/repository","branch":"feature-login","stage":"testing","labels":["epic-100"]}
- * @x-go-type xata.BranchMetadata
  */
 export type BranchMetadata = {
   /*
@@ -158,103 +41,6 @@ export type BranchMetadata = {
    */
   stage?: string;
   labels?: string[];
-};
-
-export type DBBranch = {
-  databaseName: DBName;
-  branchName: BranchName;
-  createdAt: DateTime;
-  id: string;
-  version: number;
-  lastMigrationID: string;
-  metadata?: BranchMetadata;
-  startedFrom?: StartedFromMetadata;
-  schema: Schema;
-};
-
-export type StartedFromMetadata = {
-  branchName: BranchName;
-  dbBranchID: string;
-  migrationID: string;
-};
-
-/**
- * @x-go-type xata.Schema
- */
-export type Schema = {
-  tables: Table[];
-  tablesOrder?: string[];
-};
-
-export type Table = {
-  id?: string;
-  name: TableName;
-  columns: Column[];
-  revLinks?: RevLink[];
-};
-
-/**
- * @x-go-type xata.Column
- */
-export type Column = {
-  name: string;
-  type:
-    | "bool"
-    | "int"
-    | "float"
-    | "string"
-    | "text"
-    | "email"
-    | "multiple"
-    | "link"
-    | "object"
-    | "datetime";
-  link?: {
-    table: string;
-  };
-  columns?: Column[];
-};
-
-export type RevLink = {
-  linkID: string;
-  table: string;
-};
-
-/**
- * @pattern [a-zA-Z0-9_\-~]+
- */
-export type BranchName = string;
-
-/**
- * @pattern [a-zA-Z0-9_\-~]+
- */
-export type DBName = string;
-
-/**
- * The DBBranchName matches the pattern `{db_name}:{branch_name}`.
- *
- * @pattern [a-zA-Z0-9_\-~]+:[a-zA-Z0-9_\-~]+
- */
-export type DBBranchName = string;
-
-/**
- * @pattern [a-zA-Z0-9_\-~]+
- */
-export type TableName = string;
-
-/**
- * @pattern [a-zA-Z0-9_\-~\.]+
- */
-export type ColumnName = string;
-
-export type MetricsDatapoint = {
-  timestamp: string;
-  value: number;
-};
-
-export type MetricsLatency = {
-  p50?: MetricsDatapoint[];
-  p90?: MetricsDatapoint[];
 };
 
 export type BranchMigration = {
@@ -276,13 +62,28 @@ export type BranchMigration = {
   renamedTables?: TableRename[];
 };
 
-export type TableMigration = {
-  newColumns?: {
-    [key: string]: Column;
+/**
+ * @pattern [a-zA-Z0-9_\-~]+
+ */
+export type BranchName = string;
+
+export type Column = {
+  name: string;
+  type:
+    | "bool"
+    | "int"
+    | "float"
+    | "string"
+    | "text"
+    | "email"
+    | "multiple"
+    | "link"
+    | "object"
+    | "datetime";
+  link?: {
+    table: string;
   };
-  removedColumns?: string[];
-  modifiedColumns?: ColumnMigration[];
-  newColumnOrder: string[];
+  columns?: Column[];
 };
 
 export type ColumnMigration = {
@@ -290,33 +91,112 @@ export type ColumnMigration = {
   ["new"]: Column;
 };
 
-export type SortExpression =
-  | string[]
-  | {
-      [key: string]: SortOrder;
-    }
-  | {
-      [key: string]: SortOrder;
-    }[];
+/**
+ * @pattern [a-zA-Z0-9_\-~\.]+
+ */
+export type ColumnName = string;
 
-export type SortOrder = "asc" | "desc";
+export type ColumnsProjection = string[];
+
+export type DBBranch = {
+  databaseName: DBName;
+  branchName: BranchName;
+  createdAt: DateTime;
+  id: string;
+  version: number;
+  lastMigrationID: string;
+  metadata?: BranchMetadata;
+  startedFrom?: StartedFromMetadata;
+  schema: Schema;
+};
 
 /**
- * Maximum [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance) for the search terms. The Levenshtein
- * distance is the number of one charcter changes needed to make two strings equal. The default is 1, meaning that single
- * character typos per word are tollerated by search. You can set it to 0 to remove the typo tollerance or set it to 2
- * to allow two typos in a word.
+ * The DBBranchName matches the pattern `{db_name}:{branch_name}`.
  *
- * @default 1
- * @maximum 2
- * @minimum 0
+ * @pattern [a-zA-Z0-9_\-~]+:[a-zA-Z0-9_\-~]+
  */
-export type FuzzinessExpression = number;
+export type DBBranchName = string;
 
 /**
- * If the prefix type is set to "disabled" (the default), the search only matches full words. If the prefix type is set to "phrase", the search will return results that match prefixes of the search phrase.
+ * @pattern [a-zA-Z0-9_\-~]+
  */
-export type PrefixExpression = "phrase" | "disabled";
+export type DBName = string;
+
+/**
+ * Metadata of databases
+ */
+export type DatabaseMetadata = {
+  /*
+   * The machine-readable name of a database
+   */
+  name: string;
+  /*
+   * The human-readable name of a database
+   */
+  displayName: string;
+  /*
+   * The time this database was created
+   */
+  createdAt: DateTime;
+  /*
+   * The number of branches the database has
+   */
+  numberOfBranches: number;
+  /*
+   * Metadata about the database for display in Xata user interfaces
+   */
+  ui?: {
+    /*
+     * The user-selected color for this database across interfaces
+     */
+    color?: string;
+  };
+};
+
+/**
+ * Boost records based on the value of a datetime column. It is configured via "origin", "scale", and "decay". The further away from the "origin",
+ * the more the score is decayed. The decay function uses an exponential function. For example if origin is "now", and scale is 10 days and decay is 0.5, it
+ * should be interpreted as: a record with a date 10 days before/after origin will score 2 times less than a record with the date at origin.
+ */
+export type DateBooster = {
+  /*
+   * The column in which to look for the value.
+   */
+  column: string;
+  /*
+   * The datetime (formatted as RFC3339) from where to apply the score decay function. The maximum boost will be applied for records with values at this time.
+   * If it is not specified, the current date and time is used.
+   */
+  origin?: string;
+  /*
+   * The duration at which distance from origin the score is decayed with factor, using an exponential function. It is fromatted as number + units, for example: `5d`, `20m`, `10s`.
+   *
+   * @pattern ^(\d+)(d|h|m|s|ms)$
+   */
+  scale: string;
+  /*
+   * The decay factor to expect at "scale" distance from the "origin".
+   */
+  decay: number;
+};
+
+/**
+ * @format date-time
+ */
+export type DateTime = string;
+
+export type FilterColumn = FilterColumnIncludes | FilterPredicate | FilterList;
+
+/**
+ * @maxProperties 1
+ * @minProperties 1
+ */
+export type FilterColumnIncludes = {
+  $includes?: FilterPredicate;
+  $includesAny?: FilterPredicate;
+  $includesAll?: FilterPredicate;
+  $includesNone?: FilterPredicate;
+};
 
 /**
  * @minProperties 1
@@ -332,31 +212,7 @@ export type FilterExpression = {
   [key: string]: FilterColumn;
 };
 
-export type HighlightExpression = {
-  /*
-   * Set to `false` to disable highlighting. By default it is `true`.
-   */
-  enabled?: boolean;
-  /*
-   * Set to `false` to disable HTML encoding in highlight snippets. By default it is `true`.
-   */
-  encodeHTML?: boolean;
-};
-
 export type FilterList = FilterExpression | FilterExpression[];
-
-export type FilterColumn = FilterColumnIncludes | FilterPredicate | FilterList;
-
-/**
- * @maxProperties 1
- * @minProperties 1
- */
-export type FilterColumnIncludes = {
-  $includes?: FilterPredicate;
-  $includesAny?: FilterPredicate;
-  $includesAll?: FilterPredicate;
-  $includesNone?: FilterPredicate;
-};
 
 export type FilterPredicate =
   | FilterValue
@@ -401,6 +257,83 @@ export type FilterRangeValue = number | string;
 export type FilterValue = number | string | boolean;
 
 /**
+ * Maximum [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance) for the search terms. The Levenshtein
+ * distance is the number of one charcter changes needed to make two strings equal. The default is 1, meaning that single
+ * character typos per word are tollerated by search. You can set it to 0 to remove the typo tollerance or set it to 2
+ * to allow two typos in a word.
+ *
+ * @default 1
+ * @maximum 2
+ * @minimum 0
+ */
+export type FuzzinessExpression = number;
+
+export type HighlightExpression = {
+  /*
+   * Set to `false` to disable highlighting. By default it is `true`.
+   */
+  enabled?: boolean;
+  /*
+   * Set to `false` to disable HTML encoding in highlight snippets. By default it is `true`.
+   */
+  encodeHTML?: boolean;
+};
+
+/**
+ * @pattern [a-zA-Z0-9]+
+ */
+export type InviteID = string;
+
+/**
+ * @pattern ^ik_[a-zA-Z0-9]+
+ */
+export type InviteKey = string;
+
+export type ListBranchesResponse = {
+  databaseName: string;
+  displayName: string;
+  branches: Branch[];
+};
+
+export type ListDatabasesResponse = {
+  /*
+   * A list of databases in a Xata workspace
+   */
+  databases?: DatabaseMetadata[];
+};
+
+export type ListGitBranchesResponse = {
+  mapping: {
+    gitBranch: string;
+    xataBranch: string;
+  }[];
+};
+
+export type MetricsDatapoint = {
+  timestamp: string;
+  value: number;
+};
+
+export type MetricsLatency = {
+  p50?: MetricsDatapoint[];
+  p90?: MetricsDatapoint[];
+};
+
+/**
+ * Boost records based on the value of a numeric column.
+ */
+export type NumericBooster = {
+  /*
+   * The column in which to look for the value.
+   */
+  column: string;
+  /*
+   * The factor with which to multiply the value of the column before adding it to the item score.
+   */
+  factor: number;
+};
+
+/**
  * Pagination settings.
  */
 export type PageConfig = {
@@ -434,12 +367,27 @@ export type PageConfig = {
   offset?: number;
 };
 
-export type ColumnsFilter = string[];
+/**
+ * If the prefix type is set to "disabled" (the default), the search only matches full words. If the prefix type is set to "phrase", the search will return results that match prefixes of the search phrase.
+ */
+export type PrefixExpression = "phrase" | "disabled";
 
 /**
- * Xata Table Record
+ * Xata Table Record Metadata
  */
-export type Record = {
+export type Record = RecordMeta & {
+  [key: string]: any;
+};
+
+/**
+ * @pattern [a-zA-Z0-9_-~:]+
+ */
+export type RecordID = string;
+
+/**
+ * Xata Table Record Metadata
+ */
+export type RecordMeta = {
   id: RecordID;
   xata: {
     /*
@@ -461,31 +409,14 @@ export type Record = {
           };
     };
     /*
+     * The record's relevancy score. This is returned by the search APIs.
+     */
+    score?: number;
+    /*
      * Encoding/Decoding errors
      */
     warnings?: string[];
   };
-} & {
-  [key: string]: any;
-};
-
-/**
- * @pattern [a-zA-Z0-9_-~:]+
- */
-export type RecordID = string;
-
-/**
- * @example {"newName":"newName","oldName":"oldName"}
- */
-export type TableRename = {
-  /*
-   * @minLength 1
-   */
-  newName: string;
-  /*
-   * @minLength 1
-   */
-  oldName: string;
 };
 
 /**
@@ -502,4 +433,148 @@ export type RecordsMetadata = {
      */
     more: boolean;
   };
+};
+
+export type RevLink = {
+  linkID: string;
+  table: string;
+};
+
+export type Role = "owner" | "maintainer";
+
+export type Schema = {
+  tables: Table[];
+  tablesOrder?: string[];
+};
+
+export type SortExpression =
+  | string[]
+  | {
+      [key: string]: SortOrder;
+    }
+  | {
+      [key: string]: SortOrder;
+    }[];
+
+export type SortOrder = "asc" | "desc";
+
+export type StartedFromMetadata = {
+  branchName: BranchName;
+  dbBranchID: string;
+  migrationID: string;
+};
+
+export type Table = {
+  id?: string;
+  name: TableName;
+  columns: Column[];
+  revLinks?: RevLink[];
+};
+
+export type TableMigration = {
+  newColumns?: {
+    [key: string]: Column;
+  };
+  removedColumns?: string[];
+  modifiedColumns?: ColumnMigration[];
+  newColumnOrder: string[];
+};
+
+/**
+ * @pattern [a-zA-Z0-9_\-~]+
+ */
+export type TableName = string;
+
+/**
+ * @example {"newName":"newName","oldName":"oldName"}
+ */
+export type TableRename = {
+  /*
+   * @minLength 1
+   */
+  newName: string;
+  /*
+   * @minLength 1
+   */
+  oldName: string;
+};
+
+export type User = {
+  /*
+   * @format email
+   */
+  email: string;
+  fullname: string;
+  image: string;
+};
+
+/**
+ * @pattern [a-zA-Z0-9_-~:]+
+ */
+export type UserID = string;
+
+export type UserWithID = User & {
+  id: UserID;
+};
+
+/**
+ * Boost records with a particular value for a column.
+ */
+export type ValueBooster = {
+  /*
+   * The column in which to look for the value.
+   */
+  column: string;
+  /*
+   * The exact value to boost.
+   */
+  value: string | number | boolean;
+  /*
+   * The factor with which to multiply the score of the record.
+   */
+  factor: number;
+};
+
+export type Workspace = WorkspaceMeta & {
+  id: WorkspaceID;
+  memberCount: number;
+  plan: "free";
+};
+
+/**
+ * @pattern ^([a-zA-Z0-9][a-zA-Z0-9_\-~]+-)?[a-zA-Z0-9]{6}
+ */
+export type WorkspaceID = string;
+
+export type WorkspaceInvite = {
+  inviteId: InviteID;
+  /*
+   * @format email
+   */
+  email: string;
+  /*
+   * @format date-time
+   */
+  expires: string;
+  role: Role;
+};
+
+export type WorkspaceMember = {
+  userId: UserID;
+  fullname: string;
+  /*
+   * @format email
+   */
+  email: string;
+  role: Role;
+};
+
+export type WorkspaceMembers = {
+  members: WorkspaceMember[];
+  invites: WorkspaceInvite[];
+};
+
+export type WorkspaceMeta = {
+  name: string;
+  slug: string;
 };
