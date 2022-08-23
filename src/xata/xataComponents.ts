@@ -560,6 +560,10 @@ export type InviteWorkspaceMemberError = Fetcher.ErrorWrapper<
       status: 404;
       payload: Responses.SimpleError;
     }
+  | {
+      status: 409;
+      payload: Responses.SimpleError;
+    }
 >;
 
 export type InviteWorkspaceMemberRequestBody = {
@@ -589,6 +593,64 @@ export const inviteWorkspaceMember = (
     {},
     InviteWorkspaceMemberPathParams
   >({ url: "/workspaces/{workspaceId}/invites", method: "post", ...variables });
+
+export type UpdateWorkspaceMemberInvitePathParams = {
+  /*
+   * Workspace name
+   */
+  workspaceId: Schemas.WorkspaceID;
+  /*
+   * Invite identifier
+   */
+  inviteId: Schemas.InviteID;
+};
+
+export type UpdateWorkspaceMemberInviteError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+  | {
+      status: 422;
+      payload: Responses.SimpleError;
+    }
+>;
+
+export type UpdateWorkspaceMemberInviteRequestBody = {
+  role: Schemas.Role;
+};
+
+export type UpdateWorkspaceMemberInviteVariables = {
+  body: UpdateWorkspaceMemberInviteRequestBody;
+  pathParams: UpdateWorkspaceMemberInvitePathParams;
+} & XataFetcherExtraProps;
+
+/**
+ * This operation provides a way to update an existing invite. Updates are performed in-place; they do not change the invite link, the expiry time, nor do they re-notify the recipient of the invite.
+ */
+export const updateWorkspaceMemberInvite = (
+  variables: UpdateWorkspaceMemberInviteVariables
+) =>
+  xataFetch<
+    Schemas.WorkspaceInvite,
+    UpdateWorkspaceMemberInviteError,
+    UpdateWorkspaceMemberInviteRequestBody,
+    {},
+    {},
+    UpdateWorkspaceMemberInvitePathParams
+  >({
+    url: "/workspaces/{workspaceId}/invites/{inviteId}",
+    method: "patch",
+    ...variables,
+  });
 
 export type CancelWorkspaceMemberInvitePathParams = {
   /*
@@ -899,6 +961,45 @@ export const deleteDatabase = (variables: DeleteDatabaseVariables) =>
     {},
     DeleteDatabasePathParams
   >({ url: "/dbs/{dbName}", method: "delete", ...variables });
+
+export type GetDatabaseMetadataPathParams = {
+  /*
+   * The Database Name
+   */
+  dbName: Schemas.DBName;
+};
+
+export type GetDatabaseMetadataError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
+export type GetDatabaseMetadataVariables = {
+  pathParams: GetDatabaseMetadataPathParams;
+} & XataFetcherExtraProps;
+
+/**
+ * Retrieve metadata of the given database
+ */
+export const getDatabaseMetadata = (variables: GetDatabaseMetadataVariables) =>
+  xataFetch<
+    Schemas.DatabaseMetadata,
+    GetDatabaseMetadataError,
+    undefined,
+    {},
+    {},
+    GetDatabaseMetadataPathParams
+  >({ url: "/dbs/{dbName}/metadata", method: "get", ...variables });
 
 export type GetGitBranchesMappingPathParams = {
   /*
@@ -1221,6 +1322,14 @@ export type CreateBranchError = Fetcher.ErrorWrapper<
     }
 >;
 
+export type CreateBranchResponse = {
+  /*
+   * @minLength 1
+   */
+  databaseName: string;
+  branchName: string;
+};
+
 export type CreateBranchRequestBody = {
   /*
    * Select the branch to fork from. Defaults to 'main'
@@ -1237,7 +1346,7 @@ export type CreateBranchVariables = {
 
 export const createBranch = (variables: CreateBranchVariables) =>
   xataFetch<
-    undefined,
+    CreateBranchResponse,
     CreateBranchError,
     CreateBranchRequestBody,
     {},
@@ -1589,6 +1698,14 @@ export type CreateTableError = Fetcher.ErrorWrapper<
     }
 >;
 
+export type CreateTableResponse = {
+  branchName: string;
+  /*
+   * @minLength 1
+   */
+  tableName: string;
+};
+
 export type CreateTableVariables = {
   pathParams: CreateTablePathParams;
 } & XataFetcherExtraProps;
@@ -1598,7 +1715,7 @@ export type CreateTableVariables = {
  */
 export const createTable = (variables: CreateTableVariables) =>
   xataFetch<
-    undefined,
+    CreateTableResponse,
     CreateTableError,
     undefined,
     {},
@@ -2093,6 +2210,13 @@ export type InsertRecordPathParams = {
   tableName: Schemas.TableName;
 };
 
+export type InsertRecordQueryParams = {
+  /*
+   * Column filters
+   */
+  columns?: Schemas.ColumnsProjection;
+};
+
 export type InsertRecordError = Fetcher.ErrorWrapper<
   | {
       status: 400;
@@ -2108,16 +2232,10 @@ export type InsertRecordError = Fetcher.ErrorWrapper<
     }
 >;
 
-export type InsertRecordResponse = {
-  id: string;
-  xata: {
-    version: number;
-  };
-};
-
 export type InsertRecordVariables = {
   body?: Record<string, any>;
   pathParams: InsertRecordPathParams;
+  queryParams?: InsertRecordQueryParams;
 } & XataFetcherExtraProps;
 
 /**
@@ -2125,11 +2243,11 @@ export type InsertRecordVariables = {
  */
 export const insertRecord = (variables: InsertRecordVariables) =>
   xataFetch<
-    InsertRecordResponse,
+    Responses.RecordUpdateResponse,
     InsertRecordError,
     Record<string, any>,
     {},
-    {},
+    InsertRecordQueryParams,
     InsertRecordPathParams
   >({
     url: "/db/{dbBranchName}/tables/{tableName}/data",
@@ -2153,6 +2271,10 @@ export type InsertRecordWithIDPathParams = {
 };
 
 export type InsertRecordWithIDQueryParams = {
+  /*
+   * Column filters
+   */
+  columns?: Schemas.ColumnsProjection;
   createOnly?: boolean;
   ifVersion?: number;
 };
@@ -2215,6 +2337,10 @@ export type UpdateRecordWithIDPathParams = {
 };
 
 export type UpdateRecordWithIDQueryParams = {
+  /*
+   * Column filters
+   */
+  columns?: Schemas.ColumnsProjection;
   ifVersion?: number;
 };
 
@@ -2273,6 +2399,10 @@ export type UpsertRecordWithIDPathParams = {
 };
 
 export type UpsertRecordWithIDQueryParams = {
+  /*
+   * Column filters
+   */
+  columns?: Schemas.ColumnsProjection;
   ifVersion?: number;
 };
 
@@ -2330,6 +2460,13 @@ export type DeleteRecordPathParams = {
   recordId: Schemas.RecordID;
 };
 
+export type DeleteRecordQueryParams = {
+  /*
+   * Column filters
+   */
+  columns?: Schemas.ColumnsProjection;
+};
+
 export type DeleteRecordError = Fetcher.ErrorWrapper<
   | {
       status: 400;
@@ -2347,15 +2484,16 @@ export type DeleteRecordError = Fetcher.ErrorWrapper<
 
 export type DeleteRecordVariables = {
   pathParams: DeleteRecordPathParams;
+  queryParams?: DeleteRecordQueryParams;
 } & XataFetcherExtraProps;
 
 export const deleteRecord = (variables: DeleteRecordVariables) =>
   xataFetch<
-    undefined,
+    Responses.RecordResponse,
     DeleteRecordError,
     undefined,
     {},
-    {},
+    DeleteRecordQueryParams,
     DeleteRecordPathParams
   >({
     url: "/db/{dbBranchName}/tables/{tableName}/data/{recordId}",
@@ -2378,6 +2516,13 @@ export type GetRecordPathParams = {
   recordId: Schemas.RecordID;
 };
 
+export type GetRecordQueryParams = {
+  /*
+   * Column filters
+   */
+  columns?: Schemas.ColumnsProjection;
+};
+
 export type GetRecordError = Fetcher.ErrorWrapper<
   | {
       status: 400;
@@ -2393,13 +2538,9 @@ export type GetRecordError = Fetcher.ErrorWrapper<
     }
 >;
 
-export type GetRecordRequestBody = {
-  columns?: Schemas.ColumnsFilter;
-};
-
 export type GetRecordVariables = {
-  body?: GetRecordRequestBody;
   pathParams: GetRecordPathParams;
+  queryParams?: GetRecordQueryParams;
 } & XataFetcherExtraProps;
 
 /**
@@ -2407,11 +2548,11 @@ export type GetRecordVariables = {
  */
 export const getRecord = (variables: GetRecordVariables) =>
   xataFetch<
-    Schemas.Record,
+    Responses.RecordResponse,
     GetRecordError,
-    GetRecordRequestBody,
+    undefined,
     {},
-    {},
+    GetRecordQueryParams,
     GetRecordPathParams
   >({
     url: "/db/{dbBranchName}/tables/{tableName}/data/{recordId}",
@@ -2428,6 +2569,13 @@ export type BulkInsertTableRecordsPathParams = {
    * The Table name
    */
   tableName: Schemas.TableName;
+};
+
+export type BulkInsertTableRecordsQueryParams = {
+  /*
+   * Column filters
+   */
+  columns?: Schemas.ColumnsProjection;
 };
 
 export type BulkInsertTableRecordsError = Fetcher.ErrorWrapper<
@@ -2449,10 +2597,6 @@ export type BulkInsertTableRecordsError = Fetcher.ErrorWrapper<
     }
 >;
 
-export type BulkInsertTableRecordsResponse = {
-  recordIDs: string[];
-};
-
 export type BulkInsertTableRecordsRequestBody = {
   records: Record<string, any>[];
 };
@@ -2460,6 +2604,7 @@ export type BulkInsertTableRecordsRequestBody = {
 export type BulkInsertTableRecordsVariables = {
   body: BulkInsertTableRecordsRequestBody;
   pathParams: BulkInsertTableRecordsPathParams;
+  queryParams?: BulkInsertTableRecordsQueryParams;
 } & XataFetcherExtraProps;
 
 /**
@@ -2469,11 +2614,11 @@ export const bulkInsertTableRecords = (
   variables: BulkInsertTableRecordsVariables
 ) =>
   xataFetch<
-    BulkInsertTableRecordsResponse,
+    Responses.BulkInsertResponse,
     BulkInsertTableRecordsError,
     BulkInsertTableRecordsRequestBody,
     {},
-    {},
+    BulkInsertTableRecordsQueryParams,
     BulkInsertTableRecordsPathParams
   >({
     url: "/db/{dbBranchName}/tables/{tableName}/bulk",
@@ -2511,7 +2656,7 @@ export type QueryTableRequestBody = {
   filter?: Schemas.FilterExpression;
   sort?: Schemas.SortExpression;
   page?: Schemas.PageConfig;
-  columns?: Schemas.ColumnsFilter;
+  columns?: Schemas.ColumnsProjection;
 };
 
 export type QueryTableVariables = {
@@ -3291,6 +3436,7 @@ export type SearchTableRequestBody = {
   prefix?: Schemas.PrefixExpression;
   filter?: Schemas.FilterExpression;
   highlight?: Schemas.HighlightExpression;
+  boosters?: Schemas.BoosterExpression[];
 };
 
 export type SearchTableVariables = {
@@ -3353,6 +3499,7 @@ export type SearchBranchRequestBody = {
          */
         table: string;
         filter?: Schemas.FilterExpression;
+        boosters?: Schemas.BoosterExpression[];
       }
   )[];
   /*
@@ -3383,54 +3530,6 @@ export const searchBranch = (variables: SearchBranchVariables) =>
     SearchBranchPathParams
   >({ url: "/db/{dbBranchName}/search", method: "post", ...variables });
 
-export type SummarizeTablePathParams = {
-  /*
-   * The DBBranchName matches the pattern `{db_name}:{branch_name}`.
-   */
-  dbBranchName: Schemas.DBBranchName;
-  /*
-   * The Table name
-   */
-  tableName: Schemas.TableName;
-};
-
-export type SummarizeTableError = Fetcher.ErrorWrapper<
-  | {
-      status: 400;
-      payload: Responses.BadRequestError;
-    }
-  | {
-      status: 401;
-      payload: Responses.AuthError;
-    }
-  | {
-      status: 404;
-      payload: Responses.SimpleError;
-    }
->;
-
-export type SummarizeTableVariables = {
-  body?: Record<string, any>;
-  pathParams: SummarizeTablePathParams;
-} & XataFetcherExtraProps;
-
-/**
- * Summarize table
- */
-export const summarizeTable = (variables: SummarizeTableVariables) =>
-  xataFetch<
-    Record<string, any>,
-    SummarizeTableError,
-    Record<string, any>,
-    {},
-    {},
-    SummarizeTablePathParams
-  >({
-    url: "/db/{dbBranchName}/tables/{tableName}/summarize",
-    method: "post",
-    ...variables,
-  });
-
 export const operationsByTag = {
   users: {
     getUser,
@@ -3450,6 +3549,7 @@ export const operationsByTag = {
     updateWorkspaceMemberRole,
     removeWorkspaceMember,
     inviteWorkspaceMember,
+    updateWorkspaceMemberInvite,
     cancelWorkspaceMemberInvite,
     resendWorkspaceMemberInvite,
     acceptWorkspaceMemberInvite,
@@ -3458,6 +3558,7 @@ export const operationsByTag = {
     getDatabaseList,
     createDatabase,
     deleteDatabase,
+    getDatabaseMetadata,
     getGitBranchesMapping,
     addGitBranchesEntry,
     removeGitBranchesEntry,
@@ -3498,6 +3599,5 @@ export const operationsByTag = {
     queryTable,
     searchTable,
     searchBranch,
-    summarizeTable,
   },
 };

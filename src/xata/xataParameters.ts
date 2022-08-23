@@ -7,20 +7,22 @@ import type * as Schemas from "./xataSchemas";
 
 export type APIKeyNameParam = Schemas.APIKeyName;
 
-export type InviteIDParam = Schemas.InviteID;
-
-export type InviteKeyParam = Schemas.InviteKey;
-
-export type UserIDParam = Schemas.UserID;
-
-export type WorkspaceIDParam = Schemas.WorkspaceID;
-
 export type ColumnNameParam = Schemas.ColumnName;
+
+export type ColumnsProjectionParam = Schemas.ColumnsProjection;
 
 export type DBBranchNameParam = Schemas.DBBranchName;
 
 export type DBNameParam = Schemas.DBName;
 
+export type InviteIDParam = Schemas.InviteID;
+
+export type InviteKeyParam = Schemas.InviteKey;
+
 export type RecordIDParam = Schemas.RecordID;
 
 export type TableNameParam = Schemas.TableName;
+
+export type UserIDParam = Schemas.UserID;
+
+export type WorkspaceIDParam = Schemas.WorkspaceID;

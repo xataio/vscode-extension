@@ -5,7 +5,10 @@
  */
 import type * as Schemas from "./xataSchemas";
 
-export type SimpleError = {
+/**
+ * @example {"message":"invalid API key"}
+ */
+export type AuthError = {
   id?: string;
   message: string;
 };
@@ -15,12 +18,9 @@ export type BadRequestError = {
   message: string;
 };
 
-/**
- * @example {"message":"invalid API key"}
- */
-export type AuthError = {
-  id?: string;
-  message: string;
+export type BranchMigrationPlan = {
+  version: number;
+  migration: Schemas.BranchMigration;
 };
 
 export type BulkError = {
@@ -30,26 +30,13 @@ export type BulkError = {
   }[];
 };
 
-export type BranchMigrationPlan = {
-  version: number;
-  migration: Schemas.BranchMigration;
-};
-
-export type RecordUpdateResponse = {
-  id: string;
-  xata: {
-    version: number;
-  };
-};
-
-export type QueryResponse = {
-  records: Schemas.Record[];
-  meta: Schemas.RecordsMetadata;
-};
-
-export type SearchResponse = {
-  records: Schemas.Record[];
-};
+export type BulkInsertResponse =
+  | {
+      recordIDs: string[];
+    }
+  | {
+      records: Schemas.Record[];
+    };
 
 /**
  * @example {"migrationID":"mig_c7m19ilcefoebpqj12p0"}
@@ -59,4 +46,29 @@ export type MigrationIdResponse = {
    * @minLength 1
    */
   migrationID: string;
+};
+
+export type QueryResponse = {
+  records: Schemas.Record[];
+  meta: Schemas.RecordsMetadata;
+};
+
+export type RecordResponse = Schemas.Record;
+
+export type RecordUpdateResponse =
+  | Schemas.Record
+  | {
+      id: string;
+      xata: {
+        version: number;
+      };
+    };
+
+export type SearchResponse = {
+  records: Schemas.Record[];
+};
+
+export type SimpleError = {
+  id?: string;
+  message: string;
 };
