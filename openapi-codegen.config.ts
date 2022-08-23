@@ -12,11 +12,8 @@ const { factory: f } = ts;
 export default defineConfig({
   xata: {
     from: {
-      source: "github",
-      owner: "xataio",
-      repository: "openapi",
-      ref: "main",
-      specPath: "bundled/openapi.yaml",
+      source: "url",
+      url: "https://docs.xata.io/api/openapi",
     },
     outputDir: "src/xata",
     to: async (context) => {
