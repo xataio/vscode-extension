@@ -6,6 +6,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## 0.1.2
+
+## Fixed
+
+- Align column type name & icons with the web UI
+- Fix refresh button
+- Fix delete button for one branch database
+
 ## 0.1.1
 
 ## Fixed
