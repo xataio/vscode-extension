@@ -11,4 +11,4 @@ export const xataColumnTypes = [
   "link",
   "object",
   "datetime",
-];
+] as const;

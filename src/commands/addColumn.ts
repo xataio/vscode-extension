@@ -9,6 +9,7 @@ import {
 import { ValidationError } from "../xata/xataFetcher";
 import { Column } from "../xata/xataSchemas";
 import { validateResourceName } from "../utils";
+import { xataColumnDisplayNames } from "../xata/xataColumnDisplayNames";
 
 /**
  * Command to add a column to selected table
@@ -33,13 +34,23 @@ export const addColumnCommand = createTreeItemCommand({
     return async (tableTreeItem) => {
       let link: AddTableColumnVariables["body"]["link"];
 
-      const type = (await vscode.window.showQuickPick(xataColumnTypes, {
-        title: "Column type",
-      })) as Column["type"] | undefined;
+      const selection = await vscode.window.showQuickPick(
+        xataColumnTypes
+          .filter((i) => i !== "object")
+          .map((i) => ({
+            type: i,
+            label: xataColumnDisplayNames[i],
+          })),
+        {
+          title: "Column type",
+        }
+      );
 
-      if (!type) {
+      if (!selection) {
         return;
       }
+
+      const { type } = selection;
 
       if (type === "link") {
         const branchDetails = await getBranchDetails({
