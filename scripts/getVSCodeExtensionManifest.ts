@@ -114,7 +114,12 @@ export function getVSCodeExtensionManifest(
         "view/title": [
           {
             command: "xata.refresh",
-            when: "view in xata.treeViews",
+            when: "view == xataExplorer",
+            group: "navigation",
+          },
+          {
+            command: "xata.refresh",
+            when: "view == xataProject",
             group: "navigation",
           },
           {
