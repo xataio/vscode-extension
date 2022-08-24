@@ -474,6 +474,10 @@
           "when": "view == xataExplorer && viewItem == database"
         },
         {
+          "command": "xata.deleteDatabase",
+          "when": "view == xataExplorer && viewItem == oneBranchDatabase"
+        },
+        {
           "command": "xata.addBranch",
           "when": "view == xataExplorer && viewItem == database",
           "group": "inline"
