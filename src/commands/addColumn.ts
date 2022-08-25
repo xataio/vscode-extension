@@ -6,8 +6,6 @@ import {
   AddTableColumnVariables,
   getBranchDetails,
 } from "../xata/xataComponents";
-import { ValidationError } from "../xata/xataFetcher";
-import { Column } from "../xata/xataSchemas";
 import { validateResourceName } from "../utils";
 import { xataColumnDisplayNames } from "../xata/xataColumnDisplayNames";
 
@@ -123,10 +121,6 @@ export const addColumnCommand = createTreeItemCommand({
 
         return refresh();
       } catch (e) {
-        if (e instanceof ValidationError) {
-          vscode.window.showErrorMessage(e.details);
-          return;
-        }
         if (e instanceof Error) {
           vscode.window.showErrorMessage(e.message);
           return;

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Context } from "../context";
+import * as vscode from "vscode";
 
 export type ErrorWrapper<TError> = TError;
 
@@ -7,6 +8,7 @@ export type XataFetcherExtraProps = {
   baseUrl: string;
   context: Context;
   token?: string;
+  silentError?: boolean;
 };
 
 export type XataFetcherOptions<TBody, THeaders, TQueryParams, TPathParams> = {
@@ -35,6 +37,7 @@ export async function xataFetch<
   context,
   baseUrl,
   token,
+  silentError,
 }: XataFetcherOptions<TBody, THeaders, TQueryParams, TPathParams>): Promise<
   | { success: true; data: TData }
   | { success: false; error: ErrorWrapper<TError> }
@@ -73,11 +76,17 @@ export async function xataFetch<
     }
 
     if (!response.status.toString().startsWith("2")) {
+      const payload = await response.json();
+
+      if (response.status === 400 && !silentError) {
+        vscode.window.showErrorMessage(payload.message);
+      }
+
       return {
         success: false,
         error: {
           status: response.status,
-          payload: await response.json(),
+          payload,
         } as any,
       };
     }
@@ -103,9 +112,3 @@ const resolveUrl = (
   }
   return url.replace(/\{\w*\}/g, (key) => pathParams[key.slice(1, -1)]) + query;
 };
-
-export class ValidationError<TDetails> extends Error {
-  constructor(public message: string, public details: TDetails) {
-    super(message);
-  }
-}

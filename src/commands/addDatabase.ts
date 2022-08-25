@@ -2,7 +2,6 @@ import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
 import { slugify } from "../utils";
 import { createDatabase, getDatabaseList } from "../xata/xataComponents";
-import { ValidationError } from "../xata/xataFetcher";
 
 /**
  * Command to add a database to a selected workspace
@@ -85,9 +84,6 @@ export const addDatabaseCommand = createTreeItemCommand({
         refresh();
         return response;
       } catch (e) {
-        if (e instanceof ValidationError) {
-          vscode.window.showErrorMessage(e.details);
-        }
         if (e instanceof Error) {
           vscode.window.showErrorMessage(e.message);
         }
