@@ -41,7 +41,7 @@ export const deleteColumnCommand = createTreeItemCommand({
         pathParams: {
           dbBranchName: `${columnTreeItem.databaseName}:${columnTreeItem.branchName}`,
           tableName: columnTreeItem.tableName,
-          columnName: columnTreeItem.column.name,
+          columnName: columnTreeItem.path,
         },
       });
 

@@ -146,6 +146,7 @@ export class ColumnTreeItem extends vscode.TreeItem {
 
   constructor(
     public readonly label: string,
+    public readonly path: string,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly column: Column,
     public readonly columns: Schema.Column[],

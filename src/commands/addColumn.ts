@@ -6,7 +6,7 @@ import {
   AddTableColumnVariables,
   getBranchDetails,
 } from "../xata/xataComponents";
-import { validateResourceName } from "../utils";
+import { getFlattenColumns, validateResourceName } from "../utils";
 import { xataColumnDisplayNames } from "../xata/xataColumnDisplayNames";
 
 /**
@@ -82,7 +82,7 @@ export const addColumnCommand = createTreeItemCommand({
         link = { table };
       }
 
-      const existingColumns = tableTreeItem.table.columns.map((c) => c.name);
+      const existingColumns = getFlattenColumns(tableTreeItem.table.columns);
 
       const name = await vscode.window.showInputBox({
         prompt: "Enter the name of your column",

@@ -32,7 +32,10 @@ export async function getColumnTreeItems(
     (column) =>
       new ColumnTreeItem(
         column.name,
-        vscode.TreeItemCollapsibleState.None,
+        column.name,
+        column.columns?.length
+          ? vscode.TreeItemCollapsibleState.Collapsed
+          : vscode.TreeItemCollapsibleState.None,
         {
           ...column,
           workspaceId: element.workspaceId,
