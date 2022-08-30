@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { Context } from "../context";
 
 import {
+  ColumnTreeItem,
   EmptyVSCodeWorkspaceTreeItem,
   NoConfigTreeItem,
   TreeItem,
@@ -153,6 +154,29 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
         );
       }
       return getColumnTreeItems(element, this.context, element.scope);
+    }
+
+    // Column level (type === `object`)
+    if (element.contextValue === "column" && element.column.columns) {
+      return element.column.columns.map(
+        (column) =>
+          new ColumnTreeItem(
+            column.name,
+            `${element.path}.${column.name}`,
+            column.columns?.length
+              ? vscode.TreeItemCollapsibleState.Collapsed
+              : vscode.TreeItemCollapsibleState.None,
+            {
+              ...column,
+              workspaceId: element.workspaceId,
+              databaseName: element.databaseName,
+              branchName: element.branchName,
+              tableName: element.tableName,
+            },
+            element.columns,
+            element.scope
+          )
+      );
     }
 
     return [];

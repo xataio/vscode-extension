@@ -63,7 +63,7 @@ After successfully inserting the record, you can save the file into your project
 
 This is how you can create a new database branch in Xata. It also creates a git branch of the same name in your project if your project is associated with a git repository. If not, it will just create a branch of your database on Xata.
 
-![create a branch in Xata](https://github.com/xataio/vscode-extension/blob/5a541d1c7d9ec0327dee5f6f3ebece2500ec27df/doc/create-branch.gif)
+![create a branch in Xata](https://user-images.githubusercontent.com/1761469/186844556-b4d647c3-d6f6-4ab7-a4ad-93d856f0148b.gif)
 
 You can always see on which branch you are currently working next to the name of your database. If your git branch matches a Xata branch, the extension automatically infers it. If it doesn't, the extension falls back on using the `XATA_FALLBACK_BRANCH` specified in your `.env`, or `main` if the fallback branch is unspecified. More about the fallback branch in the [docs](https://docs.xata.io/cli/getting-started#:~:text=fallback%20branch).
 

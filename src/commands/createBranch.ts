@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
 import { createBranch, getBranchList } from "../xata/xataComponents";
-import { ValidationError } from "../xata/xataFetcher";
 import { validateResourceName } from "../utils";
 
 /**
@@ -117,10 +116,6 @@ export const createBranchCommand = createTreeItemCommand({
 
         return refresh();
       } catch (e) {
-        if (e instanceof ValidationError) {
-          vscode.window.showErrorMessage(e.details);
-          return;
-        }
         if (e instanceof Error) {
           vscode.window.showErrorMessage(e.message);
           return;

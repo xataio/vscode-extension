@@ -7,6 +7,7 @@ import {
   WorkspaceTreeItem,
   BranchTreeItem,
   OneBranchDatabaseItem,
+  ColumnTreeItem,
 } from "./treeItems/TreeItem";
 import { getColumnTreeItems } from "./treeItems/getColumnTreeItems";
 import { getTableTreeItems } from "./treeItems/getTableTreeItems";
@@ -177,6 +178,29 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
     // Table level
     if (element.contextValue === "table") {
       return getColumnTreeItems(element, this.context);
+    }
+
+    // Column level (type === `object`)
+    if (element.contextValue === "column" && element.column.columns) {
+      return element.column.columns.map(
+        (column) =>
+          new ColumnTreeItem(
+            column.name,
+            `${element.path}.${column.name}`,
+            column.columns?.length
+              ? vscode.TreeItemCollapsibleState.Collapsed
+              : vscode.TreeItemCollapsibleState.None,
+            {
+              ...column,
+              workspaceId: element.workspaceId,
+              databaseName: element.databaseName,
+              branchName: element.branchName,
+              tableName: element.tableName,
+            },
+            element.columns,
+            element.scope
+          )
+      );
     }
 
     return [];

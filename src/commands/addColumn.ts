@@ -6,9 +6,7 @@ import {
   AddTableColumnVariables,
   getBranchDetails,
 } from "../xata/xataComponents";
-import { ValidationError } from "../xata/xataFetcher";
-import { Column } from "../xata/xataSchemas";
-import { validateResourceName } from "../utils";
+import { getFlattenColumns, validateResourceName } from "../utils";
 import { xataColumnDisplayNames } from "../xata/xataColumnDisplayNames";
 
 /**
@@ -84,7 +82,7 @@ export const addColumnCommand = createTreeItemCommand({
         link = { table };
       }
 
-      const existingColumns = tableTreeItem.table.columns.map((c) => c.name);
+      const existingColumns = getFlattenColumns(tableTreeItem.table.columns);
 
       const name = await vscode.window.showInputBox({
         prompt: "Enter the name of your column",
@@ -123,10 +121,6 @@ export const addColumnCommand = createTreeItemCommand({
 
         return refresh();
       } catch (e) {
-        if (e instanceof ValidationError) {
-          vscode.window.showErrorMessage(e.details);
-          return;
-        }
         if (e instanceof Error) {
           vscode.window.showErrorMessage(e.message);
           return;

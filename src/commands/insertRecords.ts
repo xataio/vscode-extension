@@ -74,6 +74,7 @@ export const insertRecordsCommand: Command = {
           const res = await bulkInsertTableRecords({
             baseUrl: config?.baseUrl ?? context.getBaseUrl(workspaceId),
             token: config?.apiKey,
+            silentError: true,
             context,
             pathParams: {
               dbBranchName: `${databaseName}:${branchName}`,

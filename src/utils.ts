@@ -1,4 +1,5 @@
 import { Uri, Webview } from "vscode";
+import { Column } from "./xata/xataSchemas";
 
 /**
  * Slugify a name for resources
@@ -26,7 +27,11 @@ export function validateResourceName(
   existingResources: string[]
 ) {
   return (value: string) => {
-    const isValid = Boolean(/^[a-zA-Z0-9_\-~:]+$/.exec(value));
+    const pattern =
+      resourceName === "column"
+        ? /^[a-zA-Z0-9_\-~:.]+$/ // column is supporting the dot notation
+        : /^[a-zA-Z0-9_\-~:]+$/;
+    const isValid = Boolean(pattern.exec(value));
     if (existingResources.includes(value)) {
       return `${resourceName} already exists`;
     }
@@ -35,4 +40,26 @@ export function validateResourceName(
       ? undefined
       : "only alphanumerics and '-', '_', or '~' are allowed";
   };
+}
+
+/**
+ * Get the list of flatten columns names.
+ *
+ * @param columns
+ * @returns list of flatten column names.
+ */
+export function getFlattenColumns(
+  columns: Column[],
+  entries: string[] = [],
+  parentPath = ""
+) {
+  columns.forEach((c) => {
+    if (c.columns) {
+      getFlattenColumns(c.columns, entries, parentPath + c.name + ".");
+    } else {
+      entries.push(parentPath + c.name);
+    }
+  });
+
+  return entries;
 }

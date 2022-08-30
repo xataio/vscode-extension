@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { validateResourceName } from "./utils";
+import { getFlattenColumns, validateResourceName } from "./utils";
 
 vi.mock("vscode", () => ({}));
 
@@ -22,5 +22,24 @@ describe("validateResourceName", () => {
     expect(validateInput("🥸")).toBe(
       "only alphanumerics and '-', '_', or '~' are allowed"
     );
+  });
+});
+
+describe("getFlattenColumns", () => {
+  it("should extract all column's names", () => {
+    expect(
+      getFlattenColumns([
+        { name: "email", type: "email" },
+        {
+          name: "address",
+          type: "object",
+          columns: [
+            { name: "number", type: "int" },
+            { name: "line1", type: "text" },
+            { name: "line2", type: "text" },
+          ],
+        },
+      ])
+    ).toEqual(["email", "address.number", "address.line1", "address.line2"]);
   });
 });
