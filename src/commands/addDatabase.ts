@@ -71,10 +71,9 @@ export const addDatabaseCommand = createTreeItemCommand({
           baseUrl: context.getBaseUrl(workspaceTreeItem.workspace.id),
           context,
           pathParams: {
-            dbName: slugify(name),
+            dbName: name,
           },
           body: {
-            displayName: name,
             ui: {
               color: color.value,
             },

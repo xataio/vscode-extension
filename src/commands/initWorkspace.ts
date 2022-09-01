@@ -119,7 +119,7 @@ export const initWorkspaceCommand: StandAloneCommand<
           const databaseChoice = await vscode.window.showQuickPick([
             { label: "$(add) New database", name: createDatabaseId },
             ...databases.map((i) => ({
-              label: `$(database) ${i.displayName}`,
+              label: `$(database) ${i.name}`,
               name: i.name,
             })),
           ]);
