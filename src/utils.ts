@@ -23,7 +23,7 @@ export function getUri(webview: Webview, extensionUri: Uri, path: string) {
  * @returns
  */
 export function validateResourceName(
-  resourceName: "branch" | "column" | "table",
+  resourceName: "branch" | "column" | "table" | "database",
   existingResources: string[]
 ) {
   return (value: string) => {
