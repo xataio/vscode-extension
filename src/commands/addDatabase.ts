@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
-import { slugify } from "../utils";
+import { validateResourceName } from "../utils";
 import { createDatabase, getDatabaseList } from "../xata/xataComponents";
 
 /**
@@ -35,11 +35,7 @@ export const addDatabaseCommand = createTreeItemCommand({
       const name = await vscode.window.showInputBox({
         prompt: "Enter the name of your database",
         title: "Database name",
-        validateInput: (value) => {
-          if (existingDatabases.includes(slugify(value))) {
-            return "database already exists";
-          }
-        },
+        validateInput: validateResourceName("database", existingDatabases),
       });
 
       if (!name) {
@@ -71,10 +67,9 @@ export const addDatabaseCommand = createTreeItemCommand({
           baseUrl: context.getBaseUrl(workspaceTreeItem.workspace.id),
           context,
           pathParams: {
-            dbName: slugify(name),
+            dbName: name,
           },
           body: {
-            displayName: name,
             ui: {
               color: color.value,
             },

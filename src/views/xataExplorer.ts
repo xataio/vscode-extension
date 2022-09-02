@@ -87,7 +87,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
             this.context.getHideBranchLevel() === false
           ) {
             return new DatabaseTreeItem(
-              db.displayName,
+              db.name,
               vscode.TreeItemCollapsibleState.Collapsed,
               { ...db, workspaceId: element.workspace.id },
               this.context.getEnableDatabaseColor()
@@ -108,7 +108,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
           const { branches } = branchList.data;
 
           return new OneBranchDatabaseItem(
-            db.displayName,
+            db.name,
             vscode.TreeItemCollapsibleState.Collapsed,
             { ...db, workspaceId: element.workspace.id },
             branches[0].name,
