@@ -32,6 +32,18 @@ export const addColumnCommand = createTreeItemCommand({
     return async (tableTreeItem) => {
       let link: AddTableColumnVariables["body"]["link"];
 
+      const existingColumns = getFlattenColumns(tableTreeItem.table.columns);
+
+      const name = await vscode.window.showInputBox({
+        prompt: "Enter the name of your column",
+        title: "Column name",
+        validateInput: validateResourceName("column", existingColumns),
+      });
+
+      if (!name) {
+        return;
+      }
+
       const selection = await vscode.window.showQuickPick(
         xataColumnTypes
           .filter((i) => i !== "object")
@@ -79,18 +91,6 @@ export const addColumnCommand = createTreeItemCommand({
         }
 
         link = { table };
-      }
-
-      const existingColumns = getFlattenColumns(tableTreeItem.table.columns);
-
-      const name = await vscode.window.showInputBox({
-        prompt: "Enter the name of your column",
-        title: "Column name",
-        validateInput: validateResourceName("column", existingColumns),
-      });
-
-      if (!name) {
-        return;
       }
 
       try {
