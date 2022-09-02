@@ -20,7 +20,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## 0.1.2
 
-## Fixed
+### Fixed
 
 - Align column type name & icons with the web UI
 - Fix refresh button
@@ -28,7 +28,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## 0.1.1
 
-## Fixed
+### Fixed
 
 - Reduce extension size from 7.74MB to 1.84MB
 
