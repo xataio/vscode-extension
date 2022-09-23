@@ -53,6 +53,7 @@ export const addColumnCommand = createTreeItemCommand({
           })),
         {
           title: "Column type",
+          ignoreFocusOut: true,
         }
       );
 
@@ -83,6 +84,7 @@ export const addColumnCommand = createTreeItemCommand({
           schema.tables.map((t) => t.name),
           {
             title: "Database to link",
+            ignoreFocusOut: true,
           }
         );
 
@@ -91,6 +93,40 @@ export const addColumnCommand = createTreeItemCommand({
         }
 
         link = { table };
+      }
+
+      enum ColumnOption {
+        None,
+        NotNull,
+        Unique,
+        NoNullAndUnique,
+      }
+      const options = await vscode.window.showQuickPick(
+        [
+          { label: "-", value: ColumnOption.None },
+          { label: "Not null", value: ColumnOption.NotNull },
+          { label: "Unique", value: ColumnOption.Unique },
+          { label: "Unique and not null", value: ColumnOption.NoNullAndUnique },
+        ],
+        {
+          title: "Constraints",
+          ignoreFocusOut: true,
+        }
+      );
+
+      let notNull;
+      let unique;
+      switch (options?.value) {
+        case ColumnOption.NotNull:
+          notNull = true;
+          break;
+        case ColumnOption.Unique:
+          unique = true;
+          break;
+        case ColumnOption.NoNullAndUnique:
+          notNull = true;
+          unique = true;
+          break;
       }
 
       try {
@@ -102,6 +138,8 @@ export const addColumnCommand = createTreeItemCommand({
             type,
             name,
             link,
+            notNull,
+            unique,
           },
           pathParams: {
             dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
