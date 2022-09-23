@@ -155,6 +155,21 @@ export class ColumnTreeItem extends vscode.TreeItem {
 
     if (column.type === "link" && column.link) {
       this.description = `🔗 ${column.link.table}`;
+      if (column.unique && column.notNull) {
+        this.description += " (unique & not null)";
+      } else if (column.unique) {
+        this.description += " (unique)";
+      } else if (column.notNull) {
+        this.description += " (not null)";
+      }
+    } else {
+      if (column.unique && column.notNull) {
+        this.description = "unique & not null";
+      } else if (column.unique) {
+        this.description = "unique";
+      } else if (column.notNull) {
+        this.description = "not null";
+      }
     }
   }
 }
