@@ -6,6 +6,15 @@
 import type * as Schemas from "./xataSchemas";
 
 /**
+ * @example {"aggs":{"dailyUniqueUsers":{"values":[{"key":"2022-02-22T22:22:22Z","uniqueUsers":134},{"key":"2022-02-23T22:22:22Z","uniqueUsers":90}]}}}
+ */
+export type AggResponse = {
+  aggs?: {
+    [key: string]: Schemas.AggResponse;
+  };
+};
+
+/**
  * @example {"message":"invalid API key"}
  */
 export type AuthError = {
@@ -35,7 +44,7 @@ export type BulkInsertResponse =
       recordIDs: string[];
     }
   | {
-      records: Schemas.Record[];
+      records: Schemas.XataRecord[];
     };
 
 /**
@@ -49,14 +58,14 @@ export type MigrationIdResponse = {
 };
 
 export type QueryResponse = {
-  records: Schemas.Record[];
+  records: Schemas.XataRecord[];
   meta: Schemas.RecordsMetadata;
 };
 
-export type RecordResponse = Schemas.Record;
+export type RecordResponse = Schemas.XataRecord;
 
 export type RecordUpdateResponse =
-  | Schemas.Record
+  | Schemas.XataRecord
   | {
       id: string;
       xata: {
@@ -65,10 +74,15 @@ export type RecordUpdateResponse =
     };
 
 export type SearchResponse = {
-  records: Schemas.Record[];
+  records: Schemas.XataRecord[];
+  warning?: string;
 };
 
 export type SimpleError = {
   id?: string;
   message: string;
+};
+
+export type SummarizeResponse = {
+  summaries: Record<string, any>[];
 };

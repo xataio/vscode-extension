@@ -1,11 +1,12 @@
-import {
-  generateSchemaTypes,
-  generateFetchers,
-} from "@openapi-codegen/typescript";
-import { isSchemaObject } from "openapi3-ts";
 import { defineConfig } from "@openapi-codegen/cli";
-import ts from "typescript";
+import {
+  generateFetchers,
+  generateSchemaTypes,
+  renameComponent,
+} from "@openapi-codegen/typescript";
 import { readFile } from "fs/promises";
+import { isSchemaObject } from "openapi3-ts";
+import ts from "typescript";
 
 const { factory: f } = ts;
 
@@ -17,6 +18,13 @@ export default defineConfig({
     },
     outputDir: "src/xata",
     to: async (context) => {
+      // Avoid conflict with typescript `Record<>` type helper
+      context.openAPIDocument = renameComponent({
+        openAPIDocument: context.openAPIDocument,
+        from: "#/components/schemas/Record",
+        to: "#/components/schemas/XataRecord",
+      });
+
       if (
         isSchemaObject(context.openAPIDocument.components!.schemas!.Column) &&
         isSchemaObject(
