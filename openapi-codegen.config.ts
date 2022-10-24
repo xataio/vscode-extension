@@ -1,6 +1,7 @@
 import {
   generateSchemaTypes,
   generateFetchers,
+  renameComponent,
 } from "@openapi-codegen/typescript";
 import { isSchemaObject } from "openapi3-ts";
 import { defineConfig } from "@openapi-codegen/cli";
@@ -52,6 +53,14 @@ export default defineConfig({
       }
 
       const filenamePrefix = "xata";
+
+      // Avoid conflict with typescript `Record<>` type helper
+      context.openAPIDocument = renameComponent({
+        openAPIDocument: context.openAPIDocument,
+        from: "#/components/schemas/Record",
+        to: "#/components/schemas/XataRecord",
+      });
+
       const { schemasFiles } = await generateSchemaTypes(context, {
         filenamePrefix,
       });

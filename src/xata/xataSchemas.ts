@@ -9,6 +9,70 @@
 export type APIKeyName = string;
 
 /**
+ * The description of a single aggregation operation. It is an object with only one key-value pair.
+ * The key represents the aggreagtion type, while the value is an object with the configuration of
+ * the aggreagtion.
+ */
+export type AggExpression =
+  | {
+      count?: CountAgg;
+    }
+  | {
+      sum?: SumAgg;
+    }
+  | {
+      max?: MaxAgg;
+    }
+  | {
+      min?: MinAgg;
+    }
+  | {
+      average?: AverageAgg;
+    }
+  | {
+      uniqueCount?: UniqueCountAgg;
+    }
+  | {
+      dateHistogram?: DateHistogramAgg;
+    }
+  | {
+      topValues?: TopValuesAgg;
+    }
+  | {
+      numericHistogram?: NumericHistogramAgg;
+    };
+
+/**
+ * The description of the aggregations you wish to receive.
+ *
+ * @example {"totalCount":{"count":"*"},"dailyActiveUsers":{"dateHistogram":{"column":"date","interval":"1d"},"aggs":{"uniqueUsers":{"uniqueCount":{"column":"userID"}}}}}
+ */
+export type AggExpressionMap = {
+  [key: string]: AggExpression;
+};
+
+export type AggResponse =
+  | (number | null)
+  | {
+      values: ({
+        $key: string | number;
+        $count: number;
+      } & {
+        [key: string]: AggResponse;
+      })[];
+    };
+
+/**
+ * The average of the numeric values in a particular column.
+ */
+export type AverageAgg = {
+  /*
+   * The column on which to compute the average. Must be a numeric type.
+   */
+  column: string;
+};
+
+/**
  * Booster Expression
  */
 export type BoosterExpression =
@@ -67,6 +131,40 @@ export type BranchMigration = {
  */
 export type BranchName = string;
 
+/**
+ * Metadata of databases
+ */
+export type CPDatabaseMetadata = {
+  /*
+   * The machine-readable name of a database
+   */
+  name: string;
+  /*
+   * Region where this database is hosted
+   */
+  region: string;
+  /*
+   * The time this database was created
+   */
+  createdAt: DateTime;
+  /*
+   * Metadata about the database for display in Xata user interfaces
+   */
+  ui?: {
+    /*
+     * The user-selected color for this database across interfaces
+     */
+    color?: string;
+  };
+};
+
+export type CPListDatabasesResponse = {
+  /*
+   * A list of databases in a Xata workspace
+   */
+  databases: CPDatabaseMetadata[];
+};
+
 export type Column = {
   name: string;
   type:
@@ -80,10 +178,14 @@ export type Column = {
     | "link"
     | "object"
     | "datetime";
-  link?: {
-    table: string;
-  };
+  link?: ColumnLink;
+  notNull?: boolean;
+  unique?: boolean;
   columns?: Column[];
+};
+
+export type ColumnLink = {
+  table: string;
 };
 
 export type ColumnMigration = {
@@ -96,7 +198,21 @@ export type ColumnMigration = {
  */
 export type ColumnName = string;
 
+/**
+ * @example name
+ * @example email
+ * @example created_at
+ */
 export type ColumnsProjection = string[];
+
+/**
+ * Count the number of records with an optional filter.
+ */
+export type CountAgg =
+  | {
+      filter?: FilterExpression;
+    }
+  | "*";
 
 export type DBBranch = {
   databaseName: DBName;
@@ -130,10 +246,6 @@ export type DatabaseMetadata = {
    * The machine-readable name of a database
    */
   name: string;
-  /*
-   * The human-readable name of a database
-   */
-  displayName: string;
   /*
    * The time this database was created
    */
@@ -178,6 +290,44 @@ export type DateBooster = {
    * The decay factor to expect at "scale" distance from the "origin".
    */
   decay: number;
+};
+
+/**
+ * Split data into buckets by a datetime column. Accepts sub-aggregations for each bucket.
+ */
+export type DateHistogramAgg = {
+  /*
+   * The column to use for bucketing. Must be of type datetime.
+   */
+  column: string;
+  /*
+   * The fixed interval to use when bucketing.
+   * It is fromatted as number + units, for example: `5d`, `20m`, `10s`.
+   *
+   * @pattern ^(\d+)(d|h|m|s|ms)$
+   */
+  interval?: string;
+  /*
+   * The calendar-aware interval to use when bucketing. Possible values are: `minute`,
+   * `hour`, `day`, `week`, `month`, `quarter`, `year`.
+   */
+  calendarInterval?:
+    | "minute"
+    | "hour"
+    | "day"
+    | "week"
+    | "month"
+    | "quarter"
+    | "year";
+  /*
+   * The timezone to use for bucketing. By default, UTC is assumed.
+   * The accepted format is as an ISO 8601 UTC offset. For example: `+01:00` or
+   * `-08:00`.
+   *
+   * @pattern ^[+-][01]\d:[0-5]\d$
+   */
+  timezone?: string;
+  aggs?: AggExpressionMap;
 };
 
 /**
@@ -258,7 +408,7 @@ export type FilterValue = number | string | boolean;
 
 /**
  * Maximum [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance) for the search terms. The Levenshtein
- * distance is the number of one charcter changes needed to make two strings equal. The default is 1, meaning that single
+ * distance is the number of one character changes needed to make two strings equal. The default is 1, meaning that single
  * character typos per word are tollerated by search. You can set it to 0 to remove the typo tollerance or set it to 2
  * to allow two typos in a word.
  *
@@ -291,7 +441,6 @@ export type InviteKey = string;
 
 export type ListBranchesResponse = {
   databaseName: string;
-  displayName: string;
   branches: Branch[];
 };
 
@@ -309,6 +458,23 @@ export type ListGitBranchesResponse = {
   }[];
 };
 
+export type ListRegionsResponse = {
+  /*
+   * A list of regions where databases can be created
+   */
+  regions: Region[];
+};
+
+/**
+ * The max of the numeric values in a particular column.
+ */
+export type MaxAgg = {
+  /*
+   * The column on which to compute the max. Must be a numeric type.
+   */
+  column: string;
+};
+
 export type MetricsDatapoint = {
   timestamp: string;
   value: number;
@@ -317,6 +483,62 @@ export type MetricsDatapoint = {
 export type MetricsLatency = {
   p50?: MetricsDatapoint[];
   p90?: MetricsDatapoint[];
+};
+
+export type MigrationRequest = {
+  number?: MigrationRequestNumber;
+  /*
+   * Migration request creation timestamp.
+   */
+  createdAt?: DateTime;
+  /*
+   * Last modified timestamp.
+   */
+  modifiedAt?: DateTime;
+  /*
+   * Timestamp when the migration request was closed.
+   */
+  closedAt?: DateTime;
+  /*
+   * Timestamp when the migration request was merged.
+   */
+  mergedAt?: DateTime;
+  status?: "open" | "closed" | "merging" | "merged";
+  /*
+   * The migration request title.
+   */
+  title?: string;
+  /*
+   * The migration request body with detailed description.
+   */
+  body?: string;
+  /*
+   * Name of the source branch.
+   */
+  source?: string;
+  /*
+   * Name of the target branch.
+   */
+  target?: string;
+};
+
+/**
+ * The migration request number.
+ *
+ * @minimum 0
+ */
+export type MigrationRequestNumber = number;
+
+export type MigrationStatus = "completed" | "pending" | "failed";
+
+/**
+ * The min of the numeric values in a particular column.
+ */
+export type MinAgg = {
+  /*
+   * The column on which to compute the min. Must be a numeric type.
+   */
+  column: string;
 };
 
 /**
@@ -331,6 +553,33 @@ export type NumericBooster = {
    * The factor with which to multiply the value of the column before adding it to the item score.
    */
   factor: number;
+};
+
+/**
+ * Split data into buckets by dynamic numeric ranges. Accepts sub-aggregations for each bucket.
+ */
+export type NumericHistogramAgg = {
+  /*
+   * The column to use for bucketing. Must be of numeric type.
+   */
+  column: string;
+  /*
+   * The numeric interval to use for bucketing. The resulting buckets will be ranges
+   * with this value as size.
+   *
+   * @minimum 0
+   */
+  interval: number;
+  /*
+   * By default the bucket keys start with 0 and then continue in `interval` steps. The bucket
+   * boundaries can be shiftend by using the offset option. For example, if the `interval` is 100,
+   * but you prefer the bucket boundaries to be `[50, 150), [150, 250), etc.`, you can set `offset`
+   * to 50.
+   *
+   * @default 0
+   */
+  offset?: number;
+  aggs?: AggExpressionMap;
 };
 
 /**
@@ -354,7 +603,7 @@ export type PageConfig = {
    */
   last?: string;
   /*
-   * Set page size. If the size is missing it is read from the cursor. If no cursor is given xata will choose the default page size.
+   * Set page size. If the size is missing it is read from the cursor. If no cursor is given Xata will choose the default page size.
    *
    * @default 20
    */
@@ -371,13 +620,6 @@ export type PageConfig = {
  * If the prefix type is set to "disabled" (the default), the search only matches full words. If the prefix type is set to "phrase", the search will return results that match prefixes of the search phrase.
  */
 export type PrefixExpression = "phrase" | "disabled";
-
-/**
- * Xata Table Record Metadata
- */
-export type Record = RecordMeta & {
-  [key: string]: any;
-};
 
 /**
  * @pattern [a-zA-Z0-9_-~:]+
@@ -435,6 +677,10 @@ export type RecordsMetadata = {
   };
 };
 
+export type Region = {
+  id: string;
+};
+
 export type RevLink = {
   linkID: string;
   table: string;
@@ -462,6 +708,54 @@ export type StartedFromMetadata = {
   branchName: BranchName;
   dbBranchID: string;
   migrationID: string;
+};
+
+/**
+ * The sum of the numeric values in a particular column.
+ */
+export type SumAgg = {
+  /*
+   * The column on which to compute the sum. Must be a numeric type.
+   */
+  column: string;
+};
+
+/**
+ * A summary expression is the description of a single summary operation. It consists of a single
+ * key representing the operation, and a value representing the column to be operated on.
+ *
+ * The column being summarized cannot be an internal column (id, xata.*), nor the base of
+ * an object, i.e. if `settings` is an object with `dark_mode` as a field, you may summarize
+ * `settings.dark_mode` but not `settings` nor `settings.*`.
+ *
+ * We currently support the `count` operation. When using `count`, one can set a column name
+ * as the value. Xata will return the total number times this column is non-null in each group.
+ *
+ * Alternately, if you'd like to count the total rows in each group - irregardless of null/not null
+ * status - you can set `count` to `*` to count everything.
+ *
+ * @example {"count":"deleted_at"}
+ */
+export type SummaryExpression = Record<string, any>;
+
+/**
+ * The description of the summaries you wish to receive. Set each key to be the field name
+ * you'd like for the summary. These names must not collide with other columns you've
+ * requested from `columns`; including implicit requests like `settings.*`.
+ *
+ * The value for each key needs to be an object. This object should contain one key and one
+ * value only. In this object, the key should be set to the summary function you wish to use
+ * and the value set to the column name to be summarized.
+ *
+ * The column being summarized cannot be an internal column (id, xata.*), nor the base of
+ * an object, i.e. if `settings` is an object with `dark_mode` as a field, you may summarize
+ * `settings.dark_mode` but not `settings` nor `settings.*`.
+ *
+ * @example {"all_users":{"count":"*"}}
+ * @example {"total_created":{"count":"created_at"}}
+ */
+export type SummaryExpressionList = {
+  [key: string]: SummaryExpression;
 };
 
 export type Table = {
@@ -497,6 +791,62 @@ export type TableRename = {
    * @minLength 1
    */
   oldName: string;
+};
+
+/**
+ * The target expression is used to filter the search results by the target columns.
+ */
+export type TargetExpression = (
+  | string
+  | {
+      /*
+       * The name of the column.
+       */
+      column: string;
+      /*
+       * The weight of the column.
+       *
+       * @default 1
+       * @maximum 10
+       * @minimum 1
+       */
+      weight?: number;
+    }
+)[];
+
+/**
+ * Split data into buckets by the unique values in a column. Accepts sub-aggregations for each bucket.
+ * The top values as ordered by the number of records (`$count`) are returned.
+ */
+export type TopValuesAgg = {
+  /*
+   * The column to use for bucketing. Accepted types are `string`, `email`, `int`, `float`, or `bool`.
+   */
+  column: string;
+  aggs?: AggExpressionMap;
+  /*
+   * The maximum number of unique values to return.
+   *
+   * @default 10
+   * @maximum 1000
+   */
+  size?: number;
+};
+
+/**
+ * Count the number of distinct values in a particular column.
+ */
+export type UniqueCountAgg = {
+  /*
+   * The column from where to count the unique values.
+   */
+  column: string;
+  /*
+   * The threshold under which the unique count is exact. If the number of unique
+   * values in the column is higher than this threshold, the results are approximative.
+   * Maximum value is 40,000, default value is 3000.
+   */
+  precisionThreshold?: number;
 };
 
 export type User = {
@@ -538,7 +888,7 @@ export type ValueBooster = {
 export type Workspace = WorkspaceMeta & {
   id: WorkspaceID;
   memberCount: number;
-  plan: "free";
+  plan: "free" | "pro";
 };
 
 /**
@@ -576,5 +926,12 @@ export type WorkspaceMembers = {
 
 export type WorkspaceMeta = {
   name: string;
-  slug: string;
+  slug?: string;
+};
+
+/**
+ * Xata Table Record Metadata
+ */
+export type XataRecord = RecordMeta & {
+  [key: string]: any;
 };
