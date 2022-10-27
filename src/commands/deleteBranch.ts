@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
-import { deleteBranch } from "../xata/xataComponents";
+import { deleteBranch } from "../xataWorkspace/xataWorkspaceComponents";
 
 export const deleteBranchCommand = createTreeItemCommand({
   id: "deleteBranch",
@@ -24,7 +24,8 @@ export const deleteBranchCommand = createTreeItemCommand({
       }
 
       await deleteBranch({
-        baseUrl: context.getBaseUrl(branchTreeItem.workspaceId),
+        workspaceId: branchTreeItem.workspaceId,
+        regionId: branchTreeItem.regionId,
         context,
         pathParams: {
           dbBranchName: `${branchTreeItem.databaseName}:${branchTreeItem.branch.name}`,

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
-import { deleteColumn } from "../xata/xataComponents";
+import { deleteColumn } from "../xataWorkspace/xataWorkspaceComponents";
 
 export const deleteColumnCommand = createTreeItemCommand({
   id: "deleteColumn",
@@ -33,9 +33,8 @@ export const deleteColumnCommand = createTreeItemCommand({
       }
 
       await deleteColumn({
-        baseUrl:
-          columnTreeItem.scope?.baseUrl ??
-          context.getBaseUrl(columnTreeItem.workspaceId),
+        workspaceId: columnTreeItem.workspaceId,
+        regionId: columnTreeItem.regionId,
         token: columnTreeItem.scope?.token,
         context,
         pathParams: {

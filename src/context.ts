@@ -8,9 +8,9 @@ import {
 } from "vscode";
 import dotenv from "dotenv";
 import { XataTablePath } from "./types";
-import { Column } from "./xata/xataSchemas";
-import { resolveBranch } from "./xata/xataComponents";
-import { xataColumnIcons } from "./xata/xataColumnIcons";
+import { Column } from "./xataWorkspace/xataWorkspaceSchemas";
+import { resolveBranch } from "./xataWorkspace/xataWorkspaceComponents";
+import { xataColumnIcons } from "./xataWorkspace/xataColumnIcons";
 
 export const CONFIG_FILES = [
   ".xatarc",
@@ -77,7 +77,56 @@ export function getContext(extensionContext: ExtensionContext) {
       const configValue = workspace.getConfiguration().get("xata.appBaseUrl");
 
       if (!(typeof configValue === "string" && configValue.includes("//"))) {
-        window.showErrorMessage('"xata.baseUrl" is not a valid url');
+        window.showErrorMessage('"xata.appBaseUrl" is not a valid url');
+        return "";
+      }
+
+      return configValue.replace(/\/^/, "");
+    },
+
+    /**
+     * Get `coreBaseUrl` from the workspace configuration
+     */
+    getCoreBaseUrl() {
+      const configValue = workspace.getConfiguration().get("xata.coreBaseUrl");
+
+      if (!(typeof configValue === "string" && configValue.includes("//"))) {
+        window.showErrorMessage('"xata.coreBaseUrl" is not a valid url');
+        return "";
+      }
+
+      return configValue.replace(/\/^/, "");
+    },
+
+    /**
+     * Get `workspaceBaseUrl` from the workspace configuration
+     */
+    getWorkspaceBaseUrl() {
+      const configValue = workspace
+        .getConfiguration()
+        .get("xata.workspaceBaseUrl");
+
+      if (typeof configValue !== "string") {
+        window.showErrorMessage('"xata.workspaceBaseUrl" is not a valid url');
+        return "";
+      }
+
+      if (!configValue.includes("//")) {
+        window.showErrorMessage('"xata.workspaceBaseUrl" is not a valid url');
+        return "";
+      }
+
+      if (!configValue.includes("{workspaceId}")) {
+        window.showErrorMessage(
+          '"xata.workspaceBaseUrl" is not a valid url, `{workspaceId}` needs to be part of the url'
+        );
+        return "";
+      }
+
+      if (!configValue.includes("{regionId}")) {
+        window.showErrorMessage(
+          '"xata.workspaceBaseUrl" is not a valid url, `{regionId}` needs to be part of the url'
+        );
         return "";
       }
 
@@ -104,16 +153,6 @@ export function getContext(extensionContext: ExtensionContext) {
         /\/$/,
         ""
       )}/workspaces/${workspaceId}/dbs/${databaseName}/branches/${branchName}/tables/${tableName}`;
-    },
-
-    /**
-     * Get `hideBranchLevel` from the workspace configuration
-     */
-    getHideBranchLevel() {
-      return (
-        workspace.getConfiguration().get<boolean>("xata.hideBranchLevel") ??
-        true
-      );
     },
 
     /**
@@ -191,12 +230,18 @@ export function getContext(extensionContext: ExtensionContext) {
         dotenvConfig.XATA_DATABASE_URL ?? xataRcConfig.databaseURL;
 
       if (typeof databaseURL === "string") {
-        const urlChunks = databaseURL.match(/\/\/([a-z0-9-]*)\./);
+        const urlChunks = databaseURL.match(/\/\/([a-z0-9-]*)\.([a-z0-9-]*)\./);
         if (!urlChunks) {
           throw new Error(
             "`XATA_DATABASE_URL` is not valid. Check your DB Configuration tab at https://app.xata.io"
           );
         }
+
+        // List of things that could be in the url but not a region
+        const notARegion = ["xata", "staging", "localhost"];
+        const regionId = notARegion.includes(urlChunks[2])
+          ? "eu-west-1"
+          : urlChunks[2];
 
         const databaseName = new URL(databaseURL).pathname.split("/")[2];
         const baseUrl = new URL(databaseURL).origin;
@@ -206,7 +251,8 @@ export function getContext(extensionContext: ExtensionContext) {
             : undefined;
 
         const branch = await resolveBranch({
-          baseUrl,
+          regionId,
+          workspaceId: urlChunks[1],
           context: this,
           token: apiKey,
           pathParams: {
@@ -229,6 +275,7 @@ export function getContext(extensionContext: ExtensionContext) {
           branch: branch.data.branch,
           apiKey,
           workspaceId: urlChunks[1],
+          regionId,
         } as const;
       }
     },

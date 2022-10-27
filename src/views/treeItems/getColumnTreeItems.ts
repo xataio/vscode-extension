@@ -1,19 +1,19 @@
 import * as vscode from "vscode";
 import { Context } from "../../context";
+import { getTableSchema } from "../../xataWorkspace/xataWorkspaceComponents";
 import { ColumnTreeItem, TableTreeItem } from "./TreeItem";
-import { getTableSchema } from "../../xata/xataComponents";
 
 export async function getColumnTreeItems(
   element: TableTreeItem,
   context: Context,
   scope?: {
     token: string;
-    baseUrl: string;
     vscodeWorkspace: vscode.WorkspaceFolder;
   }
 ) {
   const tableSchema = await getTableSchema({
-    baseUrl: scope?.baseUrl ?? context.getBaseUrl(element.workspaceId),
+    regionId: element.regionId,
+    workspaceId: element.workspaceId,
     token: scope?.token,
     context: context,
     pathParams: {
@@ -39,6 +39,7 @@ export async function getColumnTreeItems(
         {
           ...column,
           workspaceId: element.workspaceId,
+          regionId: element.regionId,
           databaseName: element.databaseName,
           branchName: element.branchName,
           tableName: element.table.name,

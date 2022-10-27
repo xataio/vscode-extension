@@ -1,7 +1,10 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
-import { getBranchDetails, updateTable } from "../xata/xataComponents";
 import { validateResourceName } from "../utils";
+import {
+  getBranchDetails,
+  updateTable,
+} from "../xataWorkspace/xataWorkspaceComponents";
 
 export const renameTableCommand = createTreeItemCommand({
   id: "renameTable",
@@ -14,7 +17,8 @@ export const renameTableCommand = createTreeItemCommand({
   action: (context, refresh, jsonSchemaProvider) => {
     return async (tableTreeItem) => {
       const branchDetails = await getBranchDetails({
-        baseUrl: context.getBaseUrl(tableTreeItem.workspaceId),
+        workspaceId: tableTreeItem.workspaceId,
+        regionId: tableTreeItem.regionId,
         context: context,
         pathParams: {
           dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,
@@ -41,9 +45,8 @@ export const renameTableCommand = createTreeItemCommand({
 
       try {
         await updateTable({
-          baseUrl:
-            tableTreeItem.scope?.baseUrl ??
-            context.getBaseUrl(tableTreeItem.workspaceId),
+          workspaceId: tableTreeItem.workspaceId,
+          regionId: tableTreeItem.regionId,
           token: tableTreeItem.scope?.token,
           context,
           pathParams: {

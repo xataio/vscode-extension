@@ -1,4 +1,4 @@
-import { Column } from "./xataSchemas";
+import { Column } from "./xataWorkspaceSchemas";
 
 export const xataColumnDisplayNames: Record<Column["type"], string> = {
   bool: "Boolean",

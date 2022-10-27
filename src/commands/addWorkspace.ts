@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { Command } from "../types";
 import { slugify } from "../utils";
-import { createWorkspace } from "../xata/xataComponents";
+import { createWorkspace } from "../xataCore/xataCoreComponents";
 
 /**
  * Command to add a workspace
@@ -23,7 +23,6 @@ export const addWorkspaceCommand: Command = {
       }
 
       await createWorkspace({
-        baseUrl: context.getBaseUrl(),
         context,
         body: {
           name,

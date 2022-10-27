@@ -1,14 +1,11 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
-import { deleteDatabase } from "../xata/xataComponents";
+import { deleteDatabase } from "../xataCore/xataCoreComponents";
 
 export const deleteDatabaseCommand = createTreeItemCommand({
   id: "deleteDatabase",
   title: "Delete database",
-  contexts: [
-    { item: "database", view: "xataExplorer" },
-    { item: "oneBranchDatabase", view: "xataExplorer" },
-  ],
+  contexts: [{ item: "database", view: "xataExplorer" }],
   icon: "trash",
   action: (context, refresh) => {
     return async (databaseTreeItem) => {
@@ -27,9 +24,9 @@ export const deleteDatabaseCommand = createTreeItemCommand({
       }
 
       await deleteDatabase({
-        baseUrl: context.getBaseUrl(databaseTreeItem.workspaceId),
         context,
         pathParams: {
+          workspaceId: databaseTreeItem.workspaceId,
           dbName: databaseTreeItem.database.name,
         },
       });

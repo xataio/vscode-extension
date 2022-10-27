@@ -6,17 +6,15 @@ import {
   DatabaseTreeItem,
   WorkspaceTreeItem,
   BranchTreeItem,
-  OneBranchDatabaseItem,
   ColumnTreeItem,
 } from "./treeItems/TreeItem";
 import { getColumnTreeItems } from "./treeItems/getColumnTreeItems";
 import { getTableTreeItems } from "./treeItems/getTableTreeItems";
-
 import {
-  getBranchList,
   getDatabaseList,
   getWorkspacesList,
-} from "../xata/xataComponents";
+} from "../xataCore/xataCoreComponents";
+import { getBranchList } from "../xataWorkspace/xataWorkspaceComponents";
 
 class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
   #onDidChangeTreeData: vscode.EventEmitter<TreeItem | null> =
@@ -40,7 +38,6 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
     // Root level
     if (!element) {
       const workspacesList = await getWorkspacesList({
-        baseUrl: this.context.getBaseUrl(),
         context: this.context,
       });
 
@@ -70,7 +67,9 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
     // Workspace level
     if (element.contextValue === "workspace") {
       const databaseList = await getDatabaseList({
-        baseUrl: this.context.getBaseUrl(element.workspace.id),
+        pathParams: {
+          workspaceId: element.workspace.id,
+        },
         context: this.context,
       });
 
@@ -82,36 +81,10 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
       return Promise.all(
         (databases || []).map(async (db) => {
-          if (
-            db.numberOfBranches > 1 ||
-            this.context.getHideBranchLevel() === false
-          ) {
-            return new DatabaseTreeItem(
-              db.name,
-              vscode.TreeItemCollapsibleState.Collapsed,
-              { ...db, workspaceId: element.workspace.id },
-              this.context.getEnableDatabaseColor()
-            );
-          }
-          const branchList = await getBranchList({
-            baseUrl: this.context.getBaseUrl(element.workspace.id),
-            context: this.context,
-            pathParams: {
-              dbName: db.name,
-            },
-          });
-
-          if (!branchList.success) {
-            throw new Error(branchList.error.payload.message);
-          }
-
-          const { branches } = branchList.data;
-
-          return new OneBranchDatabaseItem(
+          return new DatabaseTreeItem(
             db.name,
             vscode.TreeItemCollapsibleState.Collapsed,
-            { ...db, workspaceId: element.workspace.id },
-            branches[0].name,
+            { ...db, workspaceId: element.workspace.id, regionId: db.region },
             this.context.getEnableDatabaseColor()
           );
         })
@@ -119,12 +92,10 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
     }
 
     // Database level
-    if (
-      element.contextValue === "database" ||
-      element.contextValue === "oneBranchDatabase"
-    ) {
+    if (element.contextValue === "database") {
       const branchList = await getBranchList({
-        baseUrl: this.context.getBaseUrl(element.workspaceId),
+        workspaceId: element.workspaceId,
+        regionId: element.regionId,
         context: this.context,
         pathParams: {
           dbName: element.database.name,
@@ -137,30 +108,20 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
 
       const { branches } = branchList.data;
 
-      if (branches.length === 1 && this.context.getHideBranchLevel()) {
-        return getTableTreeItems(
-          {
-            workspaceId: element.workspaceId,
-            databaseName: element.database.name,
-            branchName: branches[0].name,
-          },
-          this.context
-        );
-      } else {
-        return branches.map(
-          (branch) =>
-            new BranchTreeItem(
-              branch.name,
-              vscode.TreeItemCollapsibleState.Collapsed,
+      return branches.map(
+        (branch) =>
+          new BranchTreeItem(
+            branch.name,
+            vscode.TreeItemCollapsibleState.Collapsed,
 
-              {
-                ...branch,
-                workspaceId: element.workspaceId,
-                databaseName: element.database.name,
-              }
-            )
-        );
-      }
+            {
+              ...branch,
+              workspaceId: element.workspaceId,
+              regionId: element.regionId,
+              databaseName: element.database.name,
+            }
+          )
+      );
     }
 
     // Branch level
@@ -168,6 +129,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
       return getTableTreeItems(
         {
           workspaceId: element.workspaceId,
+          regionId: element.regionId,
           databaseName: element.databaseName,
           branchName: element.branchName,
         },
@@ -193,6 +155,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
             {
               ...column,
               workspaceId: element.workspaceId,
+              regionId: element.regionId,
               databaseName: element.databaseName,
               branchName: element.branchName,
               tableName: element.tableName,

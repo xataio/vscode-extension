@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
-import { updateColumn } from "../xata/xataComponents";
 import { getFlattenColumns, validateResourceName } from "../utils";
+import { updateColumn } from "../xataWorkspace/xataWorkspaceComponents";
 
 export const renameColumnCommand = createTreeItemCommand({
   id: "renameColumn",
@@ -33,9 +33,8 @@ export const renameColumnCommand = createTreeItemCommand({
 
       try {
         await updateColumn({
-          baseUrl:
-            columnTreeItem.scope?.baseUrl ??
-            context.getBaseUrl(columnTreeItem.workspaceId),
+          workspaceId: columnTreeItem.workspaceId,
+          regionId: columnTreeItem.regionId,
           token: columnTreeItem.scope?.token,
           context,
           pathParams: {

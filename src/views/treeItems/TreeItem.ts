@@ -1,24 +1,32 @@
 import * as vscode from "vscode";
 import { formatDistanceStrict } from "date-fns";
-import { GetWorkspacesListResponse } from "../../xata/xataComponents";
-import type * as Schema from "../../xata/xataSchemas";
+import type * as WorspaceSchema from "../../xataWorkspace/xataWorkspaceSchemas";
+import type * as CoreSchema from "../../xataCore/xataCoreSchemas";
+import type { GetWorkspacesListResponse } from "../../xataCore/xataCoreComponents";
 
 export type Workspace = GetWorkspacesListResponse["workspaces"][-1];
 
-type Database = Required<Schema.ListDatabasesResponse>["databases"][-1] & {
+type Database = Required<CoreSchema.ListDatabasesResponse>["databases"][-1] & {
   workspaceId: string;
+  regionId: string;
 };
 
-type Branch = Schema.Branch & { workspaceId: string; databaseName: string };
-
-type Table = Schema.Table & {
+type Branch = WorspaceSchema.Branch & {
   workspaceId: string;
+  regionId: string;
+  databaseName: string;
+};
+
+type Table = WorspaceSchema.Table & {
+  workspaceId: string;
+  regionId: string;
   databaseName: string;
   branchName: string;
 };
 
-type Column = Schema.Column & {
+type Column = WorspaceSchema.Column & {
   workspaceId: string;
+  regionId: string;
   databaseName: string;
   branchName: string;
   tableName: string;
@@ -41,6 +49,7 @@ export class DatabaseTreeItem extends vscode.TreeItem {
   contextValue = "database" as const;
   iconPath = new vscode.ThemeIcon("database");
   workspaceId: string;
+  regionId: string;
 
   constructor(
     public readonly label: string,
@@ -51,31 +60,8 @@ export class DatabaseTreeItem extends vscode.TreeItem {
     super(label, collapsibleState);
 
     this.workspaceId = database.workspaceId;
-
-    if (withColor && database.ui?.color) {
-      const color = new vscode.ThemeColor(database.ui.color.replace("-", "."));
-      this.iconPath = new vscode.ThemeIcon("database", color);
-    }
-  }
-}
-
-export class OneBranchDatabaseItem extends vscode.TreeItem {
-  contextValue = "oneBranchDatabase" as const;
-  iconPath = new vscode.ThemeIcon("database");
-  workspaceId: string;
-  databaseName: string;
-
-  constructor(
-    public readonly label: string,
-    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-    public readonly database: Database,
-    public readonly branchName: string,
-    withColor: boolean
-  ) {
-    super(label, collapsibleState);
-
-    this.workspaceId = database.workspaceId;
-    this.databaseName = database.name;
+    this.regionId = database.regionId;
+    this.description = database.regionId;
 
     if (withColor && database.ui?.color) {
       const color = new vscode.ThemeColor(database.ui.color.replace("-", "."));
@@ -88,6 +74,7 @@ export class BranchTreeItem extends vscode.TreeItem {
   contextValue = "branch" as const;
   iconPath = new vscode.ThemeIcon("source-control");
   workspaceId: string;
+  regionId: string;
   databaseName: string;
   branchName: string;
 
@@ -99,6 +86,7 @@ export class BranchTreeItem extends vscode.TreeItem {
     super(label, collapsibleState);
 
     this.workspaceId = branch.workspaceId;
+    this.regionId = branch.regionId;
     this.databaseName = branch.databaseName;
     this.branchName = branch.name;
 
@@ -116,6 +104,7 @@ export class TableTreeItem extends vscode.TreeItem {
   contextValue = "table" as const;
   iconPath = new vscode.ThemeIcon("table");
   workspaceId: string;
+  regionId: string;
   databaseName: string;
   branchName: string;
 
@@ -124,7 +113,6 @@ export class TableTreeItem extends vscode.TreeItem {
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly table: Table,
     public readonly scope?: {
-      baseUrl: string;
       token: string;
       vscodeWorkspace: vscode.WorkspaceFolder;
     }
@@ -132,6 +120,7 @@ export class TableTreeItem extends vscode.TreeItem {
     super(label, collapsibleState);
 
     this.workspaceId = table.workspaceId;
+    this.regionId = table.regionId;
     this.databaseName = table.databaseName;
     this.branchName = table.branchName;
   }
@@ -140,6 +129,7 @@ export class TableTreeItem extends vscode.TreeItem {
 export class ColumnTreeItem extends vscode.TreeItem {
   contextValue = "column" as const;
   workspaceId: string;
+  regionId: string;
   databaseName: string;
   branchName: string;
   tableName: string;
@@ -149,9 +139,8 @@ export class ColumnTreeItem extends vscode.TreeItem {
     public readonly path: string,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly column: Column,
-    public readonly columns: Schema.Column[],
+    public readonly columns: WorspaceSchema.Column[],
     public readonly scope?: {
-      baseUrl: string;
       token: string;
       vscodeWorkspace: vscode.WorkspaceFolder;
     }
@@ -159,6 +148,7 @@ export class ColumnTreeItem extends vscode.TreeItem {
     super(label, collapsibleState);
 
     this.workspaceId = column.workspaceId;
+    this.regionId = column.regionId;
     this.databaseName = column.databaseName;
     this.branchName = column.branchName;
     this.tableName = column.tableName;
@@ -224,7 +214,6 @@ export class EmptyTreeItem extends vscode.TreeItem {
 export type TreeItem =
   | WorkspaceTreeItem
   | DatabaseTreeItem
-  | OneBranchDatabaseItem
   | BranchTreeItem
   | TableTreeItem
   | ColumnTreeItem

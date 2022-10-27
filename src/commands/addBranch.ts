@@ -1,7 +1,10 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
-import { createBranch, getBranchList } from "../xata/xataComponents";
 import { validateResourceName } from "../utils";
+import {
+  createBranch,
+  getBranchList,
+} from "../xataWorkspace/xataWorkspaceComponents";
 
 /**
  * Add a branch in a context of the xata explorer (when all the others branches is visible)
@@ -15,17 +18,13 @@ export const addBranchCommand = createTreeItemCommand({
       view: "xataExplorer",
       group: "inline",
     },
-    {
-      item: "oneBranchDatabase",
-      view: "xataExplorer",
-      group: "inline",
-    },
   ],
   icon: "git-pull-request-create",
   action: (context, refresh) => {
     return async (databaseTreeItem) => {
       const branchList = await getBranchList({
-        baseUrl: context.getBaseUrl(databaseTreeItem.workspaceId),
+        workspaceId: databaseTreeItem.workspaceId,
+        regionId: databaseTreeItem.regionId,
         context: context,
         pathParams: {
           dbName: databaseTreeItem.database.name,
@@ -61,7 +60,8 @@ export const addBranchCommand = createTreeItemCommand({
 
       try {
         await createBranch({
-          baseUrl: context.getBaseUrl(databaseTreeItem.workspaceId),
+          workspaceId: databaseTreeItem.workspaceId,
+          regionId: databaseTreeItem.regionId,
           context,
           pathParams: {
             dbBranchName: `${databaseTreeItem.database.name}:${name}`,
