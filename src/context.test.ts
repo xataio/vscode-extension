@@ -48,12 +48,12 @@ function findNode<TNode extends ts.Node>(
  */
 function getXataSchemasColumnTypes() {
   const sourceText = readFileSync(
-    join(__dirname, "xata/xataSchemas.ts"),
+    join(__dirname, "xataWorkspace/xataWorkspaceSchemas.ts"),
     "utf-8"
   );
 
   const sourceFile = ts.createSourceFile(
-    "xataSchemas.ts",
+    "xataWorkspaceSchemas.ts",
     sourceText,
     ts.ScriptTarget.Latest
   );
