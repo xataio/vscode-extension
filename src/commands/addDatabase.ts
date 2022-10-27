@@ -60,7 +60,10 @@ export const addDatabaseCommand = createTreeItemCommand({
       }
 
       const region = await vscode.window.showQuickPick(
-        regions.data.regions.map((r) => ({ label: r.id, value: r.id }))
+        regions.data.regions.map((r) => ({ label: r.id, value: r.id })),
+        {
+          title: "Select your region",
+        }
       );
 
       if (!region) {
