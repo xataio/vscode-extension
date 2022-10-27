@@ -6,7 +6,7 @@
   "preview": true,
   "description": "Manage your Xata database from VS Code",
   "publisher": "xata",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "scripts": {
     "vscode:prepublish": "npm run build",
     "lint": "eslint src --ext ts",
