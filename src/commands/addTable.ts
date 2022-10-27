@@ -1,18 +1,16 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
-import { createTable, getBranchDetails } from "../xata/xataComponents";
 import { validateResourceName } from "../utils";
+import {
+  createTable,
+  getBranchDetails,
+} from "../xataWorkspace/xataWorkspaceComponents";
 
 export const addTableCommand = createTreeItemCommand({
   id: "addTable",
   title: "Add table",
   icon: "empty-window",
   contexts: [
-    {
-      item: "oneBranchDatabase",
-      view: "xataExplorer",
-      group: "inline",
-    },
     {
       item: "branch",
       view: "xataExplorer",
@@ -29,7 +27,8 @@ export const addTableCommand = createTreeItemCommand({
   ],
   action: (context, refresh) => {
     return async (treeItem) => {
-      let baseUrl = "";
+      let regionId = "";
+      let workspaceId = "";
       let dbBranchName = "";
       let token: string | undefined = undefined;
 
@@ -49,7 +48,8 @@ export const addTableCommand = createTreeItemCommand({
           return;
         }
 
-        baseUrl = config.baseUrl;
+        regionId = config.regionId;
+        workspaceId = config.workspaceId;
         dbBranchName = `${config.databaseName}:${config.branch}`;
         token = config.apiKey;
       } else if (treeItem.contextValue === "vscodeWorkspace") {
@@ -60,17 +60,20 @@ export const addTableCommand = createTreeItemCommand({
         if (!config) {
           return;
         }
-        baseUrl = config.baseUrl;
+        regionId = config.regionId;
+        workspaceId = config.workspaceId;
         dbBranchName = `${config.databaseName}:${config.branch}`;
         token = config.apiKey;
       } else {
-        baseUrl = context.getBaseUrl(treeItem.workspaceId);
+        regionId = treeItem.regionId;
+        workspaceId = treeItem.workspaceId;
         dbBranchName = `${treeItem.databaseName}:${treeItem.branchName}`;
       }
 
       const branchDetails = await getBranchDetails({
-        baseUrl,
-        context: context,
+        regionId,
+        workspaceId,
+        context,
         token,
         pathParams: {
           dbBranchName,
@@ -96,7 +99,8 @@ export const addTableCommand = createTreeItemCommand({
 
       try {
         await createTable({
-          baseUrl,
+          workspaceId,
+          regionId,
           context,
           token,
           pathParams: {

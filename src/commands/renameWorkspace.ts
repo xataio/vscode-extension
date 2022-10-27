@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
 import { slugify } from "../utils";
-import { updateWorkspace } from "../xata/xataComponents";
+import { updateWorkspace } from "../xataCore/xataCoreComponents";
 
 export const renameWorkspaceCommand = createTreeItemCommand({
   id: "renameWorkspace",
@@ -25,7 +25,6 @@ export const renameWorkspaceCommand = createTreeItemCommand({
       }
 
       await updateWorkspace({
-        baseUrl: context.getBaseUrl(workspaceTreeItem.workspace.id),
         context,
         pathParams: {
           workspaceId: workspaceTreeItem.workspace.id,

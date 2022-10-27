@@ -71,12 +71,12 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
         return getTableTreeItems(
           {
             workspaceId: config.workspaceId,
+            regionId: config.regionId,
             databaseName: config.databaseName,
             branchName: config.branch,
           },
           this.context,
           {
-            baseUrl: config.baseUrl,
             token: config.apiKey,
             vscodeWorkspace: vscode.workspace.workspaceFolders[0],
           }
@@ -134,12 +134,12 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
       return getTableTreeItems(
         {
           workspaceId: config.workspaceId,
+          regionId: config.regionId,
           databaseName: config.databaseName,
           branchName: config.branch,
         },
         this.context,
         {
-          baseUrl: config.baseUrl,
           token: config.apiKey,
           vscodeWorkspace: element.workspaceFolder,
         }
@@ -169,6 +169,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
             {
               ...column,
               workspaceId: element.workspaceId,
+              regionId: element.regionId,
               databaseName: element.databaseName,
               branchName: element.branchName,
               tableName: element.tableName,

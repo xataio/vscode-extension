@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
-import { xataColumnTypes } from "../xata/xataColumnTypes";
+import { getFlattenColumns, validateResourceName } from "../utils";
+import { xataColumnDisplayNames } from "../xataWorkspace/xataColumnDisplayNames";
+import { xataColumnTypes } from "../xataWorkspace/xataColumnTypes";
 import {
   addTableColumn,
   AddTableColumnVariables,
   getBranchDetails,
-} from "../xata/xataComponents";
-import { getFlattenColumns, validateResourceName } from "../utils";
-import { xataColumnDisplayNames } from "../xata/xataColumnDisplayNames";
+} from "../xataWorkspace/xataWorkspaceComponents";
 
 /**
  * Command to add a column to selected table
@@ -52,9 +52,8 @@ export const addColumnCommand = createTreeItemCommand({
 
       if (type === "link") {
         const branchDetails = await getBranchDetails({
-          baseUrl:
-            tableTreeItem.scope?.baseUrl ??
-            context.getBaseUrl(tableTreeItem.workspaceId),
+          workspaceId: tableTreeItem.workspaceId,
+          regionId: tableTreeItem.regionId,
           token: tableTreeItem.scope?.token,
           context,
           pathParams: {
@@ -96,10 +95,8 @@ export const addColumnCommand = createTreeItemCommand({
 
       try {
         await addTableColumn({
-          baseUrl:
-            tableTreeItem.scope?.baseUrl ??
-            context.getBaseUrl(tableTreeItem.workspaceId),
-          token: tableTreeItem.scope?.token,
+          workspaceId: tableTreeItem.workspaceId,
+          regionId: tableTreeItem.regionId,
           context,
           body: {
             type,

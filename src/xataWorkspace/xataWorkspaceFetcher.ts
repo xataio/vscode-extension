@@ -1,28 +1,33 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Context } from "../context";
 import * as vscode from "vscode";
 
-export type ErrorWrapper<TError> = TError;
-
-export type XataFetcherExtraProps = {
-  baseUrl: string;
+export type XataWorkspaceFetcherExtraProps = {
   context: Context;
   token?: string;
   silentError?: boolean;
+  workspaceId: string;
+  regionId: string;
 };
 
-export type XataFetcherOptions<TBody, THeaders, TQueryParams, TPathParams> = {
+export type ErrorWrapper<TError> = TError;
+
+export type XataWorkspaceFetcherOptions<
+  TBody,
+  THeaders,
+  TQueryParams,
+  TPathParams
+> = {
   url: string;
   method: string;
   body?: TBody;
   headers?: THeaders;
   queryParams?: TQueryParams;
   pathParams?: TPathParams;
-} & XataFetcherExtraProps;
+} & XataWorkspaceFetcherExtraProps;
 
-export async function xataFetch<
+export async function xataWorkspaceFetch<
   TData,
-  TError extends { status: number; payload: any },
+  TError,
   TBody extends {} | undefined | null,
   THeaders extends {},
   TQueryParams extends {},
@@ -34,11 +39,17 @@ export async function xataFetch<
   headers,
   pathParams,
   queryParams,
-  context,
-  baseUrl,
   token,
   silentError,
-}: XataFetcherOptions<TBody, THeaders, TQueryParams, TPathParams>): Promise<
+  context,
+  workspaceId,
+  regionId,
+}: XataWorkspaceFetcherOptions<
+  TBody,
+  THeaders,
+  TQueryParams,
+  TPathParams
+>): Promise<
   | { success: true; data: TData }
   | { success: false; error: ErrorWrapper<TError> }
 > {
@@ -54,6 +65,11 @@ export async function xataFetch<
       token = await context.getToken();
     }
 
+    const baseUrl = context
+      .getWorkspaceBaseUrl()
+      .replace("{workspaceId}", workspaceId)
+      .replace("{regionId}", regionId);
+
     const response = await crossFetch(
       `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,
       {
@@ -66,7 +82,6 @@ export async function xataFetch<
         },
       }
     );
-
     if (response.status === 401) {
       throw new Error("Xata: Invalid token");
     }
@@ -107,8 +122,6 @@ const resolveUrl = (
   pathParams: Record<string, string> = {}
 ) => {
   let query = new URLSearchParams(queryParams).toString();
-  if (query) {
-    query = `?${query}`;
-  }
+  if (query) query = `?${query}`;
   return url.replace(/\{\w*\}/g, (key) => pathParams[key.slice(1, -1)]) + query;
 };

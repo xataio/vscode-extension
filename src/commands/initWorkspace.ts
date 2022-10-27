@@ -6,7 +6,10 @@ import {
   Workspace,
   WorkspaceTreeItem,
 } from "../views/treeItems/TreeItem";
-import { getDatabaseList, getWorkspacesList } from "../xata/xataComponents";
+import {
+  getDatabaseList,
+  getWorkspacesList,
+} from "../xataCore/xataCoreComponents";
 import { addDatabaseCommand } from "./addDatabase";
 import { loginCommand } from "./login";
 
@@ -53,8 +56,7 @@ export const initWorkspaceCommand: StandAloneCommand<
       if (!config) {
         // choose workspace
         const workspacesList = await getWorkspacesList({
-          baseUrl: context.getBaseUrl(),
-          context: context,
+          context,
         });
 
         if (!workspacesList.success) {
@@ -83,8 +85,10 @@ export const initWorkspaceCommand: StandAloneCommand<
 
         // choose database
         const databaseList = await getDatabaseList({
-          baseUrl: context.getBaseUrl(selectedWorkspace.id),
-          context: context,
+          pathParams: {
+            workspaceId: selectedWorkspace.id,
+          },
+          context,
         });
 
         if (!databaseList.success) {

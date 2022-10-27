@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import { jsonc } from "jsonc";
 import { Command } from "../types";
-import { bulkInsertTableRecords } from "../xata/xataComponents";
 import { TableTreeItem } from "../views/treeItems/TreeItem";
+import { bulkInsertTableRecords } from "../xataWorkspace/xataWorkspaceComponents";
 
 /**
  * Command to insert a record from a json
@@ -39,10 +39,11 @@ export const insertRecordsCommand: Command = {
           return;
         }
 
-        const [workspaceId, databaseName, branchName, tableName] = $schema
-          .replace(/^xata:/, "") // scheme
-          .replace(/\?.*$/, "") // query
-          .split("/");
+        const [workspaceId, regionId, databaseName, branchName, tableName] =
+          $schema
+            .replace(/^xata:/, "") // scheme
+            .replace(/\?.*$/, "") // query
+            .split("/");
 
         // Retrieve config from `?workspace={index}`
         let config: { baseUrl: string; apiKey: string } | undefined = undefined;
@@ -63,16 +64,23 @@ export const insertRecordsCommand: Command = {
           };
         }
 
-        if (!workspaceId || !databaseName || !branchName || !tableName) {
+        if (
+          !workspaceId ||
+          !databaseName ||
+          !branchName ||
+          !tableName ||
+          !regionId
+        ) {
           vscode.window.showErrorMessage(
-            `You need to have a "$schema": "xata:workspace/db/branch/table"`
+            `You need to have a "$schema": "xata:workspace/region/db/branch/table"`
           );
           return;
         }
 
         try {
           const res = await bulkInsertTableRecords({
-            baseUrl: config?.baseUrl ?? context.getBaseUrl(workspaceId),
+            workspaceId,
+            regionId,
             token: config?.apiKey,
             silentError: true,
             context,
@@ -107,6 +115,7 @@ export const insertRecordsCommand: Command = {
                       vscode.TreeItemCollapsibleState.Collapsed,
                       {
                         workspaceId,
+                        regionId,
                         databaseName,
                         branchName,
                         columns: [],
@@ -114,7 +123,6 @@ export const insertRecordsCommand: Command = {
                       },
                       vscode.workspace.workspaceFolders && config
                         ? {
-                            baseUrl: config.baseUrl,
                             token: config.apiKey,
                             vscodeWorkspace:
                               vscode.workspace.workspaceFolders[0],

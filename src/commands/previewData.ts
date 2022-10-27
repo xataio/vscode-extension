@@ -1,8 +1,11 @@
 import flatten from "flat";
 import { createTreeItemCommand } from "../types";
 import { PreviewDataPanel } from "../panels/PreviewDataPanel";
-import { getTableSchema, queryTable } from "../xata/xataComponents";
 import sanitizeHtml from "sanitize-html";
+import {
+  getTableSchema,
+  queryTable,
+} from "../xataWorkspace/xataWorkspaceComponents";
 
 export const previewDataCommand = createTreeItemCommand({
   id: "previewData",
@@ -23,9 +26,8 @@ export const previewDataCommand = createTreeItemCommand({
   action: (context) => {
     return async (tableTreeItem) => {
       const params = {
-        baseUrl:
-          tableTreeItem.scope?.baseUrl ??
-          context.getBaseUrl(tableTreeItem.workspaceId),
+        workspaceId: tableTreeItem.workspaceId,
+        regionId: tableTreeItem.regionId,
         token: tableTreeItem.scope?.token,
         context: context,
         pathParams: {

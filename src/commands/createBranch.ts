@@ -1,7 +1,10 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
-import { createBranch, getBranchList } from "../xata/xataComponents";
 import { validateResourceName } from "../utils";
+import {
+  createBranch,
+  getBranchList,
+} from "../xataWorkspace/xataWorkspaceComponents";
 
 /**
  * Create a xata branch based on the actual git branch.
@@ -46,7 +49,8 @@ export const createBranchCommand = createTreeItemCommand({
       }
 
       const branchList = await getBranchList({
-        baseUrl: config.baseUrl,
+        workspaceId: config.workspaceId,
+        regionId: config.regionId,
         token: config.apiKey,
         context,
         pathParams: {
@@ -103,7 +107,8 @@ export const createBranchCommand = createTreeItemCommand({
 
       try {
         await createBranch({
-          baseUrl: config.baseUrl,
+          workspaceId: config.workspaceId,
+          regionId: config.regionId,
           token: config.apiKey,
           context,
           pathParams: {

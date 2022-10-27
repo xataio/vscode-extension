@@ -1,8 +1,8 @@
 import { JSONSchema7Definition } from "json-schema";
 import * as vscode from "vscode";
 import { Context } from "./context";
-import { getTableSchema } from "./xata/xataComponents";
-import { Column } from "./xata/xataSchemas";
+import { getTableSchema } from "./xataWorkspace/xataWorkspaceComponents";
+import { Column } from "./xataWorkspace/xataWorkspaceSchemas";
 
 /**
  * Xata JSON schema provider.
@@ -35,7 +35,7 @@ export class XataJsonSchemaProvider
   async provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
     XataJsonSchemaProvider.openDocuments.add(uri);
 
-    const [workspaceId, databaseName, branchName, tableName] =
+    const [workspaceId, regionId, databaseName, branchName, tableName] =
       uri.path.split("/");
 
     let config: { baseUrl: string; apiKey: string } | undefined = undefined;
@@ -62,7 +62,8 @@ export class XataJsonSchemaProvider
     }
 
     const tableSchema = await getTableSchema({
-      baseUrl: config?.baseUrl ?? this.context.getBaseUrl(workspaceId),
+      workspaceId,
+      regionId,
       token: config?.apiKey,
       context: this.context,
       pathParams: {

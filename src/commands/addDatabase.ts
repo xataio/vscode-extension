@@ -1,7 +1,11 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
 import { validateResourceName } from "../utils";
-import { createDatabase, getDatabaseList } from "../xata/xataComponents";
+import {
+  createDatabase,
+  getDatabaseList,
+  listRegions,
+} from "../xataCore/xataCoreComponents";
 
 /**
  * Command to add a database to a selected workspace
@@ -20,8 +24,10 @@ export const addDatabaseCommand = createTreeItemCommand({
   action(context, refresh) {
     return async (workspaceTreeItem) => {
       const databaseList = await getDatabaseList({
-        baseUrl: context.getBaseUrl(workspaceTreeItem.workspace.id),
-        context: context,
+        pathParams: {
+          workspaceId: workspaceTreeItem.workspace.id,
+        },
+        context,
       });
 
       if (!databaseList.success) {
@@ -42,7 +48,25 @@ export const addDatabaseCommand = createTreeItemCommand({
         return;
       }
 
-      // TODO: Make this picker colorful 🌈
+      const regions = await listRegions({
+        context,
+        pathParams: {
+          workspaceId: workspaceTreeItem.workspace.id,
+        },
+      });
+
+      if (!regions.success) {
+        return;
+      }
+
+      const region = await vscode.window.showQuickPick(
+        regions.data.regions.map((r) => ({ label: r.id, value: r.id }))
+      );
+
+      if (!region) {
+        return;
+      }
+
       const color = await vscode.window.showQuickPick(
         [
           { label: "Gray", value: "xata-gray" },
@@ -64,12 +88,13 @@ export const addDatabaseCommand = createTreeItemCommand({
 
       try {
         const response = await createDatabase({
-          baseUrl: context.getBaseUrl(workspaceTreeItem.workspace.id),
           context,
           pathParams: {
+            workspaceId: workspaceTreeItem.workspace.id,
             dbName: name,
           },
           body: {
+            region: region.value,
             ui: {
               color: color.value,
             },

@@ -1,5 +1,5 @@
 import { Uri, Webview } from "vscode";
-import { Column } from "./xata/xataSchemas";
+import { Column } from "./xataWorkspace/xataWorkspaceSchemas";
 
 /**
  * Slugify a name for resources

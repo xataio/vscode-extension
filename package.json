@@ -18,7 +18,7 @@
     "package": "vsce package",
     "postpackage": "mkdir dist && mv *.vsix dist",
     "package:install": "code --install-extension dist/*.vsix",
-    "gen": "openapi-codegen gen xata",
+    "gen": "openapi-codegen gen xataWorkspace && openapi-codegen gen xataCore",
     "deploy": "run-s deploy:*",
     "deploy:vscode": "vsce publish",
     "deploy:ovsx": "ovsx publish"
@@ -48,20 +48,20 @@
     "configuration": {
       "title": "Xata",
       "properties": {
-        "xata.baseUrl": {
-          "type": "string",
-          "default": "https://xata.sh",
-          "description": "The base URL of your workspace on Xata. To get this URL, go to your workspace's (https://docs.xata.io/concepts/workspaces) settings."
-        },
         "xata.appBaseUrl": {
           "type": "string",
           "default": "https://app.xata.io",
-          "description": "The base URL of Xata. This is usually https://app.xata.io."
+          "description": "The base URL of Xata App. This is usually https://app.xata.io."
         },
-        "xata.hideBranchLevel": {
-          "type": "boolean",
-          "default": "true",
-          "description": "Hide branch level when a database has only one branch."
+        "xata.workspaceBaseUrl": {
+          "type": "string",
+          "default": "https://{workspaceId}.{regionId}.xata.sh",
+          "description": "The base URL of Xata workspace API."
+        },
+        "xata.coreBaseUrl": {
+          "type": "string",
+          "default": "https://api.xata.io",
+          "description": "The base URL of Xata core API."
         },
         "xata.enableDatabaseColor": {
           "type": "boolean",

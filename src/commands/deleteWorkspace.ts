@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { createTreeItemCommand } from "../types";
-import { deleteWorkspace } from "../xata/xataComponents";
+import { deleteWorkspace } from "../xataCore/xataCoreComponents";
 
 export const deleteWorkspaceCommand = createTreeItemCommand({
   id: "deleteWorkspace",
@@ -29,7 +29,6 @@ export const deleteWorkspaceCommand = createTreeItemCommand({
       }
 
       await deleteWorkspace({
-        baseUrl: context.getBaseUrl(),
         context,
         pathParams: {
           workspaceId: workspaceTreeItem.workspace.id,
