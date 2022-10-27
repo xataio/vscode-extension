@@ -6,9 +6,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-## 0.2.0
+## 0.3.0
 
 - Support multi-region
+
+## 0.2.0
+
+- Support object type
 
 ## 0.1.2
 
