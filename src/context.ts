@@ -230,7 +230,9 @@ export function getContext(extensionContext: ExtensionContext) {
         dotenvConfig.XATA_DATABASE_URL ?? xataRcConfig.databaseURL;
 
       if (typeof databaseURL === "string") {
-        const urlChunks = databaseURL.match(/\/\/([a-z0-9-]*)\.([a-z0-9-]*)\./);
+        const urlChunks = databaseURL.match(
+          /\/\/([a-zA-Z0-9-]*)\.([a-zA-Z0-9-]*)\./
+        );
         if (!urlChunks) {
           throw new Error(
             "`XATA_DATABASE_URL` is not valid. Check your DB Configuration tab at https://app.xata.io"
