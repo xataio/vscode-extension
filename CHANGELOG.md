@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## 0.3.1
+
+- Fix databaseURL regex
+
 ## 0.3.0
 
 - Support multi-region
