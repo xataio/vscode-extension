@@ -32,6 +32,18 @@ export const addColumnCommand = createTreeItemCommand({
     return async (tableTreeItem) => {
       let link: AddTableColumnVariables["body"]["link"];
 
+      const existingColumns = getFlattenColumns(tableTreeItem.table.columns);
+
+      const name = await vscode.window.showInputBox({
+        prompt: "Enter the name of your column",
+        title: "Column name",
+        validateInput: validateResourceName("column", existingColumns),
+      });
+
+      if (!name) {
+        return;
+      }
+
       const selection = await vscode.window.showQuickPick(
         xataColumnTypes
           .filter((i) => i !== "object")
@@ -41,6 +53,7 @@ export const addColumnCommand = createTreeItemCommand({
           })),
         {
           title: "Column type",
+          ignoreFocusOut: true,
         }
       );
 
@@ -71,6 +84,7 @@ export const addColumnCommand = createTreeItemCommand({
           schema.tables.map((t) => t.name),
           {
             title: "Database to link",
+            ignoreFocusOut: true,
           }
         );
 
@@ -81,16 +95,100 @@ export const addColumnCommand = createTreeItemCommand({
         link = { table };
       }
 
-      const existingColumns = getFlattenColumns(tableTreeItem.table.columns);
+      // Constraints
+      let notNull;
+      let unique;
+      let defaultValue: any = undefined;
 
-      const name = await vscode.window.showInputBox({
-        prompt: "Enter the name of your column",
-        title: "Column name",
-        validateInput: validateResourceName("column", existingColumns),
-      });
+      enum ColumnOption {
+        none,
+        notNull,
+        unique,
+      }
 
-      if (!name) {
-        return;
+      const choices = [{ label: "-", value: ColumnOption.none }];
+
+      // `link` doesn’t support `not null` constrain for now
+      if (type !== "link") {
+        choices.push({ label: "Not null", value: ColumnOption.notNull });
+      }
+
+      // `text` doesn’t support `unique` constrain for now
+      if (type !== "text") {
+        choices.push({ label: "Unique", value: ColumnOption.unique });
+      }
+
+      // `multiple` doesn’t support any constrain for now
+      if (type !== "multiple") {
+        const options = await vscode.window.showQuickPick(choices, {
+          title: "Constraints",
+          ignoreFocusOut: true,
+        });
+
+        switch (options?.value) {
+          case ColumnOption.notNull:
+            notNull = true;
+            break;
+          case ColumnOption.unique:
+            unique = true;
+            break;
+        }
+      }
+
+      if (notNull) {
+        switch (type) {
+          case "bool":
+            defaultValue = await vscode.window
+              .showQuickPick(
+                [
+                  { label: "true", value: "true" },
+                  { label: "false", value: "false" },
+                ],
+                {
+                  title: "Default value",
+                  ignoreFocusOut: true,
+                }
+              )
+              .then((v) => v?.value || false);
+            break;
+          case "datetime":
+            defaultValue = await vscode.window.showInputBox({
+              title: "Default value",
+              validateInput: (v) =>
+                v === "now" ||
+                /^((?:(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2}(?:\.\d+)?))(Z|[\+-]\d{2}:\d{2})?)$/.exec(
+                  v
+                )
+                  ? null
+                  : "The value should be a valid datetime (RFC3339) or `now`",
+            });
+            break;
+          case "float":
+          case "int":
+            defaultValue =
+              (await vscode.window.showInputBox({
+                title: "Default value",
+                validateInput: (v) =>
+                  Number.isFinite(parseFloat(v))
+                    ? null
+                    : "The value should be a valid number",
+              })) || 0;
+            break;
+          case "email":
+            defaultValue = await vscode.window.showInputBox({
+              title: "Default value",
+              validateInput: (v) =>
+                v.includes("@") ? null : "The value should be a valid email",
+            });
+            break;
+          case "string":
+          case "text":
+            defaultValue =
+              (await vscode.window.showInputBox({
+                title: "Default value",
+              })) || "";
+            break;
+        }
       }
 
       try {
@@ -101,7 +199,10 @@ export const addColumnCommand = createTreeItemCommand({
           body: {
             type,
             name,
+            defaultValue,
             link,
+            notNull,
+            unique,
           },
           pathParams: {
             dbBranchName: `${tableTreeItem.databaseName}:${tableTreeItem.branchName}`,

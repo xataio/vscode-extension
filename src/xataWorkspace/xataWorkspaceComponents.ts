@@ -2711,6 +2711,12 @@ export type QueryTableRequestBody = {
   sort?: Schemas.SortExpression;
   page?: Schemas.PageConfig;
   columns?: Schemas.ColumnsProjection;
+  /*
+   * The consistency level for this request.
+   *
+   * @default strong
+   */
+  consistency?: "strong" | "eventual";
 };
 
 export type QueryTableVariables = {
@@ -2743,6 +2749,8 @@ export type QueryTableVariables = {
  * }
  * ```
  *
+ * For usage, see also the [API Guide](https://xata.io/docs/api-guide/get).
+ *
  * ### Column selection
  *
  * If the `columns` array is not specified, all columns are included. For link
@@ -2761,7 +2769,6 @@ export type QueryTableVariables = {
  *
  * ```json {"truncate": true}
  * {
- *   "formatVersion": "1.0",
  *   "tables": [
  *     {
  *       "name": "teams",
@@ -3115,9 +3122,8 @@ export type QueryTableVariables = {
  *
  * #### Partial match
  *
- * `$contains` is the simplest operator for partial matching. We should generally
- * discourage overusing `$contains` because it typically can't make use of
- * indices.
+ * `$contains` is the simplest operator for partial matching. Note that `$contains` operator can
+ * cause performance issues at scale, because indices cannot be used.
  *
  * ```json
  * {
@@ -3147,7 +3153,7 @@ export type QueryTableVariables = {
  *
  * If you want to match a string that contains a wildcard character, you can escape them using a backslash (`\`). You can escape a backslash by usign another backslash.
  *
- * We could also have `$endsWith` and `$startsWith` operators:
+ * You can also use the `$endsWith` and `$startsWith` operators:
  *
  * ```json
  * {
@@ -3399,12 +3405,14 @@ export type QueryTableVariables = {
  *
  * - `after`: Return the next page 'after' the current cursor
  * - `before`: Return the previous page 'before' the current cursor.
- * - `first`: Return the first page in the table from a cursor.
- * - `last`: Return the last N records in the table from a cursor, where N is the `page.size` parameter.
+ * - `start`: Resets the given cursor position to the beginning of the query result set.
+ * Will return the first N records from the query result, where N is the `page.size` parameter.
+ * - `end`: Resets the give cursor position to the end for the query result set.
+ * Returns the last N records from the query result, where N is the `page.size` parameter.
  *
  * The request will fail if an invalid cursor value is given to `page.before`,
- * `page.after`, `page.first` , or `page.last`. No other cursor setting can be
- * used if `page.first` or `page.last` is set in a query.
+ * `page.after`, `page.start` , or `page.end`. No other cursor setting can be
+ * used if `page.start` or `page.end` is set in a query.
  *
  * If both `page.before` and `page.after` parameters are present we treat the
  * request as a range query. The range query will return all entries after
@@ -3426,14 +3434,14 @@ export type QueryTableVariables = {
  *   returned is empty, but `page.meta.cursor` will include a cursor that can be
  *   used to "tail" the table from the end waiting for new data to be inserted.
  * - `page.before=end`: This cursor returns the last page.
- * - `page.first=<cursor>`: Go to first page. This is equivalent to querying the
- *   first page without a cursor but `filter` and `sort` . Yet the `page.first`
+ * - `page.start=<cursor>`: Start at the beginning of the result set of the <cursor> query. This is equivalent to querying the
+ *   first page without a cursor but applying `filter` and `sort` . Yet the `page.start`
  *   cursor can be convenient at times as user code does not need to remember the
  *   filter, sort, columns or page size configuration. All these information are
  *   read from the cursor.
- * - `page.last=<cursor>`: Go to the end of the table. This is equivalent to querying the
+ * - `page.end=<cursor>`: Move to the end of the result set of the <cursor> query. This is equivalent to querying the
  *   last page with `page.before=end`, `filter`, and `sort` . Yet the
- *   `page.last` cursor can be more convenient at times as user code does not
+ *   `page.end` cursor can be more convenient at times as user code does not
  *   need to remember the filter, sort, columns or page size configuration. All
  *   these information are read from the cursor.
  *
@@ -3632,6 +3640,12 @@ export type SummarizeTableRequestBody = {
   summaries?: Schemas.SummaryExpressionList;
   sort?: Schemas.SortExpression;
   summariesFilter?: Schemas.FilterExpression;
+  /*
+   * The consistency level for this request.
+   *
+   * @default strong
+   */
+  consistency?: "strong" | "eventual";
   page?: {
     /*
      * The number of records returned by summarize. If the amount of data you have exceeds this, or you have
@@ -3691,7 +3705,8 @@ export type SummarizeTableVariables = {
  * `columns`: tells Xata how to create each group. If you add `product_id`
  * we will create a new group for every unique `product_id`.
  *
- * `summaries`: tells Xata which calculations to run on each group.
+ * `summaries`: tells Xata which calculations to run on each group. Xata
+ * currently supports count, min, max, sum, average.
  *
  * `sort`: tells Xata in which order you'd like to see results. You may
  * sort by fields specified in `columns` as well as the summary names
@@ -3699,8 +3714,8 @@ export type SummarizeTableVariables = {
  *
  * note: Sorting on summarized values can be slower on very large tables;
  * this will impact your rate limit significantly more than other queries.
- * Try use `filter` [coming soon] to reduce the amount of data being
- * processed in order to reduce impact on your limits.
+ * Try use `filter` to reduce the amount of data being processed in order
+ * to reduce impact on your limits.
  *
  * `summariesFilter`: tells Xata how to filter the results of a summary.
  * It has the same syntax as `filter`, however, by using `summariesFilter`
@@ -3770,6 +3785,8 @@ export type AggregateTableVariables = {
  * only eventually consistent. On the other hand, the aggregate endpoint uses a
  * store that is more appropiate for analytics, makes use of approximative algorithms
  * (e.g for cardinality), and is generally faster and can do more complex aggregations.
+ *
+ * For usage, see the [API Guide](https://xata.io/docs/api-guide/aggregate).
  */
 export const aggregateTable = (variables: AggregateTableVariables) =>
   xataWorkspaceFetch<
