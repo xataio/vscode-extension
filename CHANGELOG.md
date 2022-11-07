@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## 0.4.0
+
+- Support non-null and unique columns
+
 ## 0.3.1
 
 - Fix databaseURL regex
