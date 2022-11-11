@@ -96,6 +96,7 @@ export const initWorkspaceCommand: StandAloneCommand<
         }
 
         let selectedDatabaseName: string | undefined;
+        let selectedDatabaseRegion: string | undefined;
 
         const { databases } = databaseList.data;
         const createDatabaseId = Symbol();
@@ -117,19 +118,27 @@ export const initWorkspaceCommand: StandAloneCommand<
             return;
           }
           selectedDatabaseName = res.data.databaseName;
+          selectedDatabaseRegion = res.regionId;
         } else if (databases.length === 1) {
           selectedDatabaseName = databases[0].name;
+          selectedDatabaseRegion = databases[0].region;
         } else {
           const databaseChoice = await vscode.window.showQuickPick([
-            { label: "$(add) New database", name: createDatabaseId },
+            {
+              label: "$(add) New database",
+              name: createDatabaseId,
+              regionId: "eu-west-1",
+            },
             ...databases.map((i) => ({
               label: `$(database) ${i.name}`,
               name: i.name,
+              regionId: i.region,
             })),
           ]);
 
           if (typeof databaseChoice?.name === "string") {
             selectedDatabaseName = databaseChoice.name;
+            selectedDatabaseRegion = databaseChoice.regionId;
           } else if (databaseChoice?.name === createDatabaseId) {
             const res = await addDatabaseCommand.action(
               context,
@@ -147,14 +156,19 @@ export const initWorkspaceCommand: StandAloneCommand<
               return;
             }
             selectedDatabaseName = res.data.databaseName;
+            selectedDatabaseRegion = res.regionId;
           } else {
             return;
           }
         }
 
-        const databaseURL = `${context.getBaseUrl(
-          selectedWorkspace.id
-        )}/db/${selectedDatabaseName}`;
+        const databaseURL = `${context
+          .getWorkspaceBaseUrl()
+          .replace("{workspaceId}", selectedWorkspace.id)
+          .replace(
+            "{regionId}",
+            selectedDatabaseRegion
+          )}/db/${selectedDatabaseName}`;
 
         // create .xatarc file
         const xataRcUri = vscode.Uri.joinPath(

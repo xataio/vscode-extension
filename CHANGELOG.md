@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+- Fix init database
+
 ## 0.4.0
 
 - Support non-null and unique columns

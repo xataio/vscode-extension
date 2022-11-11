@@ -105,7 +105,7 @@ export const addDatabaseCommand = createTreeItemCommand({
         });
 
         refresh();
-        return response;
+        return { ...response, regionId: region.value };
       } catch (e) {
         if (e instanceof Error) {
           vscode.window.showErrorMessage(e.message);
