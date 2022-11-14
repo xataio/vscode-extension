@@ -209,6 +209,8 @@ export const initWorkspaceCommand: StandAloneCommand<
         vscode.Uri.joinPath(workspaceFolder.uri, envPath)
       );
 
+      const keyPrefix = await context.getApiKeyPrefix(workspaceFolder.uri);
+
       await vscode.workspace.fs.writeFile(
         vscode.Uri.joinPath(workspaceFolder.uri, envPath),
         Buffer.concat([
@@ -216,7 +218,7 @@ export const initWorkspaceCommand: StandAloneCommand<
           Buffer.from(
             `${
               envFile.length ? "\n" : ""
-            }XATA_API_KEY=${await context.getToken()}`
+            }${keyPrefix}XATA_API_KEY=${await context.getToken()}`
           ),
         ])
       );

@@ -11,7 +11,7 @@ This extension enables users to manage their entire workspace at [Xata](https://
    Once it will show in your Activity Bar like in the image below.
 
 2. Connect your Xata Workspace to the extension
-   The first step is to connect the extension to a Xata Workspace. To the that, a `XATA_API_TOKEN` is required. Clicking the **Get Started** button on the **Explorer Pane**.
+   The first step is to connect the extension to a Xata Workspace. To the that, a `XATA_API_KEY` is required. Clicking the **Get Started** button on the **Explorer Pane**.
 
    ![Setup view for the VSCode Extension](https://raw.githubusercontent.com/xataio/vscode-extension/5a541d1c7d9ec0327dee5f6f3ebece2500ec27df/doc/get-started-view.png)
 
@@ -25,7 +25,7 @@ This extension enables users to manage their entire workspace at [Xata](https://
 
    The **Project Panel** (`(uninitialized)` in the screenshot) is related to your current VS Code project. After being initialized, this will add a `.env` with an API key and a `.xatarc` with your database access details.
 
-   > ⚠️ While we recommend to version control the `.xatarc`, you should always add `.env` in `.gitignore` to avoid leaking the `XATA_API_TOKEN` and potentially other secrets.
+   > ⚠️ While we recommend to version control the `.xatarc`, you should always add `.env` in `.gitignore` to avoid leaking the `XATA_API_KEY` and potentially other secrets.
 
    If a `.xatarc` is already set, you will just need to login.
 
@@ -39,7 +39,7 @@ Once an account is connected to a Xata Workspace, the Explorer Pane is popullate
 
 ### Project Pane
 
-Once a `.xatarc` is found in your project, the **Project Pane** will be populated with all databases and tables available for that project according to the definitions of the `.xatarc` and the permissions the `XATA_API_TOKEN` provided to the extension.
+Once a `.xatarc` is found in your project, the **Project Pane** will be populated with all databases and tables available for that project according to the definitions of the `.xatarc` and the permissions the `XATA_API_KEY` provided to the extension.
 
 ## Database Features
 

@@ -228,9 +228,10 @@ export function getContext(extensionContext: ExtensionContext) {
 
         const databaseName = new URL(databaseURL).pathname.split("/")[2];
         const baseUrl = new URL(databaseURL).origin;
+        const prefix = await this.getApiKeyPrefix(uri);
         const apiKey: string | undefined =
-          typeof dotenvConfig.XATA_API_KEY === "string"
-            ? dotenvConfig.XATA_API_KEY
+          typeof dotenvConfig[prefix + "XATA_API_KEY"] === "string"
+            ? dotenvConfig[prefix + "XATA_API_KEY"]
             : undefined;
 
         const branch = await resolveBranch({
@@ -280,6 +281,20 @@ export function getContext(extensionContext: ExtensionContext) {
         return undefined; // No branch found
       } catch {
         return undefined; // No branch found
+      }
+    },
+
+    /**
+     * Get `XATA_API_KEY` prefix depending of the framework
+     *
+     * @param uri vscode's workspace uri
+     */
+    async getApiKeyPrefix(uri: Uri) {
+      try {
+        await workspace.fs.readFile(Uri.joinPath(uri, "vite.config.ts"));
+        return "VITE_";
+      } catch {
+        return "";
       }
     },
   };
