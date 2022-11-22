@@ -212,7 +212,7 @@ export function getContext(extensionContext: ExtensionContext) {
 
       if (typeof databaseURL === "string") {
         const urlChunks = databaseURL.match(
-          /\/\/([a-zA-Z0-9-]*)\.([a-zA-Z0-9-]*)\./
+          /\/\/([a-zA-Z0-9-_]*)\.([a-zA-Z0-9-]*)\./
         );
         if (!urlChunks) {
           throw new Error(
