@@ -74,6 +74,7 @@ class XataDataProvider implements vscode.TreeDataProvider<TreeItem> {
             regionId: config.regionId,
             databaseName: config.databaseName,
             branchName: config.branch,
+            baseUrl: config.baseUrl,
           },
           this.context,
           {

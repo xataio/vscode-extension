@@ -17,6 +17,8 @@ export const renameTableCommand = createTreeItemCommand({
   action: (context, refresh, jsonSchemaProvider) => {
     return async (tableTreeItem) => {
       const branchDetails = await getBranchDetails({
+        baseUrl: tableTreeItem.baseUrl,
+        token: tableTreeItem.scope?.token,
         workspaceId: tableTreeItem.workspaceId,
         regionId: tableTreeItem.regionId,
         context: context,
@@ -45,6 +47,7 @@ export const renameTableCommand = createTreeItemCommand({
 
       try {
         await updateTable({
+          baseUrl: tableTreeItem.baseUrl,
           workspaceId: tableTreeItem.workspaceId,
           regionId: tableTreeItem.regionId,
           token: tableTreeItem.scope?.token,

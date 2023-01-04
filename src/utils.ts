@@ -63,3 +63,43 @@ export function getFlattenColumns(
 
   return entries;
 }
+
+export type DatabaseUrl = {
+  regionId: string;
+  databaseName: string;
+  workspaceId: string;
+  baseUrl: string;
+};
+
+export function parseDatabaseUrl(databaseURL: string): DatabaseUrl {
+  const { pathname, origin: baseUrl, host } = new URL(databaseURL);
+  const urlChunks = host.split(".");
+  const databaseName = pathname.split("/")[2];
+  const workspaceId = host.split(".")[0];
+
+  // List of things that could be in the url but not a region
+  const notARegion = [
+    "xata",
+    "staging",
+    "localhost",
+    "xatabase",
+    "io",
+    "co",
+    "com",
+  ];
+
+  let regionId = "eu-west-1";
+
+  if (urlChunks[2] && !notARegion.includes(urlChunks[2])) {
+    regionId = urlChunks[2];
+  } else if (urlChunks[3] && !notARegion.includes(urlChunks[3])) {
+    regionId = urlChunks[3];
+  }
+
+  return {
+    baseUrl,
+    databaseName,
+    workspaceId,
+    regionId,
+  };
+}

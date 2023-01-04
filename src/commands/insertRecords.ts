@@ -79,6 +79,7 @@ export const insertRecordsCommand: Command = {
 
         try {
           const res = await bulkInsertTableRecords({
+            baseUrl: config?.baseUrl,
             workspaceId,
             regionId,
             token: config?.apiKey,
@@ -115,6 +116,7 @@ export const insertRecordsCommand: Command = {
                       vscode.TreeItemCollapsibleState.Collapsed,
                       {
                         workspaceId,
+                        baseUrl: config?.baseUrl,
                         regionId,
                         databaseName,
                         branchName,

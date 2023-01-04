@@ -33,6 +33,7 @@ export const renameColumnCommand = createTreeItemCommand({
 
       try {
         await updateColumn({
+          baseUrl: columnTreeItem.baseUrl,
           workspaceId: columnTreeItem.workspaceId,
           regionId: columnTreeItem.regionId,
           token: columnTreeItem.scope?.token,

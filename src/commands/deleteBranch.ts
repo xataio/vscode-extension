@@ -24,6 +24,7 @@ export const deleteBranchCommand = createTreeItemCommand({
       }
 
       await deleteBranch({
+        baseUrl: branchTreeItem.baseUrl,
         workspaceId: branchTreeItem.workspaceId,
         regionId: branchTreeItem.regionId,
         context,

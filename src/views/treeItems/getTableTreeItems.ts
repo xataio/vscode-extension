@@ -9,6 +9,7 @@ export async function getTableTreeItems(
     regionId: string;
     databaseName: string;
     branchName: string;
+    baseUrl?: string;
   },
   context: Context,
   scope?: {
@@ -19,6 +20,7 @@ export async function getTableTreeItems(
   const branchDetails = await getBranchDetails({
     workspaceId: element.workspaceId,
     regionId: element.regionId,
+    baseUrl: element.baseUrl,
     token: scope?.token,
     context: context,
     pathParams: {

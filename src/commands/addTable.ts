@@ -27,6 +27,7 @@ export const addTableCommand = createTreeItemCommand({
   ],
   action: (context, refresh) => {
     return async (treeItem) => {
+      let baseUrl: string | undefined;
       let regionId = "";
       let workspaceId = "";
       let dbBranchName = "";
@@ -48,6 +49,7 @@ export const addTableCommand = createTreeItemCommand({
           return;
         }
 
+        baseUrl = config.baseUrl;
         regionId = config.regionId;
         workspaceId = config.workspaceId;
         dbBranchName = `${config.databaseName}:${config.branch}`;
@@ -60,17 +62,20 @@ export const addTableCommand = createTreeItemCommand({
         if (!config) {
           return;
         }
+        baseUrl = config.baseUrl;
         regionId = config.regionId;
         workspaceId = config.workspaceId;
         dbBranchName = `${config.databaseName}:${config.branch}`;
         token = config.apiKey;
       } else {
+        baseUrl = treeItem.baseUrl;
         regionId = treeItem.regionId;
         workspaceId = treeItem.workspaceId;
         dbBranchName = `${treeItem.databaseName}:${treeItem.branchName}`;
       }
 
       const branchDetails = await getBranchDetails({
+        baseUrl,
         regionId,
         workspaceId,
         context,
@@ -99,6 +104,7 @@ export const addTableCommand = createTreeItemCommand({
 
       try {
         await createTable({
+          baseUrl,
           workspaceId,
           regionId,
           context,

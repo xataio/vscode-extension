@@ -26,6 +26,7 @@ export const previewDataCommand = createTreeItemCommand({
   action: (context) => {
     return async (tableTreeItem) => {
       const params = {
+        baseUrl: tableTreeItem.baseUrl,
         workspaceId: tableTreeItem.workspaceId,
         regionId: tableTreeItem.regionId,
         token: tableTreeItem.scope?.token,

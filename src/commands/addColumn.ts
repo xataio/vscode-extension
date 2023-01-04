@@ -65,6 +65,7 @@ export const addColumnCommand = createTreeItemCommand({
 
       if (type === "link") {
         const branchDetails = await getBranchDetails({
+          baseUrl: tableTreeItem.baseUrl,
           workspaceId: tableTreeItem.workspaceId,
           regionId: tableTreeItem.regionId,
           token: tableTreeItem.scope?.token,
@@ -193,8 +194,10 @@ export const addColumnCommand = createTreeItemCommand({
 
       try {
         await addTableColumn({
+          baseUrl: tableTreeItem.baseUrl,
           workspaceId: tableTreeItem.workspaceId,
           regionId: tableTreeItem.regionId,
+          token: tableTreeItem.scope?.token,
           context,
           body: {
             type,
