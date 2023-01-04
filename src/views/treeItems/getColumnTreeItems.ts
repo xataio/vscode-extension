@@ -12,6 +12,7 @@ export async function getColumnTreeItems(
   }
 ) {
   const tableSchema = await getTableSchema({
+    baseUrl: element.baseUrl,
     regionId: element.regionId,
     workspaceId: element.workspaceId,
     token: scope?.token,
@@ -38,6 +39,7 @@ export async function getColumnTreeItems(
           : vscode.TreeItemCollapsibleState.None,
         {
           ...column,
+          baseUrl: element.baseUrl,
           workspaceId: element.workspaceId,
           regionId: element.regionId,
           databaseName: element.databaseName,

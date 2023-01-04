@@ -7,17 +7,20 @@ import type { GetWorkspacesListResponse } from "../../xataCore/xataCoreComponent
 export type Workspace = GetWorkspacesListResponse["workspaces"][-1];
 
 type Database = Required<CoreSchema.ListDatabasesResponse>["databases"][-1] & {
+  baseUrl?: string;
   workspaceId: string;
   regionId: string;
 };
 
 type Branch = WorspaceSchema.Branch & {
+  baseUrl?: string;
   workspaceId: string;
   regionId: string;
   databaseName: string;
 };
 
 type Table = WorspaceSchema.Table & {
+  baseUrl?: string;
   workspaceId: string;
   regionId: string;
   databaseName: string;
@@ -25,6 +28,7 @@ type Table = WorspaceSchema.Table & {
 };
 
 type Column = WorspaceSchema.Column & {
+  baseUrl?: string;
   workspaceId: string;
   regionId: string;
   databaseName: string;
@@ -48,6 +52,7 @@ export class WorkspaceTreeItem extends vscode.TreeItem {
 export class DatabaseTreeItem extends vscode.TreeItem {
   contextValue = "database" as const;
   iconPath = new vscode.ThemeIcon("database");
+  baseUrl?: string;
   workspaceId: string;
   regionId: string;
 
@@ -59,6 +64,7 @@ export class DatabaseTreeItem extends vscode.TreeItem {
   ) {
     super(label, collapsibleState);
 
+    this.baseUrl = database.baseUrl;
     this.workspaceId = database.workspaceId;
     this.regionId = database.regionId;
     this.description = database.regionId;
@@ -73,6 +79,7 @@ export class DatabaseTreeItem extends vscode.TreeItem {
 export class BranchTreeItem extends vscode.TreeItem {
   contextValue = "branch" as const;
   iconPath = new vscode.ThemeIcon("source-control");
+  baseUrl?: string;
   workspaceId: string;
   regionId: string;
   databaseName: string;
@@ -85,6 +92,7 @@ export class BranchTreeItem extends vscode.TreeItem {
   ) {
     super(label, collapsibleState);
 
+    this.baseUrl = branch.baseUrl;
     this.workspaceId = branch.workspaceId;
     this.regionId = branch.regionId;
     this.databaseName = branch.databaseName;
@@ -103,6 +111,7 @@ export class BranchTreeItem extends vscode.TreeItem {
 export class TableTreeItem extends vscode.TreeItem {
   contextValue = "table" as const;
   iconPath = new vscode.ThemeIcon("table");
+  baseUrl?: string;
   workspaceId: string;
   regionId: string;
   databaseName: string;
@@ -119,6 +128,7 @@ export class TableTreeItem extends vscode.TreeItem {
   ) {
     super(label, collapsibleState);
 
+    this.baseUrl = table.baseUrl;
     this.workspaceId = table.workspaceId;
     this.regionId = table.regionId;
     this.databaseName = table.databaseName;
@@ -128,6 +138,7 @@ export class TableTreeItem extends vscode.TreeItem {
 
 export class ColumnTreeItem extends vscode.TreeItem {
   contextValue = "column" as const;
+  baseUrl?: string;
   workspaceId: string;
   regionId: string;
   databaseName: string;
@@ -147,6 +158,7 @@ export class ColumnTreeItem extends vscode.TreeItem {
   ) {
     super(label, collapsibleState);
 
+    this.baseUrl = column.baseUrl;
     this.workspaceId = column.workspaceId;
     this.regionId = column.regionId;
     this.databaseName = column.databaseName;

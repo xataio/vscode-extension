@@ -11,6 +11,7 @@ import { XataTablePath } from "./types";
 import { Column } from "./xataWorkspace/xataWorkspaceSchemas";
 import { resolveBranch } from "./xataWorkspace/xataWorkspaceComponents";
 import { xataColumnIcons } from "./xataWorkspace/xataColumnIcons";
+import { parseDatabaseUrl } from "./utils";
 
 export const CONFIG_FILES = [
   ".xatarc",
@@ -211,23 +212,9 @@ export function getContext(extensionContext: ExtensionContext) {
         dotenvConfig.XATA_DATABASE_URL ?? xataRcConfig.databaseURL;
 
       if (typeof databaseURL === "string") {
-        const urlChunks = databaseURL.match(
-          /\/\/([a-zA-Z0-9-_]*)\.([a-zA-Z0-9-]*)\./
-        );
-        if (!urlChunks) {
-          throw new Error(
-            "`XATA_DATABASE_URL` is not valid. Check your DB Configuration tab at https://app.xata.io"
-          );
-        }
+        const { regionId, workspaceId, databaseName, baseUrl } =
+          parseDatabaseUrl(databaseURL);
 
-        // List of things that could be in the url but not a region
-        const notARegion = ["xata", "staging", "localhost"];
-        const regionId = notARegion.includes(urlChunks[2])
-          ? "eu-west-1"
-          : urlChunks[2];
-
-        const databaseName = new URL(databaseURL).pathname.split("/")[2];
-        const baseUrl = new URL(databaseURL).origin;
         const apiKey: string | undefined =
           typeof dotenvConfig.XATA_API_KEY === "string"
             ? dotenvConfig.XATA_API_KEY
@@ -235,7 +222,8 @@ export function getContext(extensionContext: ExtensionContext) {
 
         const branch = await resolveBranch({
           regionId,
-          workspaceId: urlChunks[1],
+          workspaceId,
+          baseUrl,
           context: this,
           token: apiKey,
           pathParams: {
@@ -248,7 +236,9 @@ export function getContext(extensionContext: ExtensionContext) {
         });
 
         if (branch.success === false) {
-          throw new Error("Branch can't be resolved");
+          throw new Error(
+            `Branch can't be resolved (${branch.error.payload.message})`
+          );
         }
 
         return {
@@ -257,7 +247,7 @@ export function getContext(extensionContext: ExtensionContext) {
           databaseURL,
           branch: branch.data.branch,
           apiKey,
-          workspaceId: urlChunks[1],
+          workspaceId,
           regionId,
         } as const;
       }

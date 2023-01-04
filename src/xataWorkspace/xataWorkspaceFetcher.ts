@@ -7,6 +7,7 @@ export type XataWorkspaceFetcherExtraProps = {
   silentError?: boolean;
   workspaceId: string;
   regionId: string;
+  baseUrl?: string;
 };
 
 export type ErrorWrapper<TError> = TError;
@@ -44,6 +45,7 @@ export async function xataWorkspaceFetch<
   context,
   workspaceId,
   regionId,
+  baseUrl,
 }: XataWorkspaceFetcherOptions<
   TBody,
   THeaders,
@@ -65,10 +67,12 @@ export async function xataWorkspaceFetch<
       token = await context.getToken();
     }
 
-    const baseUrl = context
-      .getWorkspaceBaseUrl()
-      .replace("{workspaceId}", workspaceId)
-      .replace("{regionId}", regionId);
+    baseUrl =
+      baseUrl ??
+      context
+        .getWorkspaceBaseUrl()
+        .replace("{workspaceId}", workspaceId)
+        .replace("{regionId}", regionId);
 
     const response = await crossFetch(
       `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,

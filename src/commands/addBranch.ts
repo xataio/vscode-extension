@@ -23,6 +23,7 @@ export const addBranchCommand = createTreeItemCommand({
   action: (context, refresh) => {
     return async (databaseTreeItem) => {
       const branchList = await getBranchList({
+        baseUrl: databaseTreeItem.baseUrl,
         workspaceId: databaseTreeItem.workspaceId,
         regionId: databaseTreeItem.regionId,
         context: context,

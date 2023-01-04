@@ -33,6 +33,7 @@ export const deleteColumnCommand = createTreeItemCommand({
       }
 
       await deleteColumn({
+        baseUrl: columnTreeItem.baseUrl,
         workspaceId: columnTreeItem.workspaceId,
         regionId: columnTreeItem.regionId,
         token: columnTreeItem.scope?.token,

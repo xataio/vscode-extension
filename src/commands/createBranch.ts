@@ -49,6 +49,7 @@ export const createBranchCommand = createTreeItemCommand({
       }
 
       const branchList = await getBranchList({
+        baseUrl: config.baseUrl,
         workspaceId: config.workspaceId,
         regionId: config.regionId,
         token: config.apiKey,
@@ -107,6 +108,7 @@ export const createBranchCommand = createTreeItemCommand({
 
       try {
         await createBranch({
+          baseUrl: config.baseUrl,
           workspaceId: config.workspaceId,
           regionId: config.regionId,
           token: config.apiKey,

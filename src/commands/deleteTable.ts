@@ -35,6 +35,7 @@ export const deleteTableCommand = createTreeItemCommand({
       }
 
       await deleteTable({
+        baseUrl: tableTreeItem.baseUrl,
         workspaceId: tableTreeItem.workspaceId,
         regionId: tableTreeItem.regionId,
         token: tableTreeItem.scope?.token,
