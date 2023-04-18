@@ -125,7 +125,7 @@ async function generateColumnIcons(icons: string[]) {
             await Promise.all(
               icons.map(async (icon) =>
                 f.createPropertyAssignment(
-                  f.createIdentifier(icon),
+                  f.createStringLiteral(icon),
                   f.createObjectLiteralExpression(
                     [
                       f.createPropertyAssignment(
