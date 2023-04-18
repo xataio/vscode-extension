@@ -11,4 +11,7 @@ export const xataColumnTypes = [
   "link",
   "object",
   "datetime",
+  // "vector", // Need special UX
+  // "file[]", // Not supported yet
+  // "file",   // Not supported yet
 ] as const;

@@ -11,4 +11,7 @@ export const xataColumnDisplayNames: Record<Column["type"], string> = {
   text: "Long text",
   link: "Link",
   object: "Object",
+  "file[]": "Files",
+  file: "File",
+  vector: "Vector",
 };
