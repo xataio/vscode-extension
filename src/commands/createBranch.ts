@@ -71,11 +71,14 @@ export const createBranchCommand = createTreeItemCommand({
 
       const selection = await vscode.window.showQuickPick(
         [
-          { type: newBranch, label: "New branch…" },
-          ...existingBranches.map((b) => ({ type: b, label: b })),
+          { type: newBranch, label: "$(add) Create new branch…" },
+          ...existingBranches.map((b) => ({
+            type: b,
+            label: `$(git-branch) ${b}`,
+          })),
         ],
         {
-          title: "Select a branch or create one",
+          title: " Select a branch or create one",
         }
       );
 
