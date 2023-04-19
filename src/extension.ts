@@ -6,23 +6,28 @@ import { XataExplorer } from "./views/xataExplorer";
 import { XataJsonSchemaProvider } from "./xataJsonSchemaProvider";
 import { watchWorkspaceConfig } from "./watchWorkspaceConfig";
 import { AuthUriHandler } from "./AuthUriHandler";
+import { XataBranchStatus } from "./views/xataBranchStatus";
 
 export function activate(extensionContext: vscode.ExtensionContext) {
   const context = getContext(extensionContext);
   const xataProject = new XataProject(context);
   const xataExplorer = new XataExplorer(context);
+  const xataBranchStatus = new XataBranchStatus(context);
 
   extensionContext.subscriptions.push(xataExplorer);
   extensionContext.subscriptions.push(xataProject);
+  extensionContext.subscriptions.push(xataBranchStatus);
 
   const refresh = (scope?: "explorer" | "workspace") => {
     if (scope === "explorer") {
       xataExplorer.refresh();
     } else if (scope === "workspace") {
+      xataBranchStatus.update();
       xataProject.refresh();
     } else {
       xataExplorer.refresh();
       xataProject.refresh();
+      xataBranchStatus.update();
     }
   };
 
@@ -67,13 +72,17 @@ export function activate(extensionContext: vscode.ExtensionContext) {
 
       if (event.affectsConfiguration("xata.envFilePath") || hasThemeChange) {
         xataProject.refresh();
+        xataBranchStatus.update();
       }
     })
   );
 
   // Handle config files changes
   extensionContext.subscriptions.push(
-    watchWorkspaceConfig(() => xataProject.refresh())
+    watchWorkspaceConfig(() => {
+      xataProject.refresh();
+      xataBranchStatus.update();
+    })
   );
 
   // Uri handler

@@ -5,18 +5,20 @@
  */
 import type * as Schemas from "./xataWorkspaceSchemas";
 
+export type DBNameParam = Schemas.DBName;
+
+export type DBBranchNameParam = Schemas.DBBranchName;
+
+export type MigrationRequestNumberParam = Schemas.MigrationRequestNumber;
+
 export type BranchNameParam = Schemas.BranchName;
+
+export type TableNameParam = Schemas.TableName;
 
 export type ColumnNameParam = Schemas.ColumnName;
 
 export type ColumnsProjectionParam = Schemas.ColumnsProjection;
 
-export type DBBranchNameParam = Schemas.DBBranchName;
-
-export type DBNameParam = Schemas.DBName;
-
-export type MigrationRequestNumberParam = Schemas.MigrationRequestNumber;
-
 export type RecordIDParam = Schemas.RecordID;
 
-export type TableNameParam = Schemas.TableName;
+export type FileIDParam = Schemas.FileID;

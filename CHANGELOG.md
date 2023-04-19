@@ -6,6 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+- Remove any interaction with git branches
+- Add xata branch status bar
+
 ## 0.4.4
 
 - Fix extension working against staging

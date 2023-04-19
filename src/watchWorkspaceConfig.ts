@@ -29,23 +29,6 @@ export function watchWorkspaceConfig(onConfigChange: () => void) {
 
   indexConfigFiles();
 
-  const gitWatchers = new Map<
-    vscode.WorkspaceFolder,
-    vscode.FileSystemWatcher
-  >();
-
-  const addGitHeadWatcher = (workspaceFolder: vscode.WorkspaceFolder) => {
-    const gitHeadListener = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(workspaceFolder, ".git/HEAD")
-    );
-
-    gitHeadListener.onDidChange(() => onConfigChange());
-
-    gitWatchers.set(workspaceFolder, gitHeadListener);
-  };
-
-  vscode.workspace.workspaceFolders?.forEach(addGitHeadWatcher);
-
   const saveListener = vscode.workspace.onDidSaveTextDocument((document) => {
     if (!vscode.workspace.workspaceFolders) {
       return;
@@ -69,16 +52,6 @@ export function watchWorkspaceConfig(onConfigChange: () => void) {
   const wsListener = vscode.workspace.onDidChangeWorkspaceFolders((e) => {
     configFiles.clear();
     indexConfigFiles();
-
-    // Update .git/HEAD watchers
-    e.added.forEach(addGitHeadWatcher);
-    e.removed.forEach((ws) => {
-      const watcher = gitWatchers.get(ws);
-      if (watcher) {
-        watcher.dispose();
-        gitWatchers.delete(ws);
-      }
-    });
   });
 
   const configListener = vscode.workspace.onDidChangeConfiguration((event) => {
@@ -95,7 +68,6 @@ export function watchWorkspaceConfig(onConfigChange: () => void) {
       saveListener.dispose();
       wsListener.dispose();
       configListener.dispose();
-      Array.from(gitWatchers.values()).forEach((i) => i.dispose());
     },
   };
 }

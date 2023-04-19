@@ -42,8 +42,6 @@ export const createBranchCommand = createTreeItemCommand({
         workspaceFolder.uri
       );
 
-      const currentGitBranch = await context.getGitBranch(workspaceFolder.uri);
-
       if (!config) {
         return;
       }
@@ -69,7 +67,23 @@ export const createBranchCommand = createTreeItemCommand({
 
       let dbBranchName: string;
 
-      if (!currentGitBranch) {
+      const newBranch = Symbol("new branch");
+
+      const selection = await vscode.window.showQuickPick(
+        [
+          { type: newBranch, label: "$(add) Create new branch…" },
+          ...existingBranches.map((b) => ({
+            type: b,
+            label: `$(git-branch) ${b}`,
+          })),
+        ],
+        {
+          title: " Select a branch or create one",
+        }
+      );
+
+      if (!selection) return;
+      if (selection.type === newBranch) {
         const newBranchName = await vscode.window.showInputBox({
           prompt: "Enter the name of your branch",
           title: "Branch name",
@@ -87,46 +101,36 @@ export const createBranchCommand = createTreeItemCommand({
             : await vscode.window.showQuickPick(existingBranches, {
                 title: "Base branch",
               });
-      } else if (config.branch !== currentGitBranch) {
-        dbBranchName = `${config.databaseName}:${currentGitBranch}`;
-        from =
-          existingBranches.length === 1
-            ? existingBranches[0]
-            : await vscode.window.showQuickPick(existingBranches, {
-                title: "Base branch",
-              });
-      } else {
-        from = config.branch;
-        await vscode.commands.executeCommand("git.checkout");
-        const newBranch = await context.getGitBranch(workspaceFolder.uri);
-        dbBranchName = `${config.databaseName}:${newBranch}`;
-      }
 
-      if (!from) {
-        return;
-      }
-
-      try {
-        await createBranch({
-          baseUrl: config.baseUrl,
-          workspaceId: config.workspaceId,
-          regionId: config.regionId,
-          token: config.apiKey,
-          context,
-          pathParams: {
-            dbBranchName,
-          },
-          queryParams: {
-            from,
-          },
-        });
-
-        return refresh();
-      } catch (e) {
-        if (e instanceof Error) {
-          vscode.window.showErrorMessage(e.message);
+        if (!from) {
           return;
         }
+
+        try {
+          await createBranch({
+            baseUrl: config.baseUrl,
+            workspaceId: config.workspaceId,
+            regionId: config.regionId,
+            token: config.apiKey,
+            context,
+            pathParams: {
+              dbBranchName,
+            },
+            queryParams: {
+              from,
+            },
+          });
+
+          return refresh();
+        } catch (e) {
+          if (e instanceof Error) {
+            vscode.window.showErrorMessage(e.message);
+            return;
+          }
+        }
+      } else if (typeof selection.type === "string") {
+        await updateXataBranchInDotEnv(workspaceFolder, selection.type);
+        return refresh();
       }
     };
   },

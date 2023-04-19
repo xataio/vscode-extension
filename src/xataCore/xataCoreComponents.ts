@@ -300,6 +300,10 @@ export type GetWorkspaceError = Fetcher.ErrorWrapper<
       payload: Responses.AuthError;
     }
   | {
+      status: 403;
+      payload: Responses.AuthError;
+    }
+  | {
       status: 404;
       payload: Responses.SimpleError;
     }
@@ -336,6 +340,10 @@ export type UpdateWorkspaceError = Fetcher.ErrorWrapper<
     }
   | {
       status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 403;
       payload: Responses.AuthError;
     }
   | {
@@ -379,6 +387,10 @@ export type DeleteWorkspaceError = Fetcher.ErrorWrapper<
       payload: Responses.AuthError;
     }
   | {
+      status: 403;
+      payload: Responses.AuthError;
+    }
+  | {
       status: 404;
       payload: Responses.SimpleError;
     }
@@ -415,6 +427,10 @@ export type GetWorkspaceMembersListError = Fetcher.ErrorWrapper<
     }
   | {
       status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 403;
       payload: Responses.AuthError;
     }
   | {
@@ -460,6 +476,10 @@ export type UpdateWorkspaceMemberRoleError = Fetcher.ErrorWrapper<
     }
   | {
       status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 403;
       payload: Responses.AuthError;
     }
   | {
@@ -517,6 +537,10 @@ export type RemoveWorkspaceMemberError = Fetcher.ErrorWrapper<
       payload: Responses.AuthError;
     }
   | {
+      status: 403;
+      payload: Responses.AuthError;
+    }
+  | {
       status: 404;
       payload: Responses.SimpleError;
     }
@@ -559,6 +583,10 @@ export type InviteWorkspaceMemberError = Fetcher.ErrorWrapper<
     }
   | {
       status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 403;
       payload: Responses.AuthError;
     }
   | {
@@ -620,6 +648,10 @@ export type UpdateWorkspaceMemberInviteError = Fetcher.ErrorWrapper<
       payload: Responses.AuthError;
     }
   | {
+      status: 403;
+      payload: Responses.AuthError;
+    }
+  | {
       status: 404;
       payload: Responses.SimpleError;
     }
@@ -678,6 +710,10 @@ export type CancelWorkspaceMemberInviteError = Fetcher.ErrorWrapper<
       payload: Responses.AuthError;
     }
   | {
+      status: 403;
+      payload: Responses.AuthError;
+    }
+  | {
       status: 404;
       payload: Responses.SimpleError;
     }
@@ -727,6 +763,10 @@ export type AcceptWorkspaceMemberInviteError = Fetcher.ErrorWrapper<
       payload: Responses.AuthError;
     }
   | {
+      status: 403;
+      payload: Responses.AuthError;
+    }
+  | {
       status: 404;
       payload: Responses.SimpleError;
     }
@@ -773,6 +813,10 @@ export type ResendWorkspaceMemberInviteError = Fetcher.ErrorWrapper<
     }
   | {
       status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 403;
       payload: Responses.AuthError;
     }
   | {
@@ -858,6 +902,14 @@ export type CreateDatabaseError = Fetcher.ErrorWrapper<
   | {
       status: 401;
       payload: Responses.AuthError;
+    }
+  | {
+      status: 422;
+      payload: Responses.SimpleError;
+    }
+  | {
+      status: 423;
+      payload: Responses.SimpleError;
     }
 >;
 
@@ -1064,6 +1116,217 @@ export const updateDatabaseMetadata = (
     ...variables,
   });
 
+export type RenameDatabasePathParams = {
+  /*
+   * Workspace ID
+   */
+  workspaceId: Schemas.WorkspaceID;
+  /*
+   * The Database Name
+   */
+  dbName: Schemas.DBName;
+};
+
+export type RenameDatabaseError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 422;
+      payload: Responses.SimpleError;
+    }
+  | {
+      status: 423;
+      payload: Responses.SimpleError;
+    }
+>;
+
+export type RenameDatabaseRequestBody = {
+  /*
+   * @minLength 1
+   */
+  newName: string;
+};
+
+export type RenameDatabaseVariables = {
+  body: RenameDatabaseRequestBody;
+  pathParams: RenameDatabasePathParams;
+} & XataCoreFetcherExtraProps;
+
+/**
+ * Change the name of an existing database
+ */
+export const renameDatabase = (variables: RenameDatabaseVariables) =>
+  xataCoreFetch<
+    Schemas.DatabaseMetadata,
+    RenameDatabaseError,
+    RenameDatabaseRequestBody,
+    {},
+    {},
+    RenameDatabasePathParams
+  >({
+    url: "/workspaces/{workspaceId}/dbs/{dbName}/rename",
+    method: "post",
+    ...variables,
+  });
+
+export type GetDatabaseGithubSettingsPathParams = {
+  /*
+   * Workspace ID
+   */
+  workspaceId: Schemas.WorkspaceID;
+  /*
+   * The Database Name
+   */
+  dbName: Schemas.DBName;
+};
+
+export type GetDatabaseGithubSettingsError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
+export type GetDatabaseGithubSettingsVariables = {
+  pathParams: GetDatabaseGithubSettingsPathParams;
+} & XataCoreFetcherExtraProps;
+
+/**
+ * Retrieve current Github database settings
+ */
+export const getDatabaseGithubSettings = (
+  variables: GetDatabaseGithubSettingsVariables
+) =>
+  xataCoreFetch<
+    Schemas.DatabaseGithubSettings,
+    GetDatabaseGithubSettingsError,
+    undefined,
+    {},
+    {},
+    GetDatabaseGithubSettingsPathParams
+  >({
+    url: "/workspaces/{workspaceId}/dbs/{dbName}/github",
+    method: "get",
+    ...variables,
+  });
+
+export type UpdateDatabaseGithubSettingsPathParams = {
+  /*
+   * Workspace ID
+   */
+  workspaceId: Schemas.WorkspaceID;
+  /*
+   * The Database Name
+   */
+  dbName: Schemas.DBName;
+};
+
+export type UpdateDatabaseGithubSettingsError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 422;
+      payload: Responses.SimpleError;
+    }
+  | {
+      status: 423;
+      payload: Responses.SimpleError;
+    }
+>;
+
+export type UpdateDatabaseGithubSettingsVariables = {
+  body: Schemas.DatabaseGithubSettings;
+  pathParams: UpdateDatabaseGithubSettingsPathParams;
+} & XataCoreFetcherExtraProps;
+
+/**
+ * Map the database to a Github repository, Xata will create database branch previews for all new branches/PRs in the repo.
+ */
+export const updateDatabaseGithubSettings = (
+  variables: UpdateDatabaseGithubSettingsVariables
+) =>
+  xataCoreFetch<
+    Schemas.DatabaseGithubSettings,
+    UpdateDatabaseGithubSettingsError,
+    Schemas.DatabaseGithubSettings,
+    {},
+    {},
+    UpdateDatabaseGithubSettingsPathParams
+  >({
+    url: "/workspaces/{workspaceId}/dbs/{dbName}/github",
+    method: "put",
+    ...variables,
+  });
+
+export type DeleteDatabaseGithubSettingsPathParams = {
+  /*
+   * Workspace ID
+   */
+  workspaceId: Schemas.WorkspaceID;
+  /*
+   * The Database Name
+   */
+  dbName: Schemas.DBName;
+};
+
+export type DeleteDatabaseGithubSettingsError = Fetcher.ErrorWrapper<
+  | {
+      status: 400;
+      payload: Responses.BadRequestError;
+    }
+  | {
+      status: 401;
+      payload: Responses.AuthError;
+    }
+  | {
+      status: 404;
+      payload: Responses.SimpleError;
+    }
+>;
+
+export type DeleteDatabaseGithubSettingsVariables = {
+  pathParams: DeleteDatabaseGithubSettingsPathParams;
+} & XataCoreFetcherExtraProps;
+
+/**
+ * Delete any existing database Github settings
+ */
+export const deleteDatabaseGithubSettings = (
+  variables: DeleteDatabaseGithubSettingsVariables
+) =>
+  xataCoreFetch<
+    undefined,
+    DeleteDatabaseGithubSettingsError,
+    undefined,
+    {},
+    {},
+    DeleteDatabaseGithubSettingsPathParams
+  >({
+    url: "/workspaces/{workspaceId}/dbs/{dbName}/github",
+    method: "delete",
+    ...variables,
+  });
+
 export type ListRegionsPathParams = {
   /*
    * Workspace ID
@@ -1125,6 +1388,10 @@ export const operationsByTag = {
     deleteDatabase,
     getDatabaseMetadata,
     updateDatabaseMetadata,
+    renameDatabase,
+    getDatabaseGithubSettings,
+    updateDatabaseGithubSettings,
+    deleteDatabaseGithubSettings,
     listRegions,
   },
 };

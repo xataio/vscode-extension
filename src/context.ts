@@ -211,6 +211,8 @@ export function getContext(extensionContext: ExtensionContext) {
       const databaseURL =
         dotenvConfig.XATA_DATABASE_URL ?? xataRcConfig.databaseURL;
 
+      const branch = dotenvConfig.XATA_BRANCH ?? "main";
+
       if (typeof databaseURL === "string") {
         const { regionId, workspaceId, databaseName, baseUrl } =
           parseDatabaseUrl(databaseURL);
@@ -220,56 +222,15 @@ export function getContext(extensionContext: ExtensionContext) {
             ? dotenvConfig.XATA_API_KEY
             : undefined;
 
-        const branch = await resolveBranch({
-          regionId,
-          workspaceId,
-          baseUrl,
-          context: this,
-          token: apiKey,
-          pathParams: {
-            dbName: databaseName,
-          },
-          queryParams: {
-            gitBranch:
-              dotenvConfig.XATA_BRANCH ?? (await this.getGitBranch(uri)),
-          },
-        });
-
-        if (branch.success === false) {
-          throw new Error(
-            `Branch can't be resolved (${branch.error.payload.message})`
-          );
-        }
-
         return {
           baseUrl,
           databaseName,
           databaseURL,
-          branch: branch.data.branch,
+          branch,
           apiKey,
           workspaceId,
           regionId,
         } as const;
-      }
-    },
-
-    /**
-     * Get current git branch
-     *
-     * @param uri vscode's workspace uri
-     */
-    async getGitBranch(uri: Uri) {
-      try {
-        const HEAD = (
-          await workspace.fs.readFile(Uri.joinPath(uri, ".git/HEAD"))
-        ).toString();
-
-        if (HEAD.startsWith("ref: refs/heads/")) {
-          return HEAD.replace(/^ref: refs\/heads\//, "").trim();
-        }
-        return undefined; // No branch found
-      } catch {
-        return undefined; // No branch found
       }
     },
   };
