@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## 0.5.0
+
 - Remove any interaction with git branches
 - Add xata branch status bar
 
