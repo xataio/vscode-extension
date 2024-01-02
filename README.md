@@ -1,3 +1,8 @@
+This repository is archived. We didn't see much usage for a VS Code extension from customers, who mostly interact with Xata through the CLI or the client libraries directly.
+
+<details>
+<summary>Archived readme</summary>
+
 # Xata VS Code Extension
 
 ![Xata + VS Code banner](https://user-images.githubusercontent.com/1761469/180163941-94a75bdd-6d3f-4a0c-bf53-1f5dbe4d45ef.png)
@@ -87,3 +92,5 @@ Therefore, everybody (including CI and Pull Request previews) testing the code o
 ---
 
 Made by <img alt="Xatafly, Xata's logo" src="https://raw.githubusercontent.com/xataio/vscode-extension/2e3d0b877cf6aff1e0fc717e05ada714465ca783/doc/xata-icon-128.png" width="24" />
+
+</details>
